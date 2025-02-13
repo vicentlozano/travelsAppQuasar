@@ -1,1 +1,13 @@
 // app global css in SCSS form
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  #q-app {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+  
+    
+  }
