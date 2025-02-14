@@ -9,20 +9,40 @@
       :background-image="backgroundImage"
       :year="year"
     />
+    <q-dialog v-if="created" v-model="created" position="top" backdrop-filter='blur(4px)'>
+      <q-card style="width: 350px">
+        <q-card-section class="row items-center no-wrap">
+          <div>
+            <div class="text-grey">Viaje creado correctamente!</div>
+          </div>
+
+          <q-space />
+
+          <q-btn flat round icon="close" @click="go" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <section class="edit">
       <form @submit.prevent="handleSubmit" class="edit">
-        <input class="custom-input" v-model="name" placeholder="Introduce el nombre" />
+        <input class="custom-input" v-model="name" placeholder="Introduce el nombre" required />
         <span v-if="errors.name" class="error">{{ errors.name }}</span>
 
-        <input class="custom-input" v-model="days" placeholder="Introduce los días" type="number" />
+        <input
+          class="custom-input"
+          v-model="days"
+          placeholder="Introduce los días"
+          type="number"
+          required
+        />
         <span v-if="errors.days" class="error">{{ errors.days }}</span>
 
-        <!-- Modificación aquí para convertir la entrada en un array -->
         <input
           class="custom-input"
           v-model="placesInput"
+          type="text"
           @input="updatePlaces"
           placeholder="Introduce los lugares (separados por comas)"
+          required
         />
         <span v-if="errors.places" class="error">{{ errors.places }}</span>
 
@@ -31,10 +51,17 @@
           v-model="price"
           placeholder="Introduce el precio"
           type="number"
+          required
         />
         <span v-if="errors.price" class="error">{{ errors.price }}</span>
 
-        <input class="custom-input" v-model="year" placeholder="Introduce el año" type="number" />
+        <input
+          class="custom-input"
+          v-model="year"
+          placeholder="Introduce el año"
+          type="number"
+          required
+        />
         <span v-if="errors.year" class="error">{{ errors.year }}</span>
 
         <input
@@ -42,6 +69,7 @@
           v-model="backgroundImage"
           placeholder="URL de la imagen"
           type="url"
+          required
         />
         <span v-if="errors.backgroundImage" class="error">{{ errors.backgroundImage }}</span>
 
@@ -60,41 +88,48 @@ const router = useRouter()
 
 const name = ref('')
 const days = ref('')
-const places = ref([]) // Cambié a un array
-const placesInput = ref('') // Para manejar el input como string
+const places = ref([])
+const placesInput = ref('')
 const price = ref('')
 const year = ref('')
 const backgroundImage = ref('')
 const errors = ref({})
+const created = ref(false)
 
 const handleSubmit = async () => {
   errors.value = {}
-
-  if (!name.value) errors.value.name = 'El nombre es obligatorio.'
-  if (!days.value) errors.value.days = 'Los días son obligatorios.'
-  if (!places.value.length) errors.value.places = 'Los lugares son obligatorios.'
-  if (!price.value) errors.value.price = 'El precio es obligatorio.'
-  if (!year.value) errors.value.year = 'El año es obligatorio.'
+  const formato = /^[A-Za-z ]+$/
+  if (name.value.length < 2 || !formato.test(name.value))
+    errors.value.name = 'El nombre tiene contener mas de 1 caracter y no puede contener letras'
+  if (days.value < 1) errors.value.days = 'Los días son obligatorios.'
+  if (places.value.length < 1) errors.value.places = 'Los lugares son obligatorios.'
+  if (price.value < 1) errors.value.price = 'El precio no es válido.'
+  if (year.value < 1900 || year.value > new Date().getFullYear())
+    errors.value.year = 'El año no es válido.'
   if (!backgroundImage.value) errors.value.backgroundImage = 'La URL de la imagen es obligatoria.'
 
   if (Object.keys(errors.value).length === 0) {
     let travel = {
       name: name.value,
       days: days.value,
-      places: places.value, // Ahora es un array
+      places: places.value,
       price: price.value,
       year: year.value,
       backgroundImage: backgroundImage.value,
     }
-    await createTravel(travel)
-    alert('El viaje se ha añadido correctamente!')
-    router.push('/travels')
-    console.log('Formulario válido. Guardando datos...')
+    try {
+      await createTravel(travel)
+      created.value = true
+    } catch (error) {
+      console.log('Error al crear el viaje:', error.response ? error.response.data : error.message)
+    }
   }
+}
+const go = () => {
+  router.push('/travels')
 }
 
 const updatePlaces = () => {
-  // Convertir el valor de 'placesInput' en un array de lugares
   places.value = placesInput.value
     .split(',')
     .map((place) => place.trim())

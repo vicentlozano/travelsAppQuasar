@@ -13,9 +13,7 @@
         </p>
         <p><span class="info">Precio:</span>{{ price }}€</p>
         <p><span class="info">Año:</span>{{ year }}</p>
-      </section>
-    </div>
-    <section v-if="props.crud" class="crud">
+        <section v-if="props.crud" class="crud">
       <button class="round-button" @click="deleteTravel(props.id)">
         <img class="delete" alt="delete" src="../assets/icons/icons8-delete-60.png" />
       </button>
@@ -23,6 +21,10 @@
         <img class="edit" alt="edit" src="../assets/icons/icons8-edit-50.png" />
       </button>
     </section>
+      </section>
+     
+    </div>
+    
   </div>
 </template>
 
@@ -80,10 +82,8 @@ const deleteTravel = (id) => {
   flex-direction: row;
   gap: 2rem;
   justify-content: center;
-  border: 2px solid white;
   padding: 1rem;
   border-radius: 15px;
-  background-color: white;
 }
 .round-button {
   height: auto;

@@ -2,6 +2,9 @@
   <div>
     <h2>TODOS MIS VIAJES</h2>
     <div class="container">
+      <div class="spinner">
+        <q-spinner-oval v-if="travels.length == 0" color="purple" size="4em" class="spinner" />
+      </div>
       <section v-if="travels.length > 0" class="all-travels">
         <TravelCard
           v-for="travel in travels"
@@ -21,7 +24,7 @@
           <button @click="goAdd" class="add"></button>
         </section>
       </section>
-      
+
       <section v-if="travels.length == 0" class="no-travels">
         <h3 class="message-empty">Sin viajes actualmente!</h3>
         <section class="card">
@@ -53,8 +56,8 @@ const goAdd = () => {
   router.push('/add')
 }
 onMounted(async () => {
-  travels.value = await getAllTravels()
-  console.log(travels.value)
+  const response = await getAllTravels()
+  travels.value = response.result
 })
 </script>
 
@@ -122,6 +125,11 @@ h4 {
   font-size: 2em;
   text-wrap: auto;
   font-weight: 700;
+}
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 @media (max-width: 450px) {
