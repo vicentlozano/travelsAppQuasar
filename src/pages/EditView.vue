@@ -8,7 +8,7 @@
       :price="price"
       :background-image="backgroundImage"
       :year="year"
-      :id="travel.id"
+      :id="travel._id"
     />
     <section class="edit">
       <form @submit.prevent="handleSubmit" class="edit">
@@ -49,10 +49,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getTravelById, updateTravel } from '@/api/travelsService'
+import { getTravelById, updateTravel } from '../api/travelsService'
 
 const router = useRouter()
-import TravelCard from '@/components/TravelCard.vue'
+import TravelCard from '../components/TravelCard.vue'
 
 const route = useRoute()
 const travel = ref(null)
@@ -66,12 +66,12 @@ const errors = ref({})
 
 onMounted(async () => {
   travel.value = await getTravelById(route.params.id)
-  name.value = travel.value.name
-  days.value = travel.value.days
-  places.value = travel.value.places
-  price.value = travel.value.price
-  year.value = travel.value.year
-  backgroundImage.value = travel.value.backgroundImage
+  name.value = travel.value.result.name
+  days.value = travel.value.result.days
+  places.value = travel.value.result.places
+  price.value = travel.value.result.price
+  year.value = travel.value.result.year
+  backgroundImage.value = travel.value.result.backgroundImage
 })
 
 const handleSubmit = async () => {
@@ -106,7 +106,7 @@ const handleSubmit = async () => {
 <style scoped>
 .container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;

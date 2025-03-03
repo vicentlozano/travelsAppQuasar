@@ -14,17 +14,15 @@
         <p><span class="info">Precio:</span>{{ price }}€</p>
         <p><span class="info">Año:</span>{{ year }}</p>
         <section v-if="props.crud" class="crud">
-      <button class="round-button" @click="deleteTravel(props.id)">
-        <img class="delete" alt="delete" src="../assets/icons/icons8-delete-60.png" />
-      </button>
-      <button class="round-button" @click="editTravel(props.id)">
-        <img class="edit" alt="edit" src="../assets/icons/icons8-edit-50.png" />
-      </button>
-    </section>
+          <button class="round-button" @click="deleteTravel(props.id)">
+            <img class="delete" alt="delete" src="../assets/icons/icons8-delete-60.png" />
+          </button>
+          <button class="round-button" @click="editTravel(props.id)">
+            <img class="edit" alt="edit" src="../assets/icons/icons8-edit-50.png" />
+          </button>
+        </section>
       </section>
-     
     </div>
-    
   </div>
 </template>
 
@@ -33,16 +31,17 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const props = defineProps({
   name: String,
-  days: [String,Number],
+  days: [String, Number],
   places: Array,
-  price:  [String,Number],
+  price: [String, Number],
   backgroundImage: String,
-  year: [String,Number],
+  year: [String, Number],
   crud: Boolean,
   id: String,
 })
 const emits = defineEmits(['delete'])
 const editTravel = (id) => {
+  console.log(id)
   router.push({ name: 'edit', params: { id } })
 }
 const deleteTravel = (id) => {
@@ -131,25 +130,22 @@ p {
   text-align: center;
   color: rgb(119, 186, 206);
 }
-@media(max-width:450px){
-
+@media (max-width: 450px) {
   .parallax {
-  min-height: 200px;
-  min-width: 200px;
-
-}
-.delete {
-  height: 30px;
-  width: 30px;
-}
-.edit {
-  height: 30px;
-  width: 30px;
-}
-.card {
-  width: 200px;
-  height: 100%;
-  
-}
+    min-height: 200px;
+    min-width: 200px;
+  }
+  .delete {
+    height: 30px;
+    width: 30px;
+  }
+  .edit {
+    height: 30px;
+    width: 30px;
+  }
+  .card {
+    width: 200px;
+    height: 100%;
+  }
 }
 </style>

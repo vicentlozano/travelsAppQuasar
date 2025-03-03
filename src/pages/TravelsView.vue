@@ -16,7 +16,7 @@
           :background-image="travel.backgroundImage"
           :year="travel.year"
           :crud="true"
-          :id="travel.id"
+          :id="travel._id"
           @delete="deleteTravelSelected"
         />
         <section class="card">
@@ -41,12 +41,14 @@ import { onMounted, ref } from 'vue'
 import { getAllTravels, deleteTravel } from '../api/travelsService'
 import TravelCard from '../components/TravelCard.vue'
 import { useRouter } from 'vue-router'
+import { useTokenStore } from '../stores/token'
+const auth = useTokenStore()
 const router = useRouter()
 const travels = ref([])
 const deleteTravelSelected = async (id) => {
   try {
     deleteTravel(id)
-    travels.value = travels.value.filter((travel) => travel.id !== id)
+    travels.value = travels.value.filter((travel) => travel._id !== id)
   } catch (error) {
     console.log(error)
   }
@@ -57,7 +59,10 @@ const goAdd = () => {
 }
 onMounted(async () => {
   const response = await getAllTravels()
-  travels.value = response.result
+  const userId = auth.userId
+  console.log(userId)
+  console.log(response.result)
+  travels.value = response.result.filter((travel) => travel.userId === userId)
 })
 </script>
 
