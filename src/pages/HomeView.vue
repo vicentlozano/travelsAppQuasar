@@ -18,25 +18,48 @@
       <h3 class="message-empty">Sin viajes actualmente!</h3>
     </section>
     <section class="next-travels"></section>
+    <q-dialog v-if="created" v-model="created" position="top" backdrop-filter="blur(4px)">
+      <q-card style="width: 350px">
+        <q-card-section class="row items-center no-wrap">
+          <div>
+            <div class="text-grey">{{ message }}</div>
+          </div>
+
+          <q-space />
+
+          <q-btn flat round icon="close" @click="closePopUp" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </div>
 </template>
 
 <script setup>
 import TravelCard from '../components/TravelCard.vue'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref,computed } from 'vue'
 import { getAllTravels } from '../api/travelsService'
 
 const travels = ref([])
+const message = ref('')
+const created = computed(()=> {
+  return message.value? true : false
+})
+const closePopUp = () => {
+  message.value = ''
+}
 
 onMounted(async () => {
   const response = await getAllTravels()
+  if (response) {
+    const totalTravels = response.result.length
 
-  const totalTravels = response.result.length
-
-  if (totalTravels > 4) {
-    travels.value = response.result.slice(totalTravels - 4, totalTravels)
+    if (totalTravels > 4) {
+      travels.value = response.result.slice(totalTravels - 4, totalTravels)
+    } else {
+      travels.value = response.result
+    }
   } else {
-    travels.value = response.result
+    message.value = 'Connection to database failed'
   }
 })
 </script>

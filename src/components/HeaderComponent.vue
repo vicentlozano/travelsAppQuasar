@@ -1,14 +1,15 @@
 <template>
   <header>
-    <nav class="nav" :class="{ logged: isLogin }">
+    <nav class="nav" :class="{ logged: isLoginUser || isLoginAdmin }">
       <h1>MY TRAVELS</h1>
-      <RouterLink class="link" to="/">Home</RouterLink>
-      <RouterLink v-if="isLogin" class="link" to="/travels">Travels</RouterLink>
-      <q-btn-group rounded v-if="!isLogin">
+      <RouterLink class="link" to="/" @click="show">Home</RouterLink>
+      <RouterLink v-if="auth.username" class="link" to="/travels">Travels</RouterLink>
+      <q-btn-group rounded v-if="!auth.username">
         <q-btn class="custom-button" @click="login = true">inicar sesion</q-btn>
         <q-btn @click="signup = true">Registrarse</q-btn></q-btn-group
       >
-      <q-btn v-if="isLogin" @click="logOut">Log Out</q-btn>
+
+      <q-btn v-if="auth.username" @click="logOut">Log Out</q-btn>
     </nav>
   </header>
 
@@ -17,16 +18,18 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed} from 'vue'
 import LoginCard from './LoginCard.vue'
 import SignUpCard from './SignUpCard.vue'
-import { useTokenStore } from '../stores/token'
+import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 const $q = useQuasar()
-
-const auth = useTokenStore()
-const isLogin = computed(() => {
-  return auth.token
+const auth = useUserStore()
+const isLoginUser = computed(() => {
+  return auth.role === 'user' ? true : false
+})
+const isLoginAdmin = computed(() => {
+  return auth.role === 'admin' ? true : false
 })
 const login = ref(false)
 const signup = ref(false)
@@ -37,8 +40,8 @@ const closeSignUp = () => {
   signup.value = false
 }
 const logOut = () => {
-  auth.deleteToken()
-  auth.updateToken()
+  auth.deleteUser()
+  $q.localStorage.removeItem('token')
   $q.notify({
     color: 'blue',
     textColor: 'white',
@@ -46,6 +49,10 @@ const logOut = () => {
     message: 'User log Out',
   })
 }
+const show = () => {
+  console.log(auth.email)
+}
+
 </script>
 
 <style lang="scss" scoped>

@@ -9,7 +9,7 @@
       :background-image="backgroundImage"
       :year="year"
     />
-    <q-dialog v-if="created" v-model="created" position="top" backdrop-filter='blur(4px)'>
+    <q-dialog v-if="created" v-model="created" position="top" backdrop-filter="blur(4px)">
       <q-card style="width: 350px">
         <q-card-section class="row items-center no-wrap">
           <div>
@@ -84,6 +84,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { createTravel } from '../api/travelsService'
 import TravelCard from '../components/TravelCard.vue'
+import { useTokenStore } from '../stores/user'
+const auth = useTokenStore()
 const router = useRouter()
 
 const name = ref('')
@@ -116,6 +118,7 @@ const handleSubmit = async () => {
       price: price.value,
       year: year.value,
       backgroundImage: backgroundImage.value,
+      userId: auth.userId,
     }
     try {
       await createTravel(travel)

@@ -41,8 +41,8 @@ import { onMounted, ref } from 'vue'
 import { getAllTravels, deleteTravel } from '../api/travelsService'
 import TravelCard from '../components/TravelCard.vue'
 import { useRouter } from 'vue-router'
-import { useTokenStore } from '../stores/token'
-const auth = useTokenStore()
+import { useUserStore } from '../stores/user'
+const auth = useUserStore()
 const router = useRouter()
 const travels = ref([])
 const deleteTravelSelected = async (id) => {

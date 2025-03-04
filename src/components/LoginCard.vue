@@ -45,8 +45,8 @@ import { ref, computed } from 'vue'
 import { logIn } from '../api/travelsService'
 import { useQuasar } from 'quasar'
 import md5 from 'md5'
-import { useTokenStore } from '../stores/token'
-const auth = useTokenStore()
+import { useUserStore } from '../stores/user'
+const auth = useUserStore()
 const $q = useQuasar()
 
 const props = defineProps({
@@ -59,7 +59,6 @@ const loginInjector = computed(() => {
 const isLoginAction = ref(loginInjector)
 const email = ref('')
 const password = ref('')
-
 
 //methods
 const close = () => {
@@ -77,8 +76,12 @@ const loginAction = async () => {
       if (response.ok) {
         if (!$q.localStorage.getItem('token')) {
           $q.localStorage.set('token', response.result.token)
-          $q.localStorage.set('userId', response.result.id)
-          auth.updateToken()
+          auth.setUser(
+            response.result.id,
+            response.result.name,
+            response.result.email,
+            response.result.role,
+          )
 
           $q.notify({
             color: 'green-4',
