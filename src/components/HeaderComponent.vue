@@ -1,9 +1,22 @@
 <template>
-  <header>
+  <header v-if="!props.isMobile">
     <nav class="nav" :class="{ logged: isLoginUser || isLoginAdmin }">
       <h1>MY TRAVELS</h1>
-      <RouterLink class="link" to="/" @click="show">Home</RouterLink>
-      <RouterLink v-if="auth.username" class="link" to="/travels">Travels</RouterLink>
+      <RouterLink class="link" to="/" @click="show"
+        ><q-icon name="mdi-home" /><span>Home</span></RouterLink
+      >
+      <RouterLink v-if="auth.username" class="link" to="/chat">
+        <q-icon name="mdi-chat" /><span>Chat</span>
+      </RouterLink>
+      <RouterLink v-if="auth.username" class="link" to="/media"
+      ><q-icon name="mdi-multimedia"
+      /><span>Media</span></RouterLink>
+      <RouterLink v-if="auth.username" class="link" to="/search"
+      ><q-icon name="mdi-magnify"
+      /><span>Search</span></RouterLink>
+      <RouterLink v-if="auth.username" class="link" to="/travels"
+        ><q-icon name="mdi-account" /><span>Travels</span></RouterLink
+      >
       <q-btn-group rounded v-if="!auth.username">
         <q-btn class="custom-button" @click="login = true">inicar sesion</q-btn>
         <q-btn @click="signup = true">Registrarse</q-btn></q-btn-group
@@ -12,13 +25,22 @@
       <q-btn v-if="auth.username" @click="logOut">Log Out</q-btn>
     </nav>
   </header>
+  <footer v-else class="nav-footer">
+    <RouterLink class="link" to="/" @click="show"><q-icon name="mdi-home" /></RouterLink>
+    <RouterLink class="link" to="/chat">
+      <q-icon name="mdi-chat" />
+    </RouterLink>
+    <RouterLink class="link" to="/media"><q-icon name="mdi-multimedia" /></RouterLink>
+    <RouterLink class="link" to="/search"><q-icon name="mdi-magnify" /></RouterLink>
+    <RouterLink class="link" to="/travels"><q-icon name="mdi-account" /></RouterLink>
+  </footer>
 
   <LoginCard :login="login" @close-login="closeLogin" />
   <SignUpCard :signup="signup" @close-signup="closeSignUp" />
 </template>
 
 <script setup>
-import { ref, computed} from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import LoginCard from './LoginCard.vue'
 import SignUpCard from './SignUpCard.vue'
 import { useUserStore } from '../stores/user'
@@ -33,6 +55,14 @@ const isLoginAdmin = computed(() => {
 })
 const login = ref(false)
 const signup = ref(false)
+const mobilView = ref(null)
+
+//props
+
+const props = defineProps({
+  isMobile: Boolean,
+})
+//methods
 const closeLogin = () => {
   login.value = false
 }
@@ -53,6 +83,11 @@ const show = () => {
   console.log(auth.email)
 }
 
+//hooks
+
+onMounted(() => {
+  mobilView.value = window.innerWidth < 450
+})
 </script>
 
 <style lang="scss" scoped>
@@ -72,7 +107,7 @@ header {
   gap: 2px;
 }
 .logged {
-  grid-template-columns: 4fr 1fr 1fr 1fr;
+  grid-template-columns: 4fr 1fr 1fr 1fr 1fr 1fr 1fr;
 }
 
 .link {
@@ -93,6 +128,9 @@ a {
   justify-content: center;
   align-items: center;
   transition: all 0.8s ease;
+  font-size: 1.5em;
+  font-weight: 700;
+  gap: 0.3rem;
 }
 h1 {
   font-size: 2em;
@@ -102,6 +140,19 @@ h1 {
 .custom-button {
   min-width: 150px;
   border-right: 2px solid rgba(255, 255, 255, 0.664);
+}
+.nav-footer {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  justify-items: center;
+  align-items: center;
+  padding: 0.3rem;
+  .link {
+    padding: 0.7rem;
+    margin: 0;
+    width: fit-content;
+  }
 }
 @media (max-width: 600px) {
   a.link {

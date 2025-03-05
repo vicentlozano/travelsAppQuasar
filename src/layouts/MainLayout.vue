@@ -1,18 +1,34 @@
 <template>
-  <section class="principal-grid">
-    <HeaderComponent />
-    <main>
+  <section class="principal-grid" :class="{ mobile: isCompact }">
+    <div :class="{ 'mobile-header': isCompact }">
+      <HeaderComponent :isMobile="isCompact" />
+    </div>
+    <main :class="{ 'mobile-main': isCompact }">
       <RouterView />
     </main>
-    <FooterComponent />
+    <FooterComponent v-if="!isCompact" />
   </section>
 </template>
 
 <script setup>
 import FooterComponent from '../components/FooterComponent.vue'
 import HeaderComponent from '../components/HeaderComponent.vue'
+import { ref, onMounted,computed } from 'vue'
+let windowWidth = ref(window.innerWidth);
+let isCompact = computed(() => {
+      return windowWidth.value < 450? true: false;
+    });
 
-// import { RouterLink, RouterView } from 'vue-router'
+
+//methods
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth
+}
+
+//hooks
+onMounted(() => {
+  window.addEventListener("resize", updateWidth);
+})
 </script>
 
 <style scoped>
@@ -22,6 +38,24 @@ import HeaderComponent from '../components/HeaderComponent.vue'
   grid-template-rows: 100px 1fr minmax(60px, auto);
   width: 100%;
   height: 100%;
+}
+.mobile {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.mobile-main {
+  flex: 1;
+  overflow-y: auto; /* Scroll solo aquí */
+}
+.mobile-header {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgb(17, 17, 17); /* Asegura que tenga fondo */
+  z-index: 1000; /* Asegura que esté encima de todo */
+  box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Opcional: sombra superior */
 }
 main {
   width: 100%;
