@@ -16,6 +16,7 @@
           :background-image="travel.backgroundImage"
           :year="travel.year"
           :crud="true"
+          :user="travel.userName"
           :id="travel._id"
           @delete="deleteTravelSelected"
         />
@@ -60,7 +61,6 @@ const goAdd = () => {
 onMounted(async () => {
   const response = await getAllTravels()
   const userId = auth.userId
-  console.log(userId)
   console.log(response.result)
   travels.value = response.result.filter((travel) => travel.userId === userId)
 })
@@ -69,7 +69,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .all-travels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
   grid-gap: 3rem;
   justify-items: center;
   align-items: center;

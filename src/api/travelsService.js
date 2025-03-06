@@ -3,6 +3,8 @@ const endpoint = '/travels'
 const endpoint1 = '/users'
 const endpoint2 = '/login'
 const endpoint3 = '/loginWithToken'
+const endpoint4 = '/users/messages'
+
 
 export const getAllTravels = async () => {
   try {
@@ -77,3 +79,12 @@ export const loginWithToken = async (token) => {
     console.log(error)
   }
 }
+export const getMessages = async(userId) => {
+  try {
+    const response = await api.get(`${endpoint4}/${userId}`)
+    return response.data
+  } catch (error) {
+    throw error.name
+  }
+}
+

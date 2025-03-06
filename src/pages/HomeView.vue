@@ -12,6 +12,7 @@
         :price="travel.price"
         :background-image="travel.backgroundImage"
         :year="travel.year"
+        :user="travel.userName"
       />
     </section>
     <section v-if="!travels.length" class="no-travels">
@@ -20,13 +21,11 @@
     <section class="next-travels"></section>
     <q-dialog v-if="created" v-model="created" position="top" backdrop-filter="blur(4px)">
       <q-card style="width: 350px">
-        <q-card-section class="row items-center no-wrap bg-red" >
+        <q-card-section class="row items-center no-wrap bg-red">
           <div>
-            <div class="text-white ">{{ message }}</div>
+            <div class="text-white">{{ message }}</div>
           </div>
-
           <q-space />
-
           <q-btn flat round icon="close" @click="closePopUp" />
         </q-card-section>
       </q-card>
@@ -36,13 +35,13 @@
 
 <script setup>
 import TravelCard from '../components/TravelCard.vue'
-import { onMounted, ref,computed } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { getAllTravels } from '../api/travelsService'
 
 const travels = ref([])
 const message = ref('')
-const created = computed(()=> {
-  return message.value? true : false
+const created = computed(() => {
+  return message.value ? true : false
 })
 const closePopUp = () => {
   message.value = ''
@@ -83,7 +82,7 @@ $height-paralax-small: 30vh;
 .paralax {
   display: flex;
   width: 100%;
-  height: $height-paralax-large;
+  height: 50vh;
   background-image: url('../assets/boat.jpg');
   background-attachment: fixed;
   background-position: center;
@@ -94,7 +93,7 @@ $height-paralax-small: 30vh;
 }
 .last-travels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
   grid-gap: 3rem;
   justify-items: center;
   align-items: center;
@@ -124,15 +123,17 @@ h2 {
 .no-travels h3 {
   font-weight: 500;
 }
-
-@media (max-width: 450px) {
-  @media (max-width: 450px) {
-    .last-travels {
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    }
-    .card {
-      width: 300px;
-    }
+@media (max-width: 1310px) {
+  .last-travels  {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
   }
 }
+@media (max-width: 450px) {
+    .last-travels {
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    }
+    
+  }
+
 </style>

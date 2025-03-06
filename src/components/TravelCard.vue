@@ -1,18 +1,30 @@
 <template>
   <div class="principal">
     <div class="card">
-      <section class="parallax" :style="{ backgroundImage: `url(${backgroundImage})` }"></section>
+      <section class="travel-image" :style="{ backgroundImage: `url(${backgroundImage})` }">
+        <q-avatar size="70px" class="avatar">
+          <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
+        </q-avatar>
+        <div>
+          <h3 class="section-title">{{ name }}</h3>
+        </div>
+      </section>
       <section class="text">
-        <h3>{{ name }}</h3>
-        <p><span class="info">Dias:</span>{{ props.days }}</p>
         <p>
-          <span class="info">Sitios visitados:</span>
-          <span v-for="(place, index) in places" :key="place">
-            {{ place }}<span v-if="index < places.length - 1">, </span>
+          <span class="info">{{ props.days }} Dias</span>
+        </p>
+        <p>
+          <span v-for="(place, index) in places" :key="place" class="info"
+            >{{ place }}<span v-if="index < places.length - 1">, </span>
           </span>
         </p>
-        <p><span class="info">Precio:</span>{{ price }}€</p>
-        <p><span class="info">Año:</span>{{ year }}</p>
+        <p>
+          <span class="info">{{ price }}€</span>
+        </p>
+        <p>
+          <span class="info">{{ year }}</span>
+        </p>
+
         <section v-if="props.crud" class="crud">
           <button class="round-button" @click="deleteTravel(props.id)">
             <img class="delete" alt="delete" src="../assets/icons/icons8-delete-60.png" />
@@ -38,6 +50,7 @@ const props = defineProps({
   year: [String, Number],
   crud: Boolean,
   id: String,
+  user: String,
 })
 const emits = defineEmits(['delete'])
 const editTravel = (id) => {
@@ -52,12 +65,15 @@ const deleteTravel = (id) => {
 <style lang="scss" scoped>
 .card {
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 0.5fr;
   justify-content: center;
   align-items: center;
-  width: 400px;
-  height: 100%;
-  background-color: rgb(56, 54, 54);
+  height: fit-content;
+  width: fit-content;
+  background-image: url(../assets/landsphoto.jfif);
+
+  background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 40%, rgba(12, 12, 12, 0.757));
   border-radius: 25px;
 }
 .principal {
@@ -68,13 +84,18 @@ const deleteTravel = (id) => {
   align-items: center;
 }
 
-.parallax {
-  min-height: 400px;
+.travel-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  min-height: 280px;
   min-width: 400px;
   background-image: url(../assets/landsphoto.jfif);
-  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   border-top-left-radius: 25px;
-  border-top-right-radius: 25px;
+  border-bottom-left-radius: 25px;
 }
 .crud {
   display: flex;
@@ -107,19 +128,33 @@ img {
 img:hover {
   transform: scale(1.1);
 }
-
+.section-title {
+  background-color: rgba(32, 26, 26, 0.498);
+  font-weight: 700;
+}
 .text {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto auto auto auto;
   align-items: center;
-  padding: 1.2rem;
-  text-align: justify;
+  text-align: center;
+  text-align: center;
+  background-color: transparent;
+  padding: 0rem 1rem;
   width: 100%;
   height: 100%;
+  p {
+    font-size: 1.2em;
+    margin: 0;
+    color: white;
+    text-align: center;
+  }
 }
+
 h3 {
   color: white;
+  margin: 0;
   font-size: 1.4em;
+  border-bottom-left-radius: 25px;
 }
 .info {
   color: white;
@@ -130,10 +165,60 @@ p {
   text-align: center;
   color: rgb(119, 186, 206);
 }
-@media (max-width: 450px) {
-  .parallax {
+.avatar {
+  padding: 0.4rem;
+}
+
+@media (max-width: 1310px) {
+  .travel-image {
     min-height: 200px;
-    min-width: 200px;
+    min-width: 300px;
+    background-image: url(../assets/landsphoto.jfif);
+    border-bottom-left-radius: 0px;
+    border-top-right-radius: 25px;
+  }
+  .card {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+  }
+  h3 {
+    border-bottom-left-radius: 0px;
+  }
+}
+@media (max-width: 681px) {
+  .travel-image {
+    min-height: 200px;
+    min-width: 400px;
+    background-image: url(../assets/landsphoto.jfif);
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 25px;
+  }
+  .card {
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1.6fr 1fr;
+  }
+  h3 {
+    border-bottom-left-radius: 25px;
+  }
+}
+
+@media (max-width: 450px) {
+  .travel-image {
+    min-height: 200px;
+    min-width: 360px;
+    border-top-right-radius: 15px;
+    border-bottom-left-radius: 0px;
+  }
+  .card {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+  h3 {
+    border-bottom-left-radius: 0px;
   }
   .delete {
     height: 30px;
@@ -144,7 +229,6 @@ p {
     width: 30px;
   }
   .card {
-    width: 200px;
     height: 100%;
   }
 }

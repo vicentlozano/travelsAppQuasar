@@ -46,6 +46,7 @@ onMounted(() => {
 }
 .mobile-main {
   flex: 1;
+ margin-bottom: 55px;
   overflow-y: auto; /* Scroll solo aquí */
 }
 .mobile-header {
@@ -53,6 +54,7 @@ onMounted(() => {
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 55px;
   z-index: 1000; /* Asegura que esté encima de todo */
   box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Opcional: sombra superior */
 }

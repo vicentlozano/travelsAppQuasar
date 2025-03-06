@@ -42,7 +42,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     if (token) {
       try {
         const user = await loginWithToken(token)
-        if (user.result) {
+        if (user) {
           auth.setUser(user.result.id, user.result.name, user.result.email, user.result.role)
           $q.localStorage.set('isAuth', true)
           next()
