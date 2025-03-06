@@ -119,6 +119,7 @@ const handleSubmit = async () => {
       year: year.value,
       backgroundImage: backgroundImage.value,
       userId: auth.userId,
+      userName: auth.username
     }
     try {
       await createTravel(travel)
