@@ -20,9 +20,9 @@
     <section class="next-travels"></section>
     <q-dialog v-if="created" v-model="created" position="top" backdrop-filter="blur(4px)">
       <q-card style="width: 350px">
-        <q-card-section class="row items-center no-wrap">
+        <q-card-section class="row items-center no-wrap bg-red" >
           <div>
-            <div class="text-grey">{{ message }}</div>
+            <div class="text-white ">{{ message }}</div>
           </div>
 
           <q-space />

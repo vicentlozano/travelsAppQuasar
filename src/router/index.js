@@ -42,11 +42,18 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     if (token) {
       try {
         const user = await loginWithToken(token)
-        auth.setUser(user.result.id, user.result.name, user.result.email, user.result.role)
-        $q.localStorage.set('isAuth', true)
-        next()
+        if (user.result) {
+          auth.setUser(user.result.id, user.result.name, user.result.email, user.result.role)
+          $q.localStorage.set('isAuth', true)
+          next()
+        } else {
+          next()
+        }
       } catch (error) {
         console.error('Error al verificar el token:', error)
+        $q.localStorage.set('isAuth', false)
+        $q.localStorage.setItem('connection to database fail', true)
+        next()
       }
     } else {
       $q.localStorage.set('isAuth', false)

@@ -11,7 +11,7 @@
         <img :src="`https://cdn.quasar.dev/img/avatar${1 + 1}.jpg`" />
       </q-avatar>
     </div>
-    <q-input v-model="search" debounce="500" filled placeholder="Search" hint="Debouncing 500ms">
+    <q-input v-model="search" debounce="500" filled placeholder="Search">
       <template v-slot:append>
         <q-icon name="search" />
       </template>
@@ -32,5 +32,4 @@
   width: 100%;
   gap: 1rem;
 }
-
 </style>

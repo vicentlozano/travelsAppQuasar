@@ -37,7 +37,7 @@
 footer {
   display: inline;
   border-top: 2px solid white;
-  background-color: rgba(21, 144, 201, 0.323);
+  background-color: rgba(21, 144, 201, 0.625);
 }
 
 #footer {

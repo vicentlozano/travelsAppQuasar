@@ -35,7 +35,7 @@ onMounted(() => {
 #app,
 .principal-grid {
   display: grid;
-  grid-template-rows: 100px 1fr minmax(60px, auto);
+  grid-template-rows:100px  1fr 60px;
   width: 100%;
   height: 100%;
 }
@@ -53,7 +53,6 @@ onMounted(() => {
   bottom: 0;
   left: 0;
   width: 100%;
-  background: rgb(17, 17, 17); /* Asegura que tenga fondo */
   z-index: 1000; /* Asegura que esté encima de todo */
   box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2); /* Opcional: sombra superior */
 }
@@ -72,5 +71,11 @@ h3 {
   font-size: larger;
   padding: 0.3rem;
   margin: 0;
+}
+@media (max-width: 1069px) {
+  .principal-grid {
+  grid-template-rows:min-content  1fr 60px;
+ ;
+}
 }
 </style>

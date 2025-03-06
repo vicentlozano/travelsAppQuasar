@@ -1,21 +1,21 @@
 <template>
   <header v-if="!props.isMobile">
     <nav class="nav" :class="{ logged: isLoginUser || isLoginAdmin }">
-      <h1>MY TRAVELS</h1>
+      <h1 class="title">MY TRAVELS</h1>
       <RouterLink class="link" to="/" @click="show"
-        ><q-icon name="mdi-home" /><span>Home</span></RouterLink
+        ><q-icon name="mdi-home" /><span class="section-title">Home</span></RouterLink
       >
       <RouterLink v-if="auth.username" class="link" to="/chat">
-        <q-icon name="mdi-chat" /><span>Chat</span>
+        <q-icon name="mdi-chat" /><span class="section-title">Chat</span>
       </RouterLink>
       <RouterLink v-if="auth.username" class="link" to="/media"
-      ><q-icon name="mdi-multimedia"
-      /><span>Media</span></RouterLink>
+        ><q-icon name="mdi-multimedia" /><span class="section-title">Media</span></RouterLink
+      >
       <RouterLink v-if="auth.username" class="link" to="/search"
-      ><q-icon name="mdi-magnify"
-      /><span>Search</span></RouterLink>
+        ><q-icon name="mdi-magnify" /><span class="section-title">Search</span></RouterLink
+      >
       <RouterLink v-if="auth.username" class="link" to="/travels"
-        ><q-icon name="mdi-account" /><span>Travels</span></RouterLink
+        ><q-icon name="mdi-account" /><span class="section-title">Travels</span></RouterLink
       >
       <q-btn-group rounded v-if="!auth.username">
         <q-btn class="custom-button" @click="login = true">inicar sesion</q-btn>
@@ -72,6 +72,8 @@ const closeSignUp = () => {
 const logOut = () => {
   auth.deleteUser()
   $q.localStorage.removeItem('token')
+  $q.localStorage.set('isAuth', false)
+
   $q.notify({
     color: 'blue',
     textColor: 'white',
@@ -94,7 +96,7 @@ onMounted(() => {
 header {
   display: flex;
   flex-direction: column;
-  background-color: rgba(21, 144, 201, 0.323);
+  background-color: rgba(21, 144, 201, 0.625);
 }
 .nav {
   display: grid;
@@ -107,15 +109,16 @@ header {
   gap: 2px;
 }
 .logged {
-  grid-template-columns: 4fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.5rem;
 }
 
 .link {
   color: white;
   text-decoration: none;
-  width: 50%;
+  width: 70%;
   height: fit-content;
-  padding: 0.6rem;
+  padding: 0.2rem;
   border-radius: 25px;
 }
 .link:hover {
@@ -146,12 +149,43 @@ h1 {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-items: center;
+  border-top: 2px solid white;
+  background-color: rgba(21, 144, 201, 0.323);
+  background-color: rgba(21, 144, 201, 0.33);
+
   align-items: center;
   padding: 0.3rem;
   .link {
     padding: 0.7rem;
     margin: 0;
     width: fit-content;
+  }
+}
+@media (min-width: 1070px) and (max-width: 1500px) {
+  .link {
+    padding: 0.2rem 1.5rem;
+    width: 90%;
+    gap: 0.1rem;
+  }
+}
+@media (max-width: 1069px) {
+  .link {
+    padding: 0.2rem 1.5rem;
+    width: 90%;
+    gap: 0.1rem;
+  }
+  .logged {
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 0.5fr;
+    gap: 0.5rem;
+    .title {
+      grid-row: 1/2;
+      grid-column: 1 / -1;
+      height: fit-content;
+    }
+    .section-title {
+      display: none;
+    }
   }
 }
 @media (max-width: 600px) {

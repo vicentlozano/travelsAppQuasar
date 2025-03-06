@@ -1,9 +1,9 @@
 <template>
   <div>
-    <h2>TODOS MIS VIAJES</h2>
     <div class="container">
-      <div class="spinner">
-        <q-spinner-oval v-if="travels.length == 0" color="purple" size="4em" class="spinner" />
+      <h2>TODOS MIS VIAJES</h2>
+      <div v-if="travels.length == 0" class="spinner">
+        <q-spinner-oval  color="purple" size="4em" class="spinner" />
       </div>
       <section v-if="travels.length > 0" class="all-travels">
         <TravelCard
@@ -136,7 +136,9 @@ h4 {
   justify-content: center;
   align-items: center;
 }
-
+.container{
+  height: 100%;
+}
 @media (max-width: 450px) {
   .all-travels {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
