@@ -84,8 +84,8 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { createTravel } from '../api/travelsService'
 import TravelCard from '../components/TravelCard.vue'
-import { useTokenStore } from '../stores/user'
-const auth = useTokenStore()
+import { useUserStore } from '../stores/user'
+const auth = useUserStore()
 const router = useRouter()
 
 const name = ref('')
@@ -147,7 +147,7 @@ onMounted(() => {
 <style scoped>
 .container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100%;
