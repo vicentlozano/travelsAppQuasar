@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'https://travelsbackend.onrender.com',
+  baseURL: 'http://localhost:7002',
   timeout: 6000,
   headers: { 'Content-Type': 'application/json' },
 })

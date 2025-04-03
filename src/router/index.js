@@ -53,6 +53,8 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         console.error('Error al verificar el token:', error)
         $q.localStorage.set('isAuth', false)
         $q.localStorage.setItem('connection to database fail', true)
+        $q.localStorage.removeItem('token')
+
         next()
       }
     } else {

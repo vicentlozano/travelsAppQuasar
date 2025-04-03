@@ -1,5 +1,5 @@
 import api from './axios.js'
-const endpoint = '/travels'
+const endpoint = '/wsTravels/Travels/'
 const endpoint1 = '/users'
 const endpoint2 = '/login'
 const endpoint3 = '/loginWithToken'
@@ -8,7 +8,7 @@ const endpoint4 = '/users/messages'
 
 export const getAllTravels = async () => {
   try {
-    const response = await api.get(endpoint)
+    const response = await api.get(`${endpoint}wsGetAllTravels`)
     return response.data
   } catch (error) {
     console.log(error)
