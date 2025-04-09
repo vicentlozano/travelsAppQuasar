@@ -13,12 +13,11 @@
 <script setup>
 import FooterComponent from '../components/FooterComponent.vue'
 import HeaderComponent from '../components/HeaderComponent.vue'
-import { ref, onMounted,computed } from 'vue'
-let windowWidth = ref(window.innerWidth);
+import { ref, onMounted, computed } from 'vue'
+let windowWidth = ref(window.innerWidth)
 let isCompact = computed(() => {
-      return windowWidth.value < 450? true: false;
-    });
-
+  return windowWidth.value < 450 ? true : false
+})
 
 //methods
 const updateWidth = () => {
@@ -27,7 +26,7 @@ const updateWidth = () => {
 
 //hooks
 onMounted(() => {
-  window.addEventListener("resize", updateWidth);
+  window.addEventListener('resize', updateWidth)
 })
 </script>
 
@@ -35,7 +34,12 @@ onMounted(() => {
 #app,
 .principal-grid {
   display: grid;
-  grid-template-rows:100px  1fr 60px;
+  grid-template-rows: 100px 1fr 60px;
+  width: 100%;
+  height: 100%;
+}
+.principal {
+  display: grid;
   width: 100%;
   height: 100%;
 }
@@ -46,7 +50,7 @@ onMounted(() => {
 }
 .mobile-main {
   flex: 1;
- margin-bottom: 55px;
+  margin-bottom: 55px;
   overflow-y: auto; /* Scroll solo aquí */
 }
 .mobile-header {
@@ -76,8 +80,7 @@ h3 {
 }
 @media (max-width: 1069px) {
   .principal-grid {
-  grid-template-rows:min-content  1fr 60px;
- ;
-}
+    grid-template-rows: min-content 1fr 60px;
+  }
 }
 </style>

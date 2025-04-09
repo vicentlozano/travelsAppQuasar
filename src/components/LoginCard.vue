@@ -42,8 +42,10 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { logIn } from '../api/travelsService'
+import { logIn } from '../utils/api/post.js'
 import { useQuasar } from 'quasar'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 import md5 from 'md5'
 import { useUserStore } from '../stores/user'
 const auth = useUserStore()
@@ -66,57 +68,38 @@ const close = () => {
 }
 const loginAction = async () => {
   const user = {
-    email: email.value,
-    password: md5(password.value),
+    user: email.value,
+    hash: md5(password.value),
   }
-  try {
-    const response = await logIn(user)
-    console.log(response)
-    if (response) {
-      if (response.ok) {
-        if (!$q.localStorage.getItem('token')) {
-          $q.localStorage.set('token', response.result.token)
-          auth.setUser(
-            response.result.id,
-            response.result.name,
-            response.result.email,
-            response.result.role,
-          )
 
-          $q.notify({
-            color: 'green-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'user is logged',
-          })
-        } else {
-          $q.notify({
-            color: 'brown-4',
-            textColor: 'white',
-            icon: 'cloud_done',
-            message: 'user is already logged',
-          })
-        }
-        close()
-      } else {
-        $q.notify({
-          color: 'red',
-          textColor: 'white',
-          icon: 'cloud_done',
-          message: response.error,
-        })
-      }
+  try {
+    let response = await logIn(user)
+    response = response.data
+    if (!response.error.status && !$q.localStorage.getItem('token')) {
+      $q.localStorage.set('token', response.data.token)
+      $q.localStorage.set('isAuth', true)
+
+      auth.setUser(
+        response.data.idUser,
+        response.data.name,
+        response.data.email,
+        response.data.role,
+      )
+
+      $q.notify({
+        color: 'green-4',
+        textColor: 'white',
+        icon: 'cloud_done',
+        message: 'user is logged',
+      })
     }
+    close()
+    router.push({ name: 'home' })
   } catch (error) {
-    $q.notify({
-      color: 'red',
-      textColor: 'white',
-      icon: 'cloud_done',
-      message: error.message,
-    })
     console.log(error)
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+</style>

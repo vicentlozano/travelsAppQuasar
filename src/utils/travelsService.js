@@ -1,19 +1,17 @@
-import api from './axios.js'
+import api from './axiosConfig.js'
 const endpoint = '/wsTravels/Travels/'
-const endpoint1 = '/users'
-const endpoint2 = '/login'
-const endpoint3 = '/loginWithToken'
-const endpoint4 = '/users/messages'
+const endpoint1 = '/wsTravels/users/'
+const endpoint2 = '/wsTravels/login/'
+const endpoint4 = '/wsTravels/users/messages'
 
-
-export const getAllTravels = async () => {
-  try {
-    const response = await api.get(`${endpoint}wsGetAllTravels`)
-    return response.data
-  } catch (error) {
-    console.log(error)
-  }
-}
+// export const getAllTravels = async () => {
+//   try {
+//     const response = await api.get(`${endpoint}wsGetAllTravels`)
+//     return response.data
+//   } catch (error) {
+//     console.log(error)
+//   }
+// }
 
 export const getTravelById = async (id) => {
   try {
@@ -53,10 +51,10 @@ export const deleteTravel = async (id) => {
 
 export const logIn = async (userCredentials) => {
   try {
-    const response = await api.post(endpoint2, userCredentials)
+    const response = await api.post(`${endpoint2}wsLogin`, userCredentials)
     return response.data
   } catch (error) {
-    console.log(error)
+    return error
   }
 }
 export const signUp = async (user) => {
@@ -67,19 +65,15 @@ export const signUp = async (user) => {
     console.log(error)
   }
 }
-export const loginWithToken = async (token) => {
+export const loginWithToken = async () => {
   try {
-    const response = await api.post(endpoint3, {},{
-      headers: { 
-        Authorization: `Bearer ${token}`
-      } 
-    })
+    const response = await api.post(`${endpoint2}wsLoginToken`)
     return response.data
   } catch (error) {
     console.log(error)
   }
 }
-export const getMessages = async(userId) => {
+export const getMessages = async (userId) => {
   try {
     const response = await api.get(`${endpoint4}/${userId}`)
     return response.data
@@ -87,4 +81,3 @@ export const getMessages = async(userId) => {
     throw error.name
   }
 }
-

@@ -17,10 +17,6 @@
       <RouterLink v-if="auth.username" class="link" to="/travels"
         ><q-icon name="mdi-account" /><span class="section-title">Travels</span></RouterLink
       >
-      <q-btn-group rounded v-if="!auth.username">
-        <q-btn class="custom-button" @click="login = true">inicar sesion</q-btn>
-        <q-btn @click="signup = true">Registrarse</q-btn></q-btn-group
-      >
 
       <q-btn v-if="auth.username" @click="logOut">Log Out</q-btn>
     </nav>
@@ -47,6 +43,8 @@ import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 const $q = useQuasar()
 const auth = useUserStore()
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const isLoginUser = computed(() => {
   return auth.role === 'user' ? true : false
 })
@@ -72,7 +70,8 @@ const closeSignUp = () => {
 const logOut = () => {
   auth.deleteUser()
   $q.localStorage.removeItem('token')
-  $q.localStorage.set('isAuth', false)
+  $q.localStorage.setItem('isAuth', false)
+
 
   $q.notify({
     color: 'blue',
@@ -80,6 +79,7 @@ const logOut = () => {
     icon: 'cloud_done',
     message: 'User log Out',
   })
+  router.push({ name: 'login' })
 }
 const show = () => {
   console.log(auth.email)

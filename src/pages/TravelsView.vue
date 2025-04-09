@@ -3,7 +3,7 @@
     <div class="container">
       <h2>TODOS MIS VIAJES</h2>
       <div v-if="travels.length == 0" class="spinner">
-        <q-spinner-oval  color="purple" size="4em" class="spinner" />
+        <q-spinner-oval color="purple" size="4em" class="spinner" />
       </div>
       <section v-if="travels.length > 0" class="all-travels">
         <TravelCard
@@ -39,7 +39,7 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getAllTravels, deleteTravel } from '../api/travelsService'
+import { getAllTravels, deleteTravel } from '../utils/api/travelsService'
 import TravelCard from '../components/TravelCard.vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
@@ -49,7 +49,7 @@ const travels = ref([])
 const deleteTravelSelected = async (id) => {
   try {
     deleteTravel(id)
-    travels.value = travels.value.filter((travel) => travel._id !== id)
+    travels.value = travels.value.filter((travel) => travel.id !== id)
   } catch (error) {
     console.log(error)
   }
@@ -61,8 +61,7 @@ const goAdd = () => {
 onMounted(async () => {
   const response = await getAllTravels()
   const userId = auth.userId
-  console.log(response.result)
-  travels.value = response.result.filter((travel) => travel.userId === userId)
+  travels.value = response.data.filter((travel) => travel.user_id === userId)
 })
 </script>
 
@@ -136,7 +135,7 @@ h4 {
   justify-content: center;
   align-items: center;
 }
-.container{
+.container {
   height: 100%;
 }
 @media (max-width: 450px) {

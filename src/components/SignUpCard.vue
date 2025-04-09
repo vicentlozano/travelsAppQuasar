@@ -53,7 +53,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { signUp } from 'src/api/travelsService'
+import {signUp} from '../utils/api/post.js'
 import md5 from 'md5'
 const props = defineProps({
   signup: Boolean,

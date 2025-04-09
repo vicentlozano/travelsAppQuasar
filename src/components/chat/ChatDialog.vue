@@ -27,14 +27,13 @@
 </template>
 
 <script setup>
-import {ref,onMounted} from 'vue'
-import { getMessages } from 'src/api/travelsService';
-import { useUserStore } from 'src/stores/user';
-const user = useUserStore();
+import { ref, onMounted } from 'vue'
+import { getMessages } from 'src/utils/api/travelsService'
+import { useUserStore } from 'src/stores/user'
+const user = useUserStore()
 const messages = ref([])
-onMounted(async ()=> {
-  
-  messages.value = await getMessages(user.userId);
+onMounted(async () => {
+  messages.value = await getMessages(user.userId)
 })
 </script>
 

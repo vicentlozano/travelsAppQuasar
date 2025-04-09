@@ -26,7 +26,7 @@
 import TravelCard from 'src/components/TravelCard.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
-import { getAllTravels } from '../api/travelsService'
+import { getAllTravels } from '../utils/api/travelsService'
 
 const auth = useUserStore()
 const travels = ref([])

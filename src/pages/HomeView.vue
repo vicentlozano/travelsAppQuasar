@@ -11,8 +11,8 @@
         :places="travel.places"
         :price="travel.price"
         :background-image="travel.backgroundImage"
-        :year="travel.year"
-        :user="travel.userName"
+        :travel_date="travel.travel_date"
+        :user="travel.user_name"
       />
     </section>
     <section v-if="!travels.length" class="no-travels">
@@ -36,7 +36,7 @@
 <script setup>
 import TravelCard from '../components/TravelCard.vue'
 import { onMounted, ref, computed } from 'vue'
-import { getAllTravels } from '../api/travelsService'
+import { getAllTravels } from '../utils/api/get.js'
 
 const travels = ref([])
 const message = ref('')
@@ -48,17 +48,18 @@ const closePopUp = () => {
 }
 
 onMounted(async () => {
-  const response = await getAllTravels()
-  if (response) {
-    const totalTravels = response.result.length
+  try {
+    let response = await getAllTravels()
+    response = response.data
+    const totalTravels = response.data.length
 
     if (totalTravels > 4) {
-      travels.value = response.result.slice(totalTravels - 4, totalTravels)
+      travels.value = response.data.slice(totalTravels - 4, totalTravels)
     } else {
-      travels.value = response.result
+      travels.value = response.data
     }
-  } else {
-    message.value = 'Connection to database failed'
+  } catch (error) {
+    console.log(error)
   }
 })
 </script>
@@ -124,16 +125,14 @@ h2 {
   font-weight: 500;
 }
 @media (max-width: 1310px) {
-  .last-travels  {
+  .last-travels {
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 1rem;
   }
 }
 @media (max-width: 450px) {
-    .last-travels {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-    
+  .last-travels {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
-
+}
 </style>

@@ -22,7 +22,7 @@
           <span class="info">{{ price }}€</span>
         </p>
         <p>
-          <span class="info">{{ year }}</span>
+          <span class="info">{{ travel_date }}</span>
         </p>
 
         <section v-if="props.crud" class="crud">
@@ -47,7 +47,7 @@ const props = defineProps({
   places: Array,
   price: [String, Number],
   backgroundImage: String,
-  year: [String, Number],
+  travel_date: [String, Number],
   crud: Boolean,
   id: String,
   user: String,

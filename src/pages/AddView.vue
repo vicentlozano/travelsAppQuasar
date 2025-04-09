@@ -82,7 +82,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { createTravel } from '../api/travelsService'
+import { createTravel } from '../utils/api/travelsService'
 import TravelCard from '../components/TravelCard.vue'
 import { useUserStore } from '../stores/user'
 const auth = useUserStore()
@@ -119,7 +119,7 @@ const handleSubmit = async () => {
       year: year.value,
       backgroundImage: backgroundImage.value,
       userId: auth.userId,
-      userName: auth.username
+      userName: auth.username,
     }
     try {
       await createTravel(travel)

@@ -6,7 +6,7 @@ import {
   createWebHashHistory,
 } from 'vue-router'
 import routes from './routes'
-import { loginWithToken } from 'src/api/travelsService'
+import { loginWithToken } from '../utils/api/post'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 
@@ -39,29 +39,38 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     const $q = useQuasar()
     const auth = useUserStore()
     const token = $q.localStorage.getItem('token')
+  
+    const isLoginRoute = to.name === 'login'
+  
+    const redirectToLogin = () => {
+      $q.localStorage.set('isAuth', false)
+      $q.localStorage.remove('token')
+      if (!isLoginRoute) {
+        next({ name: 'login' })
+      } else {
+        next() // ja estem a login, deixem continuar
+      }
+    }
+  
     if (token) {
       try {
-        const user = await loginWithToken(token)
-        if (user) {
-          auth.setUser(user.result.id, user.result.name, user.result.email, user.result.role)
+        let user = await loginWithToken(token)
+        user = user.data
+  
+        if (!user.error.status && user.data) {
+          auth.setUser(user.data.userId, user.data.name, user.data.email, user.data.role)
           $q.localStorage.set('isAuth', true)
           next()
         } else {
-          next()
+          redirectToLogin()
         }
       } catch (error) {
         console.error('Error al verificar el token:', error)
-        $q.localStorage.set('isAuth', false)
-        $q.localStorage.setItem('connection to database fail', true)
-        $q.localStorage.removeItem('token')
-
-        next()
+        redirectToLogin()
       }
     } else {
-      $q.localStorage.set('isAuth', false)
-      next()
+      redirectToLogin()
     }
   })
-
   return Router
 })

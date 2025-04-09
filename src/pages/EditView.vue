@@ -49,7 +49,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { getTravelById, updateTravel } from '../api/travelsService'
+import { getTravelById, updateTravel } from '../utils/api/travelsService'
 
 const router = useRouter()
 import TravelCard from '../components/TravelCard.vue'

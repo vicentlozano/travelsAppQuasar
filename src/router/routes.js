@@ -5,6 +5,11 @@ const routes = [
     component: () => import('../pages/HomeView.vue'),
   },
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('../pages/LoginView.vue'),
+  },
+  {
     path: '/chat',
     name: 'chat',
     // route level code-splitting
