@@ -1,5 +1,5 @@
 <template>
-  <q-dialog v-model="isLoginAction" persistent>
+  <q-dialog v-model="loginInjector" persistent>
     <q-card style="min-width: 350px">
       <q-form @submit="loginAction" class="q-gutter-md">
         <q-card-section>
@@ -32,6 +32,7 @@
         </q-card-section>
 
         <q-card-actions align="right" class="text-primary">
+          <q-btn flat label="Register" @click="closeRegister" type="button" />
           <q-btn flat label="Cancel" v-close-popup @click="close" />
           <q-btn flat label="Loggin" v-close-popup type="submit" />
         </q-card-actions>
@@ -41,10 +42,12 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { logIn } from '../utils/api/post.js'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
+import { notifyError, notifySuccess } from 'src/utils/utils.js'
+
 const router = useRouter()
 import md5 from 'md5'
 import { useUserStore } from '../stores/user'
@@ -54,18 +57,15 @@ const $q = useQuasar()
 const props = defineProps({
   login: Boolean,
 })
-const emits = defineEmits(['closeLogin'])
-const loginInjector = computed(() => {
-  return props.login ? true : false
-})
-const isLoginAction = ref(loginInjector)
+const loginInjector = ref(props.login)
 const email = ref('')
 const password = ref('')
 
 //methods
 const close = () => {
-  emits('closeLogin', false)
+  loginInjector.value = false
 }
+
 const loginAction = async () => {
   const user = {
     user: email.value,
@@ -86,20 +86,16 @@ const loginAction = async () => {
         response.data.role,
       )
 
-      $q.notify({
-        color: 'green-4',
-        textColor: 'white',
-        icon: 'cloud_done',
-        message: 'user is logged',
-      })
+      notifySuccess('User is logged')
+      close()
+      router.push({ name: 'home' })
+    } else {
+      notifyError('An error ocurred')
     }
-    close()
-    router.push({ name: 'home' })
   } catch (error) {
     console.log(error)
   }
 }
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
