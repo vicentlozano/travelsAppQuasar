@@ -32,12 +32,14 @@ function get(endpoint, params) {
     })
 }
 
-export function getAllUsersInfo() {
-  return get('Control/User/wsGetAllUsersProjectsAndLanguages')
-}
+
 export const getAllTravels = () => {
   return get('Travels/wsGetAllTravels')
 }
+export const getMessages = (idUser) => {
+  return get('Messages/wsGetMessages',idUser)
+}
+
 
 function closeUserSession(error) {
   //si la sesión ha caducado o el token es invalido y no se esta cerrando sesión por el usuario

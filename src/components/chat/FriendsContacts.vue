@@ -1,12 +1,11 @@
 <template>
   <div class="bar">
-    <div class="q-pa-md q-gutter-sm" style="height: 80px">
+    <div class="q-pa-md  slider" style="height: 80px">
       <q-avatar
         v-for="n in 15"
         :key="n"
         size="40px"
         class="overlapping"
-        :style="`left: ${n * 25}px`"
       >
         <img :src="`https://cdn.quasar.dev/img/avatar${1 + 1}.jpg`" />
       </q-avatar>
@@ -24,7 +23,11 @@
 <style lang="scss" scoped>
 .overlapping {
   border: 2px solid white;
-  position: absolute;
+}
+.slider{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 40px);
+  gap:1rem;
 }
 .bar {
   display: grid;

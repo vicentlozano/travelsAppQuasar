@@ -10,7 +10,7 @@
         :days="travel.days"
         :places="travel.places"
         :price="travel.price"
-        :background-image="travel.backgroundImage"
+        :background-image="travel.background_image"
         :travel_date="travel.travel_date"
         :user="travel.user_name"
       />

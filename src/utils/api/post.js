@@ -1,7 +1,6 @@
 import { LocalStorage } from 'quasar'
-import {api} from '../../boot/axios'
+import { api } from '../../boot/axios'
 import { notifyError } from 'src/utils/utils'
-
 
 let isReloading = false
 const errorCode = 54321
@@ -20,18 +19,17 @@ function post(endpoint, params) {
       return res
     })
     .catch((error) => {
-      closeUserSession(error);
+      closeUserSession(error)
       if (!isReloading) {
         if (error.response.data.error && error.response.data.error.code === errorCode) {
-          notifyError(error.response.data.error.source);
+          notifyError(error.response.data.error.source)
         } else {
-          notifyError("defaultError");
+          notifyError('defaultError')
         }
       }
-      throw error;
-    });
+      throw error
+    })
 }
-
 
 function closeUserSession(error) {
   //si la sesión ha caducado o el token es invalido y no se esta cerrando sesión por el usuario
@@ -61,15 +59,9 @@ function closeUserSession(error) {
  * @param {Array} projects: Projects to which the user is linked to.
  *
  */
-export function createOrEditUser(user) {
-  return post('Control/User/wsCreateOrEditUser', {
-    idUser: user.idUser,
-    company: user.company,
-    email: user.email,
-    pass: user.pass,
-    accessLevel: 1,
-    projects: user.projects,
-  })
+
+export function createTravel(travel) {
+  return post('Travels/wsCreateTravel', travel)
 }
 
 export const logIn = (user) => {

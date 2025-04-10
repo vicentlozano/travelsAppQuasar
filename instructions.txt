@@ -1,0 +1,10 @@
+una vez clonado el repositorio, npm install para cargar librerias.
+para levantar el proyecto: quasar dev
+
+
+
+node version =>  22.12.0
+
+
+Usuario para testear: admin@gmail.com
+Pass: admin

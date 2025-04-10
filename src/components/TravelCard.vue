@@ -14,8 +14,8 @@
           <span class="info">{{ props.days }} Dias</span>
         </p>
         <p>
-          <span v-for="(place, index) in places" :key="place" class="info"
-            >{{ place }}<span v-if="index < places.length - 1">, </span>
+          <span v-for="(place) in places" :key="place" class="info-places"
+            >{{ place }}
           </span>
         </p>
         <p>
@@ -49,7 +49,7 @@ const props = defineProps({
   backgroundImage: String,
   travel_date: [String, Number],
   crud: Boolean,
-  id: String,
+  id: Number,
   user: String,
 })
 const emits = defineEmits(['delete'])
@@ -60,6 +60,7 @@ const editTravel = (id) => {
 const deleteTravel = (id) => {
   emits('delete', id)
 }
+console.log(props.places)
 </script>
 
 <style lang="scss" scoped>
@@ -159,6 +160,9 @@ h3 {
 .info {
   color: white;
   margin-right: 0.6rem;
+}
+.info-places{
+  font-size: 0.9rem;
 }
 p {
   width: 100%;

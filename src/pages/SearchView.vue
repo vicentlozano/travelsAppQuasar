@@ -13,10 +13,10 @@
         :days="travel.days"
         :places="travel.places"
         :price="travel.price"
-        :background-image="travel.backgroundImage"
-        :year="travel.year"
-        :user="travel.userName"
-        :id="travel._id"
+        :background-image="travel.background_image"
+        :year="travel.travel_date"
+        :user="travel.user_name"
+        :id="travel.user_id"
       />
     </section>
   </div>
@@ -26,11 +26,12 @@
 import TravelCard from 'src/components/TravelCard.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
-import { getAllTravels } from '../utils/api/travelsService'
+import { getAllTravels } from '../utils/api/get'
 
 const auth = useUserStore()
 const travels = ref([])
 const search = ref('')
+const userId = ref(null)
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 const travelsSearched = computed(() => {
   return search.value
@@ -45,18 +46,21 @@ const travelsSearched = computed(() => {
                 removeAccents(search.value.toLowerCase()),
               ),
             )) ||
-          removeAccents(travel.userName.toLowerCase()).includes(
+          removeAccents(travel.user_name.toLowerCase()).includes(
             removeAccents(search.value.toLowerCase()),
           ),
       )
     : travels.value
 })
 onMounted(async () => {
-  const response = await getAllTravels()
-  const userId = auth.userId
-  console.log(userId)
-  console.log(response.result)
-  travels.value = response.result
+  userId.value = auth.userId
+  try {
+    let response = await getAllTravels()
+    response = response.data
+    travels.value = response.data
+  } catch (error) {
+    console.log(error)
+  }
 })
 </script>
 

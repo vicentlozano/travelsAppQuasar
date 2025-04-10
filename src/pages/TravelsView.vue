@@ -13,11 +13,11 @@
           :days="travel.days"
           :places="travel.places"
           :price="travel.price"
-          :background-image="travel.backgroundImage"
-          :year="travel.year"
+          :background-image="travel.background_image"
+          :year="travel.travel_date"
           :crud="true"
-          :user="travel.userName"
-          :id="travel._id"
+          :user="travel.user_name"
+          :id="travel.id"
           @delete="deleteTravelSelected"
         />
         <section class="card">
@@ -39,17 +39,19 @@
 
 <script setup>
 import { onMounted, ref } from 'vue'
-import { getAllTravels, deleteTravel } from '../utils/api/travelsService'
+import { getAllTravels } from '../utils/api/get'
+import { deleteTravelById } from '../utils/api/delete'
+
 import TravelCard from '../components/TravelCard.vue'
 import { useRouter } from 'vue-router'
 import { useUserStore } from '../stores/user'
 const auth = useUserStore()
 const router = useRouter()
 const travels = ref([])
-const deleteTravelSelected = async (id) => {
+const deleteTravelSelected = async (idSelected) => {
   try {
-    deleteTravel(id)
-    travels.value = travels.value.filter((travel) => travel.id !== id)
+    await deleteTravelById({ id: idSelected })
+    travels.value = travels.value.filter((travel) => travel.id !== idSelected)
   } catch (error) {
     console.log(error)
   }
@@ -61,7 +63,7 @@ const goAdd = () => {
 onMounted(async () => {
   const response = await getAllTravels()
   const userId = auth.userId
-  travels.value = response.data.filter((travel) => travel.user_id === userId)
+  travels.value = response.data.data.filter((travel) => travel.user_id === userId)
 })
 </script>
 

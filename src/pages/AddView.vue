@@ -9,19 +9,6 @@
       :background-image="backgroundImage"
       :year="year"
     />
-    <q-dialog v-if="created" v-model="created" position="top" backdrop-filter="blur(4px)">
-      <q-card style="width: 350px">
-        <q-card-section class="row items-center no-wrap">
-          <div>
-            <div class="text-grey">Viaje creado correctamente!</div>
-          </div>
-
-          <q-space />
-
-          <q-btn flat round icon="close" @click="go" />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
     <section class="edit">
       <form @submit.prevent="handleSubmit" class="edit">
         <input class="custom-input" v-model="name" placeholder="Introduce el nombre" required />
@@ -58,8 +45,8 @@
         <input
           class="custom-input"
           v-model="year"
-          placeholder="Introduce el año"
-          type="number"
+          placeholder="Introduce la fecha"
+          type="date"
           required
         />
         <span v-if="errors.year" class="error">{{ errors.year }}</span>
@@ -82,9 +69,10 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { createTravel } from '../utils/api/travelsService'
+import { createTravel } from '../utils/api/post'
 import TravelCard from '../components/TravelCard.vue'
 import { useUserStore } from '../stores/user'
+import { notifyError, notifySuccess } from 'src/utils/utils'
 const auth = useUserStore()
 const router = useRouter()
 
@@ -96,7 +84,6 @@ const price = ref('')
 const year = ref('')
 const backgroundImage = ref('')
 const errors = ref({})
-const created = ref(false)
 
 const handleSubmit = async () => {
   errors.value = {}
@@ -106,8 +93,8 @@ const handleSubmit = async () => {
   if (days.value < 1) errors.value.days = 'Los días son obligatorios.'
   if (places.value.length < 1) errors.value.places = 'Los lugares son obligatorios.'
   if (price.value < 1) errors.value.price = 'El precio no es válido.'
-  if (year.value < 1900 || year.value > new Date().getFullYear())
-    errors.value.year = 'El año no es válido.'
+  // if (year)
+  //   errors.value.year = 'La fecha no es válido.'
   if (!backgroundImage.value) errors.value.backgroundImage = 'La URL de la imagen es obligatoria.'
 
   if (Object.keys(errors.value).length === 0) {
@@ -116,15 +103,19 @@ const handleSubmit = async () => {
       days: days.value,
       places: places.value,
       price: price.value,
-      year: year.value,
-      backgroundImage: backgroundImage.value,
-      userId: auth.userId,
-      userName: auth.username,
+      travel_date: year.value,
+      background_image: backgroundImage.value,
+      user_id: auth.userId,
+      user_name: auth.username,
     }
     try {
-      await createTravel(travel)
-      created.value = true
+      const response = await createTravel({ travel: travel })
+      if (!response.data.error.status) {
+        notifySuccess('Viaje creado correctamente!')
+        go()
+      }
     } catch (error) {
+      notifyError('Error al crear el viaje:', error)
       console.log('Error al crear el viaje:', error.response ? error.response.data : error.message)
     }
   }

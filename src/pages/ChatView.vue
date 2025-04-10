@@ -1,14 +1,8 @@
 <template>
   <section class="chat">
-    <FriendsContacts /> <ChatDialog />
-    <q-input
-      standout
-      bottom-slots
-      v-model="text"
-      label="Label"
-      :dense="dense"
-      class="keyboard"
-    >
+    <FriendsContacts />
+    <ChatDialog />
+    <q-input standout bottom-slots v-model="text" label="Label" :dense="dense" class="keyboard">
       <template v-slot:before>
         <q-avatar>
           <img src="https://cdn.quasar.dev/img/avatar5.jpg" />
@@ -19,7 +13,6 @@
         <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
         <q-icon name="schedule" />
       </template>
-
 
       <template v-slot:after>
         <q-btn round dense flat icon="send" />
