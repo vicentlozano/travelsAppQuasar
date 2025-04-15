@@ -1,4 +1,6 @@
 <template>
+  <div class="page-basic">
+    <HeaderComponent class="absolute-top" />
   <div class="container">
     <TravelCard
       v-if="travel"
@@ -44,12 +46,16 @@
       </form>
     </section>
   </div>
+</div>
+
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getTravelById, updateTravel } from '../utils/api/travelsService'
+import HeaderComponent from 'src/components/HeaderComponent.vue'
+
 
 const router = useRouter()
 import TravelCard from '../components/TravelCard.vue'
@@ -141,5 +147,15 @@ const handleSubmit = async () => {
 .error {
   color: red;
   font-size: 0.8rem;
+}
+.page-basic {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: auto 1fr;
+}
+.absolute-top {
+  position: fixed;
+  top: 1;
 }
 </style>

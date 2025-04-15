@@ -171,6 +171,7 @@ p {
 }
 .avatar {
   padding: 0.4rem;
+  z-index: -1;
 }
 
 @media (max-width: 1310px) {

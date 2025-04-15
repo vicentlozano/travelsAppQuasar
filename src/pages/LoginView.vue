@@ -1,38 +1,36 @@
 <template>
   <div class="login-page">
-    <div class="fallout">
-      <transition name="fade" mode="out-in">
-        <LoginCard :login="true" />
-      </transition>
-    </div>
+    <transition name="fade" mode="out-in">
+      <LoginCard :login="true" />
+    </transition>
   </div>
 </template>
-
 <script setup>
 import LoginCard from 'src/components/LoginCard.vue'
 </script>
 
 <style lang="scss" scoped>
+@keyframes gradient {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
 
 .login-page {
-  display: grid;
-  grid-template-rows: auto;
-  height: 100%;
+  height: 100vh;
   width: 100%;
-  z-index: -1;
-  background-image: url('../assets/boat.jpg');
-  background-image: url('../assets/boat.jpg');
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-position-x: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(-127deg, $gray-pure 50%, $gray-accent 75%);
+  background-size: 800% 800%;
+  animation: gradient 10s ease infinite;
 }
-.fallout{
-  display: grid;
-  height: 100%;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.466);
-  backdrop-filter: blur(5px);
-  }
 </style>

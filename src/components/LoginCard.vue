@@ -1,44 +1,42 @@
 <template>
-  <q-dialog v-model="loginInjector" persistent>
-    <q-card style="min-width: 350px">
-      <q-form @submit="loginAction" class="q-gutter-md">
-        <q-card-section>
-          <div class="text-h6" align="center">Your email or user name</div>
-        </q-card-section>
+  <q-card style="min-width: 350px">
+    <q-form @submit="loginAction" class="q-gutter-md">
+      <q-card-section>
+        <div class="text-h6" align="center">Your email or user name</div>
+      </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-input
-            dense
-            v-model="email"
-            autofocus
-            @keyup.enter="prompt = false"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-        </q-card-section>
-        <q-card-section>
-          <div class="text-h6" align="center">Your password</div>
-        </q-card-section>
+      <q-card-section class="q-pt-none">
+        <q-input
+          dense
+          v-model="email"
+          autofocus
+          @keyup.enter="prompt = false"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
+      </q-card-section>
+      <q-card-section>
+        <div class="text-h6" align="center">Your password</div>
+      </q-card-section>
 
-        <q-card-section class="q-pt-none">
-          <q-input
-            dense
-            v-model="password"
-            autofocus
-            @keyup.enter="prompt = false"
-            lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-        </q-card-section>
+      <q-card-section class="q-pt-none">
+        <q-input
+          dense
+          v-model="password"
+          autofocus
+          @keyup.enter="prompt = false"
+          lazy-rules
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
+      </q-card-section>
 
-        <q-card-actions align="right" class="text-primary">
-          <q-btn flat label="Register" @click="closeRegister" type="button" />
-          <q-btn flat label="Cancel" v-close-popup @click="close" />
-          <q-btn flat label="Loggin" v-close-popup type="submit" />
-        </q-card-actions>
-      </q-form>
-    </q-card>
-  </q-dialog>
+      <q-card-actions align="right" class="text-primary">
+        <q-btn flat label="Register" @click="closeRegister" type="button" />
+        <q-btn flat label="Cancel" v-close-popup @click="close" />
+        <q-btn flat label="Loggin" v-close-popup type="submit" />
+      </q-card-actions>
+    </q-form>
+  </q-card>
 </template>
 
 <script setup>
@@ -98,4 +96,8 @@ const loginAction = async () => {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.full-transparent {
+  background-color: transparent;
+}
+</style>

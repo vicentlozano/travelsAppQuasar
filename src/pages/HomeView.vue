@@ -1,51 +1,36 @@
 <template>
-  <div class="basic-container">
-    <section class="paralax"><div class="paralax" aria-hidden="true"></div></section>
-    <h2>MIS ÚLTIMOS VIAJES</h2>
-    <section class="last-travels">
-      <TravelCard
-        v-for="travel in travels"
-        :key="travel.id"
-        :name="travel.name"
-        :days="travel.days"
-        :places="travel.places"
-        :price="travel.price"
-        :background-image="travel.background_image"
-        :travel_date="travel.travel_date"
-        :user="travel.user_name"
-      />
-    </section>
-    <section v-if="!travels.length" class="no-travels">
-      <h3 class="message-empty">Sin viajes actualmente!</h3>
-    </section>
-    <section class="next-travels"></section>
-    <q-dialog v-if="created" v-model="created" position="top" backdrop-filter="blur(4px)">
-      <q-card style="width: 350px">
-        <q-card-section class="row items-center no-wrap bg-red">
-          <div>
-            <div class="text-white">{{ message }}</div>
-          </div>
-          <q-space />
-          <q-btn flat round icon="close" @click="closePopUp" />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+  <div class="page-basic">
+    <HeaderComponent class="absolute-top" />
+    <div class="basic-container">
+      <section class="paralax"></section>
+      <h2>MIS ÚLTIMOS VIAJES</h2>
+      <section class="last-travels">
+        <TravelCard
+          v-for="travel in travels"
+          :key="travel.id"
+          :name="travel.name"
+          :days="travel.days"
+          :places="travel.places"
+          :price="travel.price"
+          :background-image="travel.background_image"
+          :travel_date="travel.travel_date"
+          :user="travel.user_name"
+        />
+      </section>
+      <section v-if="!travels.length" class="no-travels">
+        <h3 class="message-empty">Sin viajes actualmente!</h3>
+      </section>
+    </div>
   </div>
 </template>
 
 <script setup>
 import TravelCard from '../components/TravelCard.vue'
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, ref } from 'vue'
 import { getAllTravels } from '../utils/api/get.js'
+import HeaderComponent from 'src/components/HeaderComponent.vue'
 
 const travels = ref([])
-const message = ref('')
-const created = computed(() => {
-  return message.value ? true : false
-})
-const closePopUp = () => {
-  message.value = ''
-}
 
 onMounted(async () => {
   try {
@@ -76,14 +61,15 @@ $height-paralax-large: 70vh;
 $height-paralax-small: 30vh;
 .basic-container {
   display: grid;
-  grid-template-rows: auto auto;
+  grid-template-rows: 0.6fr 0.2fr 1fr;
   height: 100%;
   width: 100%;
+  margin-top: 3.4rem;
 }
 .paralax {
   display: flex;
   width: 100%;
-  height: 50vh;
+  height: 100%;
   background-image: url('../assets/boat.jpg');
   background-attachment: fixed;
   background-position: center;
@@ -109,20 +95,32 @@ h2 {
   font-size: 2em;
   font-weight: 700;
   height: 200px;
-  background-color: azure;
-  color: rgb(49, 47, 47);
+  background-color: rgb(44, 46, 46);
+  color: white;
 }
 .no-travels {
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 2em;
-  background-color: rgb(198, 228, 235);
+  background-color: transparent;
   height: 80vh;
   color: black;
 }
 .no-travels h3 {
   font-weight: 500;
+}
+.page-basic {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: auto 1fr;
+}
+.absolute-top {
+  position: fixed;
+  top: 1;
+  background-color: $gray-accent;
+  height: 3.4rem;
 }
 @media (max-width: 1310px) {
   .last-travels {

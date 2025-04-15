@@ -1,29 +1,35 @@
 <template>
-  <div class="section-search">
-    <q-input v-model="search" debounce="500" filled placeholder="Search">
-      <template v-slot:append>
-        <q-icon name="search" />
-      </template>
-    </q-input>
-    <section v-if="travels.length > 0" class="all-travels">
-      <TravelCard
-        v-for="travel in travelsSearched"
-        :key="travel.id"
-        :name="travel.name"
-        :days="travel.days"
-        :places="travel.places"
-        :price="travel.price"
-        :background-image="travel.background_image"
-        :year="travel.travel_date"
-        :user="travel.user_name"
-        :id="travel.user_id"
-      />
-    </section>
+  <div class="page-basic">
+    <div class="absolute-top">
+      <HeaderComponent />
+      <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
+    </div>
+    <div class="section-search">
+      <section v-if="travels.length > 0" class="all-travels">
+        <TravelCard
+          v-for="travel in travelsSearched"
+          :key="travel.id"
+          :name="travel.name"
+          :days="travel.days"
+          :places="travel.places"
+          :price="travel.price"
+          :background-image="travel.background_image"
+          :year="travel.travel_date"
+          :user="travel.user_name"
+          :id="travel.user_id"
+        />
+      </section>
+    </div>
   </div>
 </template>
 
 <script setup>
 import TravelCard from 'src/components/TravelCard.vue'
+import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api/get'
@@ -70,6 +76,8 @@ onMounted(async () => {
   grid-template-rows: auto 1fr;
   height: 100%;
   gap: 1rem;
+  background-color: $gray-pure;
+  margin-top: 6.9rem;
 }
 .all-travels {
   display: grid;
@@ -79,7 +87,28 @@ onMounted(async () => {
   align-items: center;
   height: 100%;
   padding: 2rem;
-  background-color: rgb(198, 228, 235);
+  padding-top: 8rem;
+  background-color: transparent;
+}
+.page-basic {
+  display: grid;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: auto 1fr;
+  background-color: $gray-pure;
+}
+.absolute-top {
+  position: fixed;
+  top: 1;
+  background-color: $gray-accent;
+  height: 6.9rem;
+}
+.search-input {
+  width: 100%;
+  position: fixed;
+  top: 1;
+  z-index:3;
+  background-color: white;
 }
 @media (max-width: 1310px) {
   .all-travels {
