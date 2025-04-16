@@ -1,7 +1,7 @@
 <template>
   <div class="login-page">
     <transition name="fade" mode="out-in">
-      <LoginCard :login="true" />
+      <LoginCard />
     </transition>
   </div>
 </template>
@@ -29,7 +29,7 @@ import LoginCard from 'src/components/LoginCard.vue'
   justify-content: center;
   align-items: center;
 
-  background: linear-gradient(-127deg, $gray-pure 50%, $gray-accent 75%);
+  background: linear-gradient(-127deg, $blue-gray 50%, $gray-accent 67%);
   background-size: 800% 800%;
   animation: gradient 10s ease infinite;
 }
