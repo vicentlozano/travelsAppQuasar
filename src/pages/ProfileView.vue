@@ -6,10 +6,11 @@
     <section class="profile">
       <p>{{ auth.email }}</p>
       <q-avatar color="primary" text-color="white" size="200px"
-        >J <q-badge floating color="teal"><q-icon class="edit"></q-icon></q-badge>
+        >J <q-badge  color="teal"><q-icon class="edit"></q-icon></q-badge>
       </q-avatar>
-
+      
       <p>Hola {{ auth.username }} !</p>
+      <q-btn @click="logout">Logout</q-btn>
     </section>
   </div>
 </template>
@@ -18,9 +19,21 @@
 import { onMounted } from 'vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useUserStore } from '../stores/user'
+import { useRouter } from 'vue-router'
+import { useQuasar } from 'quasar'
+
 
 //data
 const auth = useUserStore()
+const router = useRouter()
+const $q = useQuasar()
+//methods
+const logout = () => {
+$q.localStorage.removeItem('token')
+
+router.push({ name: 'login' })
+}
+
 
 //hooks
 onMounted(async () => {})
