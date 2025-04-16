@@ -136,7 +136,7 @@ const loginAction = async () => {
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
   width: 80%;
-  align-items: center;
+  justify-content: center;
   justify-self: center;
 }
 .button {
