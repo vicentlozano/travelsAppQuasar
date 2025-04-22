@@ -1,26 +1,24 @@
 <template>
-  <div class="page-basic">
-    <HeaderComponent class="absolute-top" />
-    <div class="basic-container">
-      <section class="paralax"></section>
-      <h2>MIS ÚLTIMOS VIAJES</h2>
-      <section class="last-travels">
-        <TravelCard
-          v-for="travel in travels"
-          :key="travel.id"
-          :name="travel.name"
-          :days="travel.days"
-          :places="travel.places"
-          :price="travel.price"
-          :background-image="travel.background_image"
-          :travel_date="travel.travel_date"
-          :user="travel.user_name"
-        />
-      </section>
-      <section v-if="!travels.length" class="no-travels">
-        <h3 class="message-empty">Sin viajes actualmente!</h3>
-      </section>
-    </div>
+  <HeaderComponent />
+  <div class="basic-container">
+    <section class="paralax"></section>
+    <h2>MIS ÚLTIMOS VIAJES</h2>
+    <section class="last-travels">
+      <TravelCard
+        v-for="travel in travels"
+        :key="travel.id"
+        :name="travel.name"
+        :days="travel.days"
+        :places="travel.places"
+        :price="travel.price"
+        :background-image="travel.background_image"
+        :travel_date="travel.travel_date"
+        :user="travel.user_name"
+      />
+    </section>
+    <section v-if="!travels.length" class="no-travels">
+      <h3 class="message-empty">Sin viajes actualmente!</h3>
+    </section>
   </div>
 </template>
 
@@ -59,12 +57,12 @@ $gap-spacing: 2rem;
 $margin-spacing: 3rem;
 $height-paralax-large: 70vh;
 $height-paralax-small: 30vh;
+
 .basic-container {
   display: grid;
-  grid-template-rows: 0.6fr 0.2fr 1fr;
+  grid-template-rows: 50vh 0.2fr 1fr;
   height: 100%;
   width: 100%;
-  margin-top: 3.4rem;
 }
 .paralax {
   display: flex;
@@ -84,6 +82,7 @@ $height-paralax-small: 30vh;
   grid-gap: 3rem;
   justify-items: center;
   align-items: center;
+  height: 100%;
   padding: 2rem;
   background-color: rgb(198, 228, 235);
 }
@@ -110,12 +109,7 @@ h2 {
 .no-travels h3 {
   font-weight: 500;
 }
-.page-basic {
-  display: grid;
-  height: 100%;
-  width: 100%;
-  grid-template-rows: auto 1fr;
-}
+
 .absolute-top {
   position: fixed;
   top: 1;

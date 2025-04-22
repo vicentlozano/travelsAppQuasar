@@ -1,16 +1,13 @@
 <template>
+  <HeaderComponent />
   <div class="page-basic">
-    <div class="absolute-top">
-      <HeaderComponent />
       <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
-    </div>
-
     <section class="chat">
-      <FriendsContacts/>
+      <FriendsContacts />
       <ChatDialog />
       <q-input standout bottom-slots v-model="text" label="Label" :dense="dense" class="keyboard">
         <template v-slot:before>
@@ -42,12 +39,12 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 .chat {
   display: grid;
   grid-template-rows: auto 1fr auto;
+  padding-top: 3.9rem;
   align-items: center;
   justify-items: center;
   width: 100%;
   height: 100%;
   z-index: -1;
-  margin-top: 6.9rem;
 }
 .keyboard {
   width: 100%;
@@ -57,15 +54,16 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 }
 .page-basic {
   display: grid;
+  margin-top: 3.4rem;
   max-height: 100%;
   width: 100%;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows:0.2fr 1fr;
 }
 .absolute-top {
-  position: fixed;
-  top: 0;
+  position: relative;
+  top: 1;
   background-color: $gray-accent;
-  height: 6.9rem;
+  height: 3.4rem;
 }
 .search-input {
   width: 100%;
@@ -77,5 +75,4 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 .contacts {
   width: 100%;
 }
-
 </style>

@@ -43,7 +43,7 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .chat-dialog {
   width: 100%;
-  padding: 2rem;
+  padding: 3rem 1rem 5rem 1rem  ;
   max-width: 600px;
 }
 </style>

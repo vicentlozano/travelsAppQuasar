@@ -1,7 +1,7 @@
 <template>
   <section class="login-card">
     <h3 class="title">TRAVELS APP</h3>
-    <q-form @submit="loginAction" class="q-gutter-md">
+    <q-form @submit.prevent="loginAction" class="q-gutter-md">
       <section class="inputs">
         <q-input
           outlined
@@ -87,7 +87,6 @@ const loginAction = async () => {
       )
 
       notifySuccess('User is logged')
-      close()
       router.push({ name: 'home' })
     } else {
       notifyError('An error ocurred')

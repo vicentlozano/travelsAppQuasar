@@ -1,40 +1,39 @@
 <template>
-  <div class="page-basic">
-    <HeaderComponent class="absolute-top" />
-    <div class="container">
-      <h2>TODOS MIS VIAJES</h2>
-      <div v-if="travels.length == 0" class="spinner">
-        <q-spinner-oval color="purple" size="4em" class="spinner" />
-      </div>
-      <section v-if="travels.length > 0" class="all-travels">
-        <TravelCard
-          v-for="travel in travels"
-          :key="travel.id"
-          :name="travel.name"
-          :days="travel.days"
-          :places="travel.places"
-          :price="travel.price"
-          :background-image="travel.background_image"
-          :year="travel.travel_date"
-          :crud="true"
-          :user="travel.user_name"
-          :id="travel.id"
-          @delete="deleteTravelSelected"
-        />
-        <section class="card">
-          <h4 class="add-text">Añadir nuevo viaje</h4>
-          <button @click="goAdd" class="add"></button>
-        </section>
-      </section>
+  <HeaderComponent />
 
-      <section v-if="travels.length == 0" class="no-travels">
-        <h3 class="message-empty">Sin viajes actualmente!</h3>
-        <section class="card">
-          <h4 class="add-text">Añadir nuevo viaje</h4>
-          <button @click="goAdd" class="add"></button>
-        </section>
-      </section>
+  <div class="container">
+    <h2>TODOS MIS VIAJES</h2>
+    <div v-if="travels.length == 0" class="spinner">
+      <q-spinner-oval color="purple" size="4em" class="spinner" />
     </div>
+    <section v-if="travels.length > 0" class="all-travels">
+      <TravelCard
+        v-for="travel in travels"
+        :key="travel.id"
+        :name="travel.name"
+        :days="travel.days"
+        :places="travel.places"
+        :price="travel.price"
+        :background-image="travel.background_image"
+        :year="travel.travel_date"
+        :crud="true"
+        :user="travel.user_name"
+        :id="travel.id"
+        @delete="deleteTravelSelected"
+      />
+      <section class="card">
+        <h4 class="add-text">Añadir nuevo viaje</h4>
+        <button @click="goAdd" class="add"></button>
+      </section>
+    </section>
+
+    <section v-if="travels.length == 0" class="no-travels">
+      <h3 class="message-empty">Sin viajes actualmente!</h3>
+      <section class="card">
+        <h4 class="add-text">Añadir nuevo viaje</h4>
+        <button @click="goAdd" class="add"></button>
+      </section>
+    </section>
   </div>
 </template>
 
@@ -139,23 +138,13 @@ h4 {
   align-items: center;
 }
 .container {
-display: grid;
-grid-template-rows: auto 1fr;
-  height: 100%;
-  margin-top: 3.4rem;
-}
-.page-basic {
   display: grid;
+  grid-template-rows: auto 1fr;
   height: 100%;
   width: 100%;
-  grid-template-rows: auto 1fr;
+  margin-top: 3.4rem;
 }
-.absolute-top {
-  position: fixed;
-  top: 1;
-  background-color: $gray-accent;
-  height: 3.4rem;
-}
+
 @media (max-width: 450px) {
   .all-travels {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));

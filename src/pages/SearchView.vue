@@ -1,29 +1,25 @@
 <template>
+  <HeaderComponent />
   <div class="page-basic">
-    <div class="absolute-top">
-      <HeaderComponent />
       <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
         <template v-slot:append>
           <q-icon name="search" />
         </template>
       </q-input>
-    </div>
-    <div class="section-search">
-      <section v-if="travels.length > 0" class="all-travels">
-        <TravelCard
-          v-for="travel in travelsSearched"
-          :key="travel.id"
-          :name="travel.name"
-          :days="travel.days"
-          :places="travel.places"
-          :price="travel.price"
-          :background-image="travel.background_image"
-          :year="travel.travel_date"
-          :user="travel.user_name"
-          :id="travel.user_id"
-        />
-      </section>
-    </div>
+    <section v-if="travels.length > 0" class="all-travels">
+      <TravelCard
+        v-for="travel in travelsSearched"
+        :key="travel.id"
+        :name="travel.name"
+        :days="travel.days"
+        :places="travel.places"
+        :price="travel.price"
+        :background-image="travel.background_image"
+        :year="travel.travel_date"
+        :user="travel.user_name"
+        :id="travel.user_id"
+      />
+    </section>
   </div>
 </template>
 
@@ -71,14 +67,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.section-search {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: 100%;
-  gap: 1rem;
-  background-color: $gray-pure;
-  margin-top: 6.9rem;
-}
 .all-travels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
@@ -86,28 +74,22 @@ onMounted(async () => {
   justify-items: center;
   align-items: center;
   height: 100%;
-  padding: 2rem;
-  padding-top: 8rem;
+  padding:6rem 2rem 2rem 2rem ;
   background-color: transparent;
 }
 .page-basic {
   display: grid;
+  margin-top: 3.4rem;
   height: 100%;
   width: 100%;
-  grid-template-rows: auto 1fr;
-  background-color: $gray-pure;
+  grid-template-rows: 0.2fr 1fr;
 }
-.absolute-top {
-  position: fixed;
-  top: 1;
-  background-color: $gray-accent;
-  height: 6.9rem;
-}
+
 .search-input {
   width: 100%;
   position: fixed;
   top: 1;
-  z-index:3;
+  z-index: 3;
   background-color: white;
 }
 @media (max-width: 1310px) {
