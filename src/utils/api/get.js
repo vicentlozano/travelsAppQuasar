@@ -6,7 +6,7 @@ let isReloading = false
 
 const errorCode = 54321
 
-function get(endpoint, params) {
+async function get(endpoint, params) {
   return api
     .get(`/${endpoint}`, { params })
     .then((res) => {

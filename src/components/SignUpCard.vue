@@ -1,10 +1,11 @@
 <template>
   <section class="register-card">
     <h5 class="title">{{ text[step] }}</h5>
-    <q-form @submit.prevent class=" custom">
+    <q-form @submit.prevent class="custom">
       <section v-if="step === 0" class="inputs-name">
         <q-input
           outlined
+          ref="nameRef"
           label="First name"
           stack-label
           v-model="name"
@@ -23,6 +24,7 @@
           stack-label
           class="input"
           v-model="lastName"
+          ref="lastNameRef"
           filled
           type="lastname"
           @keyup.enter="prompt = false"
@@ -37,7 +39,16 @@
           filled
           v-model="dateStamp"
           mask="date"
-          :rules="['date']"
+          ref="dateRef"
+          :rules="[
+            (val) => {
+              if (!val) return 'Please enter a date'
+              const inputDate = new Date(val)
+              const today = new Date()
+              if (inputDate > today) return 'The date cannot be in the future'
+              return true
+            },
+          ]"
           dense
           bg-color="white"
           class="input"
@@ -57,6 +68,7 @@
         <q-select
           stack-label
           label="Gender"
+          ref="genderRef"
           transition-show="flip-up"
           transition-hide="flip-down"
           filled
@@ -65,6 +77,7 @@
           v-model="gender"
           :options="optionsGender"
           class="input"
+          :rules="[(val) => (val && val.length > 0) || 'Please select something']"
         />
       </section>
       <section v-if="step === 2" class="inputs-email">
@@ -73,6 +86,7 @@
           label="Email"
           stack-label
           v-model="email"
+          ref="emailRef"
           class="input"
           filled
           type="email"
@@ -83,6 +97,7 @@
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
         <q-input
+          ref="passwordRef"
           v-model="password"
           label="Password"
           outlined
@@ -93,7 +108,11 @@
           bg-color="white"
           :type="isPwd ? 'password' : 'text'"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+          :rules="[
+            (val) => !!val || 'Please type a password',
+            (val) => /[A-Z]/.test(val) || 'Must contain at least one uppercase letter',
+            (val) => /\d/.test(val) || 'Must contain at least one number',
+          ]"
         >
           <template v-slot:append>
             <q-icon
@@ -104,6 +123,7 @@
           </template>
         </q-input>
         <q-input
+          ref="repeatPasswordRef"
           v-model="repeatPassword"
           label="Repeat Password"
           outlined
@@ -114,7 +134,13 @@
           bg-color="white"
           :type="isPwd2 ? 'password' : 'text'"
           lazy-rules
-          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+          :rules="[
+            (val) => {
+              if (!val) return 'Please repeat the password'
+              if (val !== password) return 'Passwords do not match'
+              return true
+            },
+          ]"
         >
           <template v-slot:append>
             <q-icon
@@ -125,14 +151,50 @@
           </template>
         </q-input>
       </section>
+      <section v-if="step === 3" class="avatar">
+        <q-avatar size="200px" font-size="52px" text-color="white" color="teal">
+          <img v-if="imageUrl" :src="imageUrl" />
+          <p class="initial" v-else>{{ name.charAt(0).toUpperCase() }}</p>
+        </q-avatar>
+        <q-file
+          style="width: 250px"
+          v-model="imageFile"
+          filled
+          label-color="white"
+          label="Add your photo"
+          @rejected="onRejected"
+          @update:model-value="onFileChange"
+        >
+          <template v-slot:append>
+            <q-icon
+              v-if="imageFile !== null"
+              name="close"
+              @click.stop.prevent="((imageFile = null), (imageUrl = null))"
+              class="cursor-pointer"
+            />
+            <q-icon v-if="imageFile === null" round dense flat name="cloud_upload" />
+          </template>
+        </q-file>
+      </section>
+      <section v-if="!allData" :class="step > 0 ? 'buttons' : 'only-button'">
+        <q-btn v-if="step > 0" class="button left" rounded label="Back" @click="step--" />
+        <q-btn
+          v-if="step >= 0 && step < 3"
+          class="button right"
+          rounded
+          label="Next"
+          @click="nextStep"
+        />
+        <q-btn
+          v-else
+          class="button right"
+          rounded
+          label="SUBMIT"
+          type="button"
+          @click="signUpAction"
+        />
+      </section>
     </q-form>
-    <section v-if="!allData" :class="step > 0 ? 'buttons' : 'only-button'">
-      <q-btn v-if="step > 0" class="button left" rounded label="Back" @click="step--" />
-      <q-btn class="button right" rounded label="Next" @click="step++" />
-    </section>
-    <section v-else class="buttons">
-      <q-btn class="button right" rounded label="Next" type="button" @click="signUpAction" />
-    </section>
   </section>
 </template>
 
@@ -149,25 +211,41 @@ const name = ref('')
 const lastName = ref('')
 const dateStamp = ref(moment().format('YYYY/MM/DD'))
 const gender = ref('')
+const imageUrl = ref(null)
 const optionsGender = ['Male', 'Female', 'Rather not say', 'Other']
 const text = [
   'Enter your name',
   'Enter your birthday and gender',
   'Enter your email and create a strong password',
-  'upload your profile photo',
+  'Upload your profile photo',
 ]
 const email = ref('')
 const password = ref('')
 const repeatPassword = ref('')
-
+const imageFile = ref(null)
 const isPwd = ref(true)
 const isPwd2 = ref(true)
-console.log(dateStamp.value)
+const nameRef = ref(null)
+const lastNameRef = ref(null)
+const dateRef = ref(null)
+const genderRef = ref(null)
+const emailRef = ref(null)
+const passwordRef = ref(null)
+const repeatPasswordRef = ref(null)
+
+//methods
+const onFileChange = () => {
+  imageUrl.value = URL.createObjectURL(imageFile.value)
+}
 const signUpAction = async () => {
   const user = {
     name: name.value,
+    lastName: lastName.value,
+    birthday: dateStamp.value,
+    gender: gender.value,
     email: email.value,
     password: md5(password.value),
+    avatar: imageFile.value
   }
   try {
     const response = await signUp(user)
@@ -180,6 +258,32 @@ const signUpAction = async () => {
     }
   } catch (error) {
     console.log(error)
+  }
+}
+
+const nextStep = async () => {
+  switch (step.value) {
+    case 0: {
+      let validName = await nameRef.value.validate()
+      let validLast = await lastNameRef.value.validate()
+      if (validName && validLast) step.value++
+      break
+    }
+    case 1: {
+      let validDate = await dateRef.value.validate()
+      let validGender = await genderRef.value.validate()
+      if (validDate && validGender) step.value++
+      break
+    }
+    case 2: {
+      let validEmail = await emailRef.value.validate()
+      let validPassword = await passwordRef.value.validate()
+      let validRepeatPassword = await repeatPasswordRef.value.validate()
+      if (validEmail && validPassword && validRepeatPassword) step.value++
+      break
+    }
+    default:
+      break
   }
 }
 </script>
@@ -201,13 +305,13 @@ const signUpAction = async () => {
 }
 .register-card {
   width: 450px;
-  height:500px;
+  height: 500px;
   display: grid;
   gap: 1rem;
-  grid-template-rows: 1fr 4fr 1fr;
+  grid-template-rows: 1fr 4fr;
   text-align: center;
   padding: 2rem 2rem 0 2rem;
-  background-color: #42464e83;
+  background-color: #70858fb2;
   border-radius: 25px;
   place-items: center;
   align-content: center;
@@ -267,8 +371,9 @@ const signUpAction = async () => {
 .custom {
   width: 100%;
   height: 100%;
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-rows: 4fr 1fr;
+  justify-items: space-between;
   align-items: center;
 }
 .date-section {
@@ -276,5 +381,20 @@ const signUpAction = async () => {
   grid-template-columns: 1fr 1fr 1fr;
   width: 100%;
   gap: 1.5rem;
+}
+.avatar {
+  display: grid;
+  grid-template-rows: 2fr 1fr;
+  justify-content: center;
+  place-items: center;
+  gap: 0.3rem;
+  justify-content: center;
+}
+.initial {
+  margin: 0;
+  font-weight: 600;
+}
+.no-click {
+  z-index: 0;
 }
 </style>

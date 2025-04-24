@@ -29,8 +29,8 @@ import RegisterCard from '../components/SignUpCard.vue'
   justify-content: center;
   align-items: center;
 
-  background: linear-gradient(-127deg, $blue-gray 50%, $gray-accent 67%);
+  background: linear-gradient(-127deg, $blue-gray 50%, $accent 67%);
   background-size: 800% 800%;
-  animation: gradient 10s ease infinite;
+  animation: gradient 20s ease infinite;
 }
 </style>

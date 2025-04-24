@@ -36,7 +36,6 @@ const messages = ref([])
 onMounted(async () => {
   messages.value = await getMessages({ userId: user.userId })
   messages.value = messages.value.data.data
-  console.log(messages.value)
 })
 </script>
 
