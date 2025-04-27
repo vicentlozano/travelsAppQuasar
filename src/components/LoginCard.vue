@@ -78,12 +78,12 @@ const loginAction = async () => {
     if (!response.error.status && !$q.localStorage.getItem('token')) {
       $q.localStorage.set('token', response.data.token)
       $q.localStorage.set('isAuth', true)
-
       auth.setUser(
         response.data.idUser,
         response.data.name,
         response.data.email,
         response.data.role,
+        response.data.avatar,
       )
 
       notifySuccess('User is logged')

@@ -5,10 +5,12 @@
     </div>
     <section class="profile">
       <p>{{ auth.email }}</p>
-      <q-avatar color="primary" text-color="white" size="200px"
-        >J <q-badge  color="teal"><q-icon class="edit"></q-icon></q-badge>
+      <q-avatar color="primary" text-color="white" size="200px">
+        <img v-if="auth.avatar" :src="auth.avatar" />
+        <span v-else>{{ auth.username.charAt(0) }}</span
+        ><q-badge color="teal"><q-icon class="edit"></q-icon></q-badge>
       </q-avatar>
-      
+
       <p>Hola {{ auth.username }} !</p>
       <q-btn @click="logout">Logout</q-btn>
     </section>
@@ -22,18 +24,16 @@ import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 import { useQuasar } from 'quasar'
 
-
 //data
 const auth = useUserStore()
 const router = useRouter()
 const $q = useQuasar()
 //methods
 const logout = () => {
-$q.localStorage.removeItem('token')
+  $q.localStorage.removeItem('token')
 
-router.push({ name: 'login' })
+  router.push({ name: 'login' })
 }
-
 
 //hooks
 onMounted(async () => {})

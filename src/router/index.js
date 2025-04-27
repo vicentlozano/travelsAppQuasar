@@ -59,7 +59,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         user = user.data
 
         if (!user.error.status && user.data) {
-          auth.setUser(user.data.userId, user.data.name, user.data.email, user.data.role)
+          auth.setUser(user.data.userId, user.data.name, user.data.email, user.data.role, user.data.avatar)
           $q.localStorage.set('isAuth', true)
           next()
         } else {

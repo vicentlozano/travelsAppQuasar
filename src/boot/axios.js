@@ -12,7 +12,6 @@ import { LocalStorage } from 'quasar'
 const api = axios.create({
   baseURL: 'http://localhost:7002/wsTravels/',
   timeout: 6000,
-  headers: { 'Content-Type': 'application/json' },
 })
 api.interceptors.request.use(
   (config) => {

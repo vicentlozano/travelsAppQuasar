@@ -160,6 +160,7 @@
           style="width: 250px"
           v-model="imageFile"
           filled
+          name="avatar"
           label-color="white"
           label="Add your photo"
           @rejected="onRejected"
@@ -176,7 +177,7 @@
           </template>
         </q-file>
       </section>
-      <section v-if="!allData" :class="step > 0 ? 'buttons' : 'only-button'">
+      <section :class="step > 0 ? 'buttons' : 'only-button'">
         <q-btn v-if="step > 0" class="button left" rounded label="Back" @click="step--" />
         <q-btn
           v-if="step >= 0 && step < 3"
@@ -238,23 +239,27 @@ const onFileChange = () => {
   imageUrl.value = URL.createObjectURL(imageFile.value)
 }
 const signUpAction = async () => {
-  const user = {
-    name: name.value,
-    lastName: lastName.value,
-    birthday: dateStamp.value,
-    gender: gender.value,
-    email: email.value,
-    password: md5(password.value),
-    avatar: imageFile.value
-  }
   try {
-    const response = await signUp(user)
+    const formData = new FormData()
+    formData.append('name', name.value)
+    formData.append('lastName', lastName.value)
+    formData.append('birthday', dateStamp.value)
+    formData.append('gender', gender.value)
+    formData.append('email', email.value)
+    formData.append('password', md5(password.value))
+
+    if (imageFile.value) {
+      formData.append('avatar', imageFile.value)
+    }
+
+
+    const response = await signUp(formData)
     if (!response.data.error.status) {
-      notifySuccess('Registered succsesfull!')
+      notifySuccess('Registered successfully!')
       router.push({ name: 'login' })
       close()
     } else {
-      notifyError('error en el registro')
+      notifyError('Error en el registro')
     }
   } catch (error) {
     console.log(error)
