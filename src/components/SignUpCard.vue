@@ -197,6 +197,19 @@
       </section>
     </q-form>
   </section>
+  <q-dialog v-model="dialog" backdrop-filter="blur(4px) saturate(150%)">
+    <q-card>
+      <q-card-section class="row items-center q-pb-none text-h6">
+        Registered successfully.
+      </q-card-section>
+
+      <q-card-section>Go to your messages to verify the email address!</q-card-section>
+
+      <q-card-actions align="right">
+        <q-btn flat label="Close" color="primary" v-close-popup />
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
 </template>
 
 <script setup>
@@ -233,6 +246,7 @@ const genderRef = ref(null)
 const emailRef = ref(null)
 const passwordRef = ref(null)
 const repeatPasswordRef = ref(null)
+const dialog = ref(null)
 
 //methods
 const onFileChange = () => {
@@ -252,10 +266,11 @@ const signUpAction = async () => {
       formData.append('avatar', imageFile.value)
     }
 
-
     const response = await signUp(formData)
     if (!response.data.error.status) {
       notifySuccess('Registered successfully!')
+      dialog.value = true
+
       router.push({ name: 'login' })
       close()
     } else {

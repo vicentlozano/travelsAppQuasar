@@ -75,3 +75,6 @@ export const loginWithToken = () => {
 export const signUp = async (user) => {
   return post('Users/wsSignUp', user)
 }
+export const verifyEmail = async (token) => {
+  return post('Users/wsVerifyEmail', token)
+}

@@ -89,7 +89,11 @@ const loginAction = async () => {
       notifySuccess('User is logged')
       router.push({ name: 'home' })
     } else {
-      notifyError('An error ocurred')
+      if (response.error.source === 'userNotVerified') {
+        notifyError('User not verified. Please check your email and verify your email adress')
+      } else {
+        notifyError('An error ocurred')
+      }
     }
   } catch (error) {
     console.log(error)
