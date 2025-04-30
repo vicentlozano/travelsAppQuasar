@@ -6,12 +6,16 @@
     </RouterLink>
     <RouterLink class="link" to="/media"><q-icon name="mdi-multimedia" /></RouterLink>
     <RouterLink class="link" to="/search"><q-icon name="mdi-magnify" /></RouterLink>
-    <RouterLink class="link" to="/profile"><q-icon name="mdi-account" /></RouterLink>
+    <RouterLink class="link" to="/profile"><q-avatar>
+      <img :src="auth.avatar">
+    </q-avatar></RouterLink>
   </header>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import { useUserStore } from '../stores/user'
+const auth = useUserStore()
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
 
