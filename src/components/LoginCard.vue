@@ -50,7 +50,7 @@ import { ref } from 'vue'
 import { logIn } from '../utils/api/post.js'
 import { useQuasar } from 'quasar'
 import { useRouter } from 'vue-router'
-import { notifyError, notifySuccess } from 'src/utils/utils.js'
+import { notifyError, notifySuccess } from 'src/utils/utilsNotify.js'
 
 const router = useRouter()
 import md5 from 'md5'

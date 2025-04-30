@@ -1,6 +1,6 @@
 import { LocalStorage } from 'quasar'
 import { api } from '../../boot/axios'
-import { notifyError } from 'src/utils/utils'
+import { notifyError } from 'src/utils/utilsNotify'
 
 let isReloading = false
 
@@ -32,14 +32,12 @@ async function get(endpoint, params) {
     })
 }
 
-
 export const getAllTravels = () => {
   return get('Travels/wsGetAllTravels')
 }
 export const getMessages = (idUser) => {
-  return get('Messages/wsGetMessages',idUser)
+  return get('Messages/wsGetMessages', idUser)
 }
-
 
 function closeUserSession(error) {
   //si la sesión ha caducado o el token es invalido y no se esta cerrando sesión por el usuario

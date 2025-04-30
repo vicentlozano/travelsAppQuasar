@@ -1,6 +1,6 @@
 import { LocalStorage } from 'quasar'
 import { api } from '../../boot/axios'
-import { notifyError } from 'src/utils/utils'
+import { notifyError } from 'src/utils/utilsNotify'
 
 let isReloading = false
 const errorCode = 54321

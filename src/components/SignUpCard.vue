@@ -217,7 +217,7 @@ import { ref } from 'vue'
 import { signUp } from '../utils/api/post.js'
 import md5 from 'md5'
 import { useRouter } from 'vue-router'
-import { notifyError, notifySuccess } from 'src/utils/utils.js'
+import { notifyError, notifySuccess } from 'src/utils/utilsNotify.js'
 import moment from 'moment'
 const router = useRouter()
 const step = ref(0)

@@ -1,22 +1,18 @@
 <template>
   <div class="verify-page">
     <transition name="fade" mode="out-in">
-      <Verify :token="token"/>
+      <VerifyEmail :token="token" />
     </transition>
   </div>
 </template>
 <script setup>
-import Verify from 'src/components/LoginCard.vue'
-import { onMounted, ref } from 'vue'
+import VerifyEmail from 'src/components/VerifyEmail.vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 //data
 const route = useRoute()
-const token = ref(null)
-
-onMounted(() => {
-  token.value = route.query.token
-})
+const token = ref(route.query.token)
 </script>
 
 <style lang="scss" scoped>

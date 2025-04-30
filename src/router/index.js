@@ -42,6 +42,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
 
     const isLoginRoute = to.name === 'login'
     const isRegisterRoute = to.name === 'register'
+    const isVerifyRoute = to.name === 'verify'
 
     const redirectToLogin = () => {
       $q.localStorage.set('isAuth', false)
@@ -59,7 +60,13 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         user = user.data
 
         if (!user.error.status && user.data) {
-          auth.setUser(user.data.userId, user.data.name, user.data.email, user.data.role, user.data.avatar)
+          auth.setUser(
+            user.data.userId,
+            user.data.name,
+            user.data.email,
+            user.data.role,
+            user.data.avatar,
+          )
           $q.localStorage.set('isAuth', true)
           next()
         } else {
@@ -71,6 +78,10 @@ export default defineRouter(function (/* { store, ssrContext } */) {
       }
     } else {
       if (isRegisterRoute) {
+        next()
+      }
+      else if(isVerifyRoute){
+        console.log('aquiiiiii')
         next()
       } else {
         redirectToLogin()

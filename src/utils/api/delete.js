@@ -1,6 +1,6 @@
 import { LocalStorage } from 'quasar'
 import { api } from '../../boot/axios'
-import { notifyError } from 'src/utils/utils'
+import { notifyError } from 'src/utils/utilsNotify'
 
 let isReloading = false
 
@@ -32,11 +32,9 @@ function deleted(endpoint, params) {
     })
 }
 
-
 export const deleteTravelById = (id) => {
-  return deleted('Travels/wsDeleteTravelById', id)}
-
-
+  return deleted('Travels/wsDeleteTravelById', id)
+}
 
 function closeUserSession(error) {
   //si la sesión ha caducado o el token es invalido y no se esta cerrando sesión por el usuario
