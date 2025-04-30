@@ -72,7 +72,7 @@ import { useRouter } from 'vue-router'
 import { createTravel } from '../utils/api/post'
 import TravelCard from '../components/TravelCard.vue'
 import { useUserStore } from '../stores/user'
-import { notifyError, notifySuccess } from 'src/utils/utils'
+import { notifyError, notifySuccess } from 'src/utils/utilsNotify'
 const auth = useUserStore()
 const router = useRouter()
 

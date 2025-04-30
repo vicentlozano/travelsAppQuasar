@@ -1,6 +1,6 @@
 import { LocalStorage } from 'quasar'
 import { api } from '../../boot/axios'
-import { notifyError } from 'src/utils/utils'
+import { notifyError } from 'src/utils/utilsNotify'
 
 let isReloading = false
 const errorCode = 54321
@@ -74,4 +74,7 @@ export const loginWithToken = () => {
 
 export const signUp = async (user) => {
   return post('Users/wsSignUp', user)
+}
+export const verifyEmail = async (token) => {
+  return post('Users/wsVerifyEmail', token)
 }

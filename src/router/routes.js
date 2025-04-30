@@ -10,6 +10,11 @@ const routes = [
     component: () => import('../pages/LoginView.vue'),
   },
   {
+    path: '/register',
+    name: 'register',
+    component: () => import('../pages/RegisterView.vue'),
+  },
+  {
     path: '/chat',
     name: 'chat',
     // route level code-splitting
@@ -34,12 +39,12 @@ const routes = [
     component: () => import('../pages/SearchView.vue'),
   },
   {
-    path: '/travels',
-    name: 'travels',
+    path: '/profile',
+    name: 'profile',
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
-    component: () => import('../pages/TravelsView.vue'),
+    component: () => import('../pages/ProfileView.vue'),
   },
   {
     path: '/edit/:id',
@@ -57,6 +62,14 @@ const routes = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../pages/AddView.vue'),
+  },
+  {
+    path: '/verifyEmail',
+    name: 'verify',
+    // route level code-splitting
+    // this generates a separate chunk (About.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import('../pages/VerifyView.vue'),
   },
 ]
 

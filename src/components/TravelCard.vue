@@ -44,7 +44,7 @@ const router = useRouter()
 const props = defineProps({
   name: String,
   days: [String, Number],
-  places: Array,
+  places: [String],
   price: [String, Number],
   backgroundImage: String,
   travel_date: [String, Number],
@@ -54,13 +54,11 @@ const props = defineProps({
 })
 const emits = defineEmits(['delete'])
 const editTravel = (id) => {
-  console.log(id)
   router.push({ name: 'edit', params: { id } })
 }
 const deleteTravel = (id) => {
   emits('delete', id)
 }
-console.log(props.places)
 </script>
 
 <style lang="scss" scoped>
@@ -171,6 +169,7 @@ p {
 }
 .avatar {
   padding: 0.4rem;
+  z-index: -1;
 }
 
 @media (max-width: 1310px) {

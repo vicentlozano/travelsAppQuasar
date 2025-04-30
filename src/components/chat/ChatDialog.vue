@@ -36,14 +36,13 @@ const messages = ref([])
 onMounted(async () => {
   messages.value = await getMessages({ userId: user.userId })
   messages.value = messages.value.data.data
-  console.log(messages.value)
 })
 </script>
 
 <style lang="scss" scoped>
 .chat-dialog {
   width: 100%;
-  padding: 2rem;
+  padding: 3rem 1rem 5rem 1rem  ;
   max-width: 600px;
 }
 </style>

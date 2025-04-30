@@ -39,9 +39,11 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     const $q = useQuasar()
     const auth = useUserStore()
     const token = $q.localStorage.getItem('token')
-  
+
     const isLoginRoute = to.name === 'login'
-  
+    const isRegisterRoute = to.name === 'register'
+    const isVerifyRoute = to.name === 'verify'
+
     const redirectToLogin = () => {
       $q.localStorage.set('isAuth', false)
       $q.localStorage.remove('token')
@@ -51,14 +53,20 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         next() // ja estem a login, deixem continuar
       }
     }
-  
+
     if (token) {
       try {
         let user = await loginWithToken(token)
         user = user.data
-  
+
         if (!user.error.status && user.data) {
-          auth.setUser(user.data.userId, user.data.name, user.data.email, user.data.role)
+          auth.setUser(
+            user.data.userId,
+            user.data.name,
+            user.data.email,
+            user.data.role,
+            user.data.avatar,
+          )
           $q.localStorage.set('isAuth', true)
           next()
         } else {
@@ -69,7 +77,15 @@ export default defineRouter(function (/* { store, ssrContext } */) {
         redirectToLogin()
       }
     } else {
-      redirectToLogin()
+      if (isRegisterRoute) {
+        next()
+      }
+      else if(isVerifyRoute){
+        console.log('aquiiiiii')
+        next()
+      } else {
+        redirectToLogin()
+      }
     }
   })
   return Router

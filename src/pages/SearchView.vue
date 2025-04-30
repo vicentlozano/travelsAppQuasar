@@ -1,10 +1,11 @@
 <template>
-  <div class="section-search">
-    <q-input v-model="search" debounce="500" filled placeholder="Search">
-      <template v-slot:append>
-        <q-icon name="search" />
-      </template>
-    </q-input>
+  <HeaderComponent />
+  <div class="page-basic">
+      <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     <section v-if="travels.length > 0" class="all-travels">
       <TravelCard
         v-for="travel in travelsSearched"
@@ -24,6 +25,7 @@
 
 <script setup>
 import TravelCard from 'src/components/TravelCard.vue'
+import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api/get'
@@ -65,12 +67,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.section-search {
-  display: grid;
-  grid-template-rows: auto 1fr;
-  height: 100%;
-  gap: 1rem;
-}
 .all-travels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
@@ -78,8 +74,23 @@ onMounted(async () => {
   justify-items: center;
   align-items: center;
   height: 100%;
-  padding: 2rem;
-  background-color: rgb(198, 228, 235);
+  padding:6rem 2rem 2rem 2rem ;
+  background-color: transparent;
+}
+.page-basic {
+  display: grid;
+  margin-top: 3.4rem;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: 0.2fr 1fr;
+}
+
+.search-input {
+  width: 100%;
+  position: fixed;
+  top: 1;
+  z-index: 3;
+  background-color: white;
 }
 @media (max-width: 1310px) {
   .all-travels {

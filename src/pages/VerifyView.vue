@@ -1,12 +1,18 @@
 <template>
-  <div class="login-page">
+  <div class="verify-page">
     <transition name="fade" mode="out-in">
-      <LoginCard />
+      <VerifyEmail :token="token" />
     </transition>
   </div>
 </template>
 <script setup>
-import LoginCard from 'src/components/LoginCard.vue'
+import VerifyEmail from 'src/components/VerifyEmail.vue'
+import { ref } from 'vue'
+import { useRoute } from 'vue-router'
+
+//data
+const route = useRoute()
+const token = ref(route.query.token)
 </script>
 
 <style lang="scss" scoped>
@@ -22,7 +28,7 @@ import LoginCard from 'src/components/LoginCard.vue'
   }
 }
 
-.login-page {
+.verify-page {
   height: 100vh;
   width: 100%;
   display: flex;

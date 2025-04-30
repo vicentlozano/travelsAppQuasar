@@ -1,11 +1,4 @@
-const get = require("./get");
-const post = require("./post");
-const put = require("./put");
-const del = require("./delete");
-
-module.exports = {
-  ...get,
-  ...post,
-  ...put,
-  ...del,
-};
+export * from './get'
+export * from './post'
+export * from './put'
+export * from './delete'
