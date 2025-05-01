@@ -21,6 +21,7 @@ async function get(endpoint, params) {
     })
     .catch((error) => {
       closeUserSession(error)
+      console.log(error)
       if (!isReloading) {
         if (error.response.data.error && error.response.data.error.code === errorCode) {
           notifyError(error.response.data.error.source)
@@ -37,6 +38,9 @@ export const getAllTravels = () => {
 }
 export const getMessages = (idUser) => {
   return get('Messages/wsGetMessages', idUser)
+}
+export const getTravelById = (idTravel) => {
+  return get('Travels/wsGetTravelById', idTravel)
 }
 
 function closeUserSession(error) {
