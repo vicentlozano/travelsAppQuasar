@@ -1,8 +1,6 @@
 <template>
   <div class="page-basic">
-    <div class="absolute-top">
       <HeaderComponent />
-    </div>
     <section class="profile">
       <p>{{ auth.email }}</p>
       <q-avatar color="primary" text-color="white" size="200px">
@@ -42,9 +40,10 @@ onMounted(async () => {})
 <style lang="scss" scoped>
 .page-basic {
   display: grid;
+  padding-top: 3.4rem;
   height: 100%;
   width: 100%;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: 0.2fr 1fr;
 }
 .absolute-top {
   position: fixed;
@@ -53,15 +52,27 @@ onMounted(async () => {})
   height: 3.4rem;
 }
 .profile {
-  margin-top: 3.4rem;
   display: grid;
   height: 100%;
   width: 100%;
   gap: 1rem;
+  padding-top: 3.4rem;
   grid-template-rows: auto auto;
   justify-content: center;
   align-content: center;
   place-items: center;
   padding: 2rem;
+}
+@media (max-width: 450px) {
+  .all-travels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+    padding-top: 5rem;
+    padding-bottom: 3.6rem;
+  }
+  .page-basic {
+    padding-top: 0rem;
+  }
 }
 </style>

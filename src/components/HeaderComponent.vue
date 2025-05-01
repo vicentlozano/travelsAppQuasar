@@ -1,12 +1,12 @@
 <template>
   <header :class="mobilView ? 'nav-footer' : 'nav-header'">
-    <RouterLink class="link" to="/"><q-icon name="mdi-home" /></RouterLink>
+    <RouterLink class="link" to="/"><q-icon name="mdi-home" class="icons-header" /></RouterLink>
     <RouterLink class="link" to="/chat">
-      <q-icon name="mdi-chat" />
+      <q-icon name="mdi-chat" class="icons-header"/>
     </RouterLink>
-    <RouterLink class="link" to="/media"><q-icon name="mdi-multimedia" /></RouterLink>
-    <RouterLink class="link" to="/search"><q-icon name="mdi-magnify" /></RouterLink>
-    <RouterLink class="link" to="/profile"><q-avatar>
+    <RouterLink class="link" to="/media"><q-icon name="mdi-multimedia" class="icons-header"/></RouterLink>
+    <RouterLink class="link" to="/search"><q-icon name="mdi-magnify" class="icons-header"/></RouterLink>
+    <RouterLink class="link-image" to="/profile"><q-avatar size="30px">
       <img :src="auth.avatar">
     </q-avatar></RouterLink>
   </header>
@@ -18,6 +18,7 @@ import { useUserStore } from '../stores/user'
 const auth = useUserStore()
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
+console.log(windowWidth.value)
 
 //methods
 const updateWidth = () => {
@@ -61,8 +62,11 @@ header {
   border-radius: 25px;
 }
 .link:hover {
-  background-color: white;
-  color: black;
+  transform: scale(1.3);
+  transition: 0.5s ease;
+}
+.link-image:hover {
+  transform: scale(1.2);
   transition: 0.5s ease;
 }
 a {
@@ -94,14 +98,16 @@ h1 {
   align-items: center;
   height: 3.4rem;
   padding: 0.3rem;
-  .link {
-    padding: 0.7rem;
-    margin: 0;
-    width: fit-content;
-  }
   position: fixed;
   top: 0;
   z-index: 1;
+  .link {
+    margin: 0;
+    width: fit-content;
+  }
+  .link-image{
+    padding: 0rem;
+  }
 }
 .nav-footer {
   width: 100%;
@@ -113,15 +119,23 @@ h1 {
   backdrop-filter: blur(0.7px);
   align-items: center;
   padding: 0.3rem;
+  position: fixed;
+  bottom: 0;
   .link {
-    padding: 0.7rem;
     margin: 0;
     width: fit-content;
   }
-  position: fixed;
-  bottom: 0;
+  .link:hover {
+  transform: scale(1.0);
+  transition:none;
 }
+}
+.icons-header{
+height: 30px;
+width: 30px;
 
+
+}
 @media (min-width: 1070px) and (max-width: 1500px) {
   .link {
     padding: 0.2rem 1.5rem;

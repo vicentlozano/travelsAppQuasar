@@ -54,7 +54,7 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 }
 .page-basic {
   display: grid;
-  margin-top: 3.4rem;
+  padding-top: 3.4rem;
   max-height: 100%;
   width: 100%;
   grid-template-rows:0.2fr 1fr;
@@ -74,5 +74,17 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 }
 .contacts {
   width: 100%;
+}
+@media (max-width: 450px) {
+  .page-basic {
+    padding-top: 0rem;
+    padding-bottom: 3.6rem;
+  }
+  .keyboard {
+  width: 100%;
+  position: fixed;
+  bottom: 0;
+  padding: 1rem 1rem 3.6rem 1rem;
+}
 }
 </style>
