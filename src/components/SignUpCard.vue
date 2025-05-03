@@ -1,190 +1,229 @@
 <template>
-  <section class="register-card">
-    <h5 class="title">{{ text[step] }}</h5>
-    <q-form @submit.prevent class="custom">
-        <section v-if="step === 0" class="inputs-name">
-          <q-input
-            outlined
-            ref="nameRef"
-            label="First name"
-            stack-label
-            v-model="name"
-            class="input"
-            filled
-            type="name"
-            @keyup.enter="prompt = false"
-            lazy-rules
-            dense
-            bg-color="white"
-            :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-          <q-input
-            outlined
-            label="Last Name"
-            stack-label
-            class="input"
-            v-model="lastName"
-            ref="lastNameRef"
-            filled
-            type="lastname"
-            @keyup.enter="prompt = false"
-            lazy-rules
-            dense
-            bg-color="white"
-            :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-        </section>
-        <section v-if="step === 1" class="inputs-name" transition-hide="jump-up">
-          <q-input
-            filled
-            v-model="dateStamp"
-            mask="date"
-            ref="dateRef"
-            :rules="[
-              (val) => {
-                if (!val) return 'Please enter a date'
-                const inputDate = new Date(val)
-                const today = new Date()
-                if (inputDate > today) return 'The date cannot be in the future'
-                return true
-              },
-            ]"
-            dense
-            bg-color="white"
-            class="input"
-          >
-            <template v-slot:append>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="dateStamp" :locale="myLocale">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <q-select
-            stack-label
-            label="Gender"
-            ref="genderRef"
-            transition-show="flip-up"
-            transition-hide="flip-down"
-            filled
-            dense
-            bg-color="white"
-            v-model="gender"
-            :options="optionsGender"
-            class="input"
-            :rules="[(val) => (val && val.length > 0) || 'Please select something']"
-          />
-        </section>
-        <section v-if="step === 2" class="inputs-email">
-          <q-input
-            outlined
-            label="Email"
-            stack-label
-            v-model="email"
-            ref="emailRef"
-            class="input"
-            filled
-            type="email"
-            @keyup.enter="prompt = false"
-            lazy-rules
-            dense
-            bg-color="white"
-            :rules="[(val) => (val && val.length > 0) || 'Please type something']"
-          />
-          <q-input
-            ref="passwordRef"
-            v-model="password"
-            label="Password"
-            outlined
-            dense
-            class="input"
-            stack-label
-            filled
-            bg-color="white"
-            :type="isPwd ? 'password' : 'text'"
-            lazy-rules
-            :rules="[
-              (val) => !!val || 'Please type a password',
-              (val) => /[A-Z]/.test(val) || 'Must contain at least one uppercase letter',
-              (val) => /\d/.test(val) || 'Must contain at least one number',
-            ]"
-          >
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
-            </template>
-          </q-input>
-          <q-input
-            ref="repeatPasswordRef"
-            v-model="repeatPassword"
-            label="Repeat Password"
-            outlined
-            dense
-            stack-label
-            class="input"
-            filled
-            bg-color="white"
-            :type="isPwd2 ? 'password' : 'text'"
-            lazy-rules
-            :rules="[
-              (val) => {
-                if (!val) return 'Please repeat the password'
-                if (val !== password) return 'Passwords do not match'
-                return true
-              },
-            ]"
-          >
-            <template v-slot:append>
-              <q-icon
-                :name="isPwd2 ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd2 = !isPwd2"
-              />
-            </template>
-          </q-input>
-        </section>
-        <section v-if="step === 3" class="avatar">
-          <q-avatar size="150px" font-size="52px" text-color="white" color="teal">
-            <img v-if="imageUrl" :src="imageUrl" />
-            <p class="initial" v-else>{{ name.charAt(0).toUpperCase() }}</p>
-          </q-avatar>
-          <q-file
-            style="width: 250px"
-            v-model="imageFile"
-            filled
-            dense
-            name="avatar"
-            label-color="white"
-            label="Add your photo"
-            @rejected="onRejected"
-            @update:model-value="onFileChange"
-          >
-            <template v-slot:append>
-              <q-icon
-                v-if="imageFile !== null"
-                name="close"
-                @click.stop.prevent="((imageFile = null), (imageUrl = null))"
-                class="cursor-pointer"
-              />
-              <q-icon v-if="imageFile === null" round dense flat name="cloud_upload" />
-            </template>
-          </q-file>
-        </section>
-      <section class="buttons">
-        <q-btn v-if="step > 0" class="button left" label="Back" @click="step--" />
-        <q-btn v-if="step >= 0 && step < 3" class="button right" label="Next" @click="nextStep" />
-        <q-btn v-else class="button right" label="SUBMIT" type="button" @click="signUpAction" />
+  <q-stepper
+    v-model="step"
+    ref="stepper"
+    animated
+    type="horizontal"
+    done-color="deep-orange"
+    active-color="purple"
+    inactive-color="secondary"
+    class="full transparent"
+    style="width: 600px"
+    contracted
+    dark
+    header-class="background-header"
+  >
+    <q-step :name="0" icon="account_circle" :done="step > 0">
+      <section class="inputs-name">
+        <q-input
+          outlined
+          ref="nameRef"
+          label="First name"
+          stack-label
+          v-model="name"
+          class="input"
+          filled
+          type="name"
+          @keyup.enter="prompt = false"
+          lazy-rules
+          dense
+          bg-color="white"
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
+        <q-input
+          outlined
+          label="Last Name"
+          stack-label
+          class="input"
+          v-model="lastName"
+          ref="lastNameRef"
+          filled
+          type="lastname"
+          @keyup.enter="prompt = false"
+          lazy-rules
+          dense
+          bg-color="white"
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
       </section>
-    </q-form>
-  </section>
+    </q-step>
+    <q-step :name="1" icon="event" :done="step > 1">
+      <section v-if="step === 1" class="inputs-name" transition-hide="jump-up">
+        <q-input
+          filled
+          v-model="dateStamp"
+          mask="date"
+          ref="dateRef"
+          :rules="[
+            (val) => {
+              if (!val) return 'Please enter a date'
+              const inputDate = new Date(val)
+              const today = new Date()
+              if (inputDate > today) return 'The date cannot be in the future'
+              return true
+            },
+          ]"
+          dense
+          bg-color="white"
+          class="input"
+        >
+          <template v-slot:append>
+            <q-icon name="event" class="cursor-pointer">
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-date v-model="dateStamp" :locale="myLocale">
+                  <div class="row items-center justify-end">
+                    <q-btn v-close-popup label="Close" color="primary" flat />
+                  </div>
+                </q-date>
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+        <q-select
+          stack-label
+          label="Gender"
+          ref="genderRef"
+          transition-show="flip-up"
+          transition-hide="flip-down"
+          filled
+          dense
+          bg-color="white"
+          v-model="gender"
+          :options="optionsGender"
+          class="input"
+          :rules="[(val) => (val && val.length > 0) || 'Please select something']"
+        />
+      </section>
+    </q-step>
+    <q-step :name="2" icon="password" :done="step > 2">
+      <section v-if="step === 2" class="inputs-email">
+        <q-input
+          outlined
+          label="Email"
+          stack-label
+          v-model="email"
+          ref="emailRef"
+          class="input"
+          filled
+          type="email"
+          @keyup.enter="prompt = false"
+          lazy-rules
+          dense
+          bg-color="white"
+          :rules="[(val) => (val && val.length > 0) || 'Please type something']"
+        />
+        <q-input
+          ref="passwordRef"
+          v-model="password"
+          label="Password"
+          outlined
+          dense
+          class="input"
+          stack-label
+          filled
+          bg-color="white"
+          :type="isPwd ? 'password' : 'text'"
+          lazy-rules
+          :rules="[
+            (val) => !!val || 'Please type a password',
+            (val) => /[A-Z]/.test(val) || 'Must contain at least one uppercase letter',
+            (val) => /\d/.test(val) || 'Must contain at least one number',
+          ]"
+        >
+          <template v-slot:append>
+            <q-icon
+              :name="isPwd ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
+        <q-input
+          ref="repeatPasswordRef"
+          v-model="repeatPassword"
+          label="Repeat Password"
+          outlined
+          dense
+          stack-label
+          class="input"
+          filled
+          bg-color="white"
+          :type="isPwd2 ? 'password' : 'text'"
+          lazy-rules
+          :rules="[
+            (val) => {
+              if (!val) return 'Please repeat the password'
+              if (val !== password) return 'Passwords do not match'
+              return true
+            },
+          ]"
+        >
+          <template v-slot:append>
+            <q-icon
+              :name="isPwd2 ? 'visibility_off' : 'visibility'"
+              class="cursor-pointer"
+              @click="isPwd2 = !isPwd2"
+            />
+          </template>
+        </q-input>
+      </section>
+    </q-step>
+    <q-step :name="3" icon="add_a_photo" :done="step > 3">
+      <section v-if="step === 3" class="avatar">
+        <q-avatar size="149.60px" font-size="52px" text-color="white" color="teal">
+          <img v-if="imageUrl" :src="imageUrl" />
+          <p class="initial" v-else>{{ name.charAt(0).toUpperCase() }}</p>
+        </q-avatar>
+        <q-file
+          style="width: 250px"
+          v-model="imageFile"
+          filled
+          dense
+          name="avatar"
+          label-color="white"
+          label="Add your photo"
+          @rejected="onRejected"
+          @update:model-value="onFileChange"
+        >
+          <template v-slot:append>
+            <q-icon
+              v-if="imageFile !== null"
+              name="close"
+              @click.stop.prevent="((imageFile = null), (imageUrl = null))"
+              class="cursor-pointer"
+            />
+            <q-icon v-if="imageFile === null" round dense flat name="cloud_upload" />
+          </template>
+        </q-file>
+      </section>
+    </q-step>
+    <section class="buttons">
+      <q-btn v-if="step > 0" class="button left" label="Back" @click="step--" />
+      <q-btn v-if="step >= 0 && step < 3" class="button right" label="Next" @click="nextStep" />
+      <q-btn v-else class="button right" label="SUBMIT" type="button" @click="signUpAction" />
+    </section>
+    <template v-slot:navigation>
+      <q-stepper-navigation class="buttons">
+        <q-btn v-if="step > 0" label="Back" @click="step--" class="button left" />
+        <q-btn v-if="step >= 0 && step < 3" label="Next" class="button right" @click="nextStep" />
+        <q-btn v-else label="SUBMIT" class="button right" type="button" @click="signUpAction" />
+      </q-stepper-navigation>
+    </template>
+    <template v-slot:message>
+      <q-banner v-if="step === 0" class="bg-purple-8 text-white q-px-lg">
+        {{ text[0] }}
+      </q-banner>
+      <q-banner v-else-if="step === 1" class="bg-orange-8 text-white q-px-lg">
+        {{ text[1] }}
+      </q-banner>
+      <q-banner v-else-if="step === 2" class="bg-green-8 text-white q-px-lg">
+        {{ text[2] }}
+      </q-banner>
+      <q-banner v-else class="bg-blue-8 text-white q-px-lg">
+        {{ text[3] }}
+      </q-banner>
+    </template>
+  </q-stepper>
   <q-dialog v-model="dialog" backdrop-filter="blur(4px) saturate(150%)">
     <q-card>
       <q-card-section class="row items-center q-pb-none text-h6">
@@ -194,7 +233,16 @@
       <q-card-section>Go to your messages to verify the email address!</q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Close" color="primary" v-close-popup />
+        <q-btn
+          flat
+          label="Close"
+          color="primary"
+          v-close-popup
+          @click="
+            router.push({ name: 'login' }),
+            close()
+          "
+        />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -205,7 +253,7 @@ import { ref } from 'vue'
 import { signUp } from '../utils/api/post.js'
 import md5 from 'md5'
 import { useRouter } from 'vue-router'
-import { notifyError, notifySuccess } from 'src/utils/utilsNotify.js'
+import { notifyError } from 'src/utils/utilsNotify.js'
 import moment from 'moment'
 const router = useRouter()
 const step = ref(0)
@@ -256,11 +304,7 @@ const signUpAction = async () => {
 
     const response = await signUp(formData)
     if (!response.data.error.status) {
-      notifySuccess('Registered successfully!')
       dialog.value = true
-
-      router.push({ name: 'login' })
-      close()
     } else {
       notifyError('Error en el registro')
     }
@@ -297,33 +341,10 @@ const nextStep = async () => {
 </script>
 
 <style lang="scss" scoped>
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
 .full-transparent {
   background-color: transparent;
 }
-.register-card {
-  width: 370px;
-  height: fit-content;
-  display: grid;
-  gap: 1rem;
-  grid-template-rows: auto 3fr;
-  text-align: center;
-  place-items: center;
-  border: 0.3px solid rgba(255, 255, 255, 0.147);
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-}
+
 .plus {
   padding: 4rem;
 }
@@ -339,25 +360,17 @@ const nextStep = async () => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 3rem;
-  width: 90%;
+  width: 100%;
   align-items: center;
   margin: 0;
   padding-top: 0.5rem;
   justify-content: space-around;
+  background-color: #22202063;
 }
-.only-button {
-  display: flex;
-  grid-template-columns: 1fr;
-  gap: 1rem;
-  width: 100%;
-  padding-bottom: 0.6rem;
-  justify-content: right;
-}
+
 .button {
   width: 100%;
-  background: linear-gradient(-127deg, $gray-accent 50%, $blue-gray 67%);
-  background-size: 800% 800%;
-  animation: gradient 14s ease infinite;
+  background-color: $blue-gray;
   color: white;
 }
 .left {
@@ -369,9 +382,7 @@ const nextStep = async () => {
 .input {
   width: 100%;
 }
-.date {
-  width: 8rem;
-}
+
 .inputs-email {
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
@@ -389,43 +400,33 @@ const nextStep = async () => {
   margin: 0;
   padding: 35.61px 0rem;
 }
-.custom {
-  display: grid;
-  width: 90%;
-  height: 100%;
-  grid-template-rows: 1fr 36px;
-  place-items: center;
-  margin: 0;
-}
-.date-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 100%;
-  gap: 1.5rem;
-}
+
 .avatar {
   display: grid;
-  grid-template-rows: 2fr 1fr;
-  height: 234.38px;
+  grid-template-rows: 2fr min-content;
   justify-content: center;
   place-items: center;
-  gap: 0.3rem;
+  gap: 0.8rem;
   justify-content: center;
 }
 .initial {
   margin: 0;
   font-weight: 600;
 }
-.no-click {
-  z-index: 0;
+
+::v-deep(.q-stepper__header) {
+  background-color: rgb(44, 41, 41);
 }
-@media (max-width: 420px) {
-  .register-card {
-    width: 350px;
-    padding: 1.5rem;
-  }
-  .title {
-    font-size: 1.4em;
+::v-deep(.q-stepper__line)::before,
+::v-deep(.q-stepper__line)::after {
+  background-color: rgba(255, 255, 255, 0.401) !important;
+}
+::v-deep(.q-stepper__content.q-panel-parent) {
+  background-color: #22202063;
+}
+@media (max-width: 730px) {
+  .full {
+    margin: 2.6rem;
   }
 }
 </style>
