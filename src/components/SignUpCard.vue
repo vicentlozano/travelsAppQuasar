@@ -324,7 +324,7 @@ const nextStep = async () => {
   background-color: transparent;
 }
 .register-card {
-  width: 450px;
+  width: 370px;
   height: 500px;
   display: grid;
   gap: 1rem;
