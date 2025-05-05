@@ -63,8 +63,7 @@ function closeUserSession(error) {
 export function createTravel(travel) {
   return post('Travels/wsCreateTravel', travel)
 }
-export function updateTravel
-(travel) {
+export function updateTravel(travel) {
   return post('Travels/wsUpdateTravelById', travel)
 }
 
@@ -81,4 +80,8 @@ export const signUp = async (user) => {
 }
 export const verifyEmail = async (token) => {
   return post('Users/wsVerifyEmail', token)
+}
+
+export const sendMessageById = async (message) => {
+  return post('Messages/wsSendMessageById', message)
 }
