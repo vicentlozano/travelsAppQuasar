@@ -1,11 +1,11 @@
 <template>
   <HeaderComponent />
   <div class="page-basic">
-      <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
-        <template v-slot:append>
-          <q-icon name="search" />
-        </template>
-      </q-input>
+    <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
+      <template v-slot:append>
+        <q-icon name="search" />
+      </template>
+    </q-input>
     <section v-if="travels.length > 0" class="all-travels">
       <TravelCard
         v-for="travel in travelsSearched"
@@ -29,12 +29,13 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api/get'
-
 const auth = useUserStore()
 const travels = ref([])
 const search = ref('')
 const userId = ref(null)
+
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+//computed
 const travelsSearched = computed(() => {
   return search.value
     ? travels.value.filter(
@@ -54,6 +55,7 @@ const travelsSearched = computed(() => {
       )
     : travels.value
 })
+//hooks
 onMounted(async () => {
   userId.value = auth.userId
   try {
@@ -74,12 +76,12 @@ onMounted(async () => {
   justify-items: center;
   align-items: center;
   height: 100%;
-  padding:6rem 2rem 2rem 2rem ;
+  padding: 6rem 2rem 2rem 2rem;
   background-color: transparent;
 }
 .page-basic {
   display: grid;
-  margin-top: 3.4rem;
+  padding-top: 3.4rem;
   height: 100%;
   width: 100%;
   grid-template-rows: 0.2fr 1fr;
@@ -103,7 +105,11 @@ onMounted(async () => {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     grid-gap: 1rem;
-    padding: 0px;
+    padding-top: 5rem;
+    padding-bottom: 3.6rem;
+  }
+  .page-basic {
+    padding-top: 0rem;
   }
 }
 </style>

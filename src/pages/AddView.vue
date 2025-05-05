@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <div class="page-basic">
+    <HeaderComponent />
     <TravelCard
       v-if="backgroundImage"
       :name="name"
@@ -7,7 +8,7 @@
       :places="places"
       :price="price"
       :background-image="backgroundImage"
-      :year="year"
+      :travel_date="travel_date"
     />
     <section class="edit">
       <form @submit.prevent="handleSubmit" class="edit">
@@ -44,12 +45,12 @@
 
         <input
           class="custom-input"
-          v-model="year"
+          v-model="travel_date"
           placeholder="Introduce la fecha"
           type="date"
           required
         />
-        <span v-if="errors.year" class="error">{{ errors.year }}</span>
+        <span v-if="errors.travel_date" class="error">{{ errors.travel_date }}</span>
 
         <input
           class="custom-input"
@@ -68,6 +69,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useRouter } from 'vue-router'
 import { createTravel } from '../utils/api/post'
 import TravelCard from '../components/TravelCard.vue'
@@ -81,7 +83,7 @@ const days = ref('')
 const places = ref([])
 const placesInput = ref('')
 const price = ref('')
-const year = ref('')
+const travel_date = ref('')
 const backgroundImage = ref('')
 const errors = ref({})
 
@@ -93,8 +95,8 @@ const handleSubmit = async () => {
   if (days.value < 1) errors.value.days = 'Los días son obligatorios.'
   if (places.value.length < 1) errors.value.places = 'Los lugares son obligatorios.'
   if (price.value < 1) errors.value.price = 'El precio no es válido.'
-  // if (year)
-  //   errors.value.year = 'La fecha no es válido.'
+  // if (travel_date)
+  //   errors.value.travel_date = 'La fecha no es válido.'
   if (!backgroundImage.value) errors.value.backgroundImage = 'La URL de la imagen es obligatoria.'
 
   if (Object.keys(errors.value).length === 0) {
@@ -103,7 +105,7 @@ const handleSubmit = async () => {
       days: days.value,
       places: places.value,
       price: price.value,
-      travel_date: year.value,
+      travel_date: travel_date.value,
       background_image: backgroundImage.value,
       user_id: auth.userId,
       user_name: auth.username,
@@ -121,7 +123,7 @@ const handleSubmit = async () => {
   }
 }
 const go = () => {
-  router.push('/travels')
+  router.push('/media')
 }
 
 const updatePlaces = () => {
@@ -137,14 +139,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+.page-basic {
+  display: grid;
+  padding-top: 3.4rem;
   height: 100%;
-  gap: 1rem;
+  width: 100%;
+  grid-template-rows: 0.2fr 1fr;
 }
 .edit {
   display: flex;

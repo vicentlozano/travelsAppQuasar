@@ -1,7 +1,7 @@
 <template>
   <section class="login-card">
     <h3 class="title">TRAVELS APP</h3>
-    <q-form @submit.prevent="loginAction" class="q-gutter-md">
+    <q-form @submit.prevent="loginAction" class="q-gutter-md form">
       <section class="inputs">
         <q-input
           outlined
@@ -13,6 +13,7 @@
           @keyup.enter="prompt = false"
           lazy-rules
           dense
+          class="full-input"
           bg-color="white"
           :rules="[(val) => (val && val.length > 0) || 'Please type something']"
         />
@@ -23,6 +24,7 @@
           dense
           stack-label
           filled
+          class="full-input"
           bg-color="white"
           :type="isPwd ? 'password' : 'text'"
           lazy-rules
@@ -117,12 +119,13 @@ const loginAction = async () => {
   background-color: transparent;
 }
 .login-card {
-  min-width: 370px;
-  height: 300px;
+  width: 370px;
+  height: fit-content;
   display: grid;
   gap: 1rem;
-  grid-template-rows: 1fr 3fr;
+  grid-template-rows: 0.7fr 3fr;
   text-align: center;
+  place-items: center;
 }
 .title {
   color: white;
@@ -132,21 +135,34 @@ const loginAction = async () => {
 .inputs {
   display: grid;
   grid-template-rows: 1fr 1fr;
+  width: 100%;
+  place-items: center;
   gap: 0.7rem;
+  margin: 0;
 }
 .buttons {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-  width: 80%;
+  gap: 3rem;
+  width: 90%;
   align-items: center;
-  justify-self: center;
+  margin: 0;
+  justify-content: space-around;
 }
 .button {
   width: 100%;
   background: linear-gradient(-127deg, $gray-accent 50%, $blue-gray 67%);
   background-size: 800% 800%;
-  animation: gradient 10s ease infinite;
+  animation: gradient 14s ease infinite;
   color: white;
+}
+.form {
+  display: grid;
+  width: 90%;
+  place-items: center;
+  margin: 0;
+}
+.full-input {
+  width: 100%;
 }
 </style>

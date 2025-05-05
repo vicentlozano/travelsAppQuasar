@@ -26,10 +26,10 @@
         </p>
 
         <section v-if="props.crud" class="crud">
-          <button class="round-button" @click="deleteTravel(props.id)">
+          <button class="round-button" @click="deleteTravel(props.travel_id)">
             <img class="delete" alt="delete" src="../assets/icons/icons8-delete-60.png" />
           </button>
-          <button class="round-button" @click="editTravel(props.id)">
+          <button class="round-button" @click="editTravel(props.travel_id)">
             <img class="edit" alt="edit" src="../assets/icons/icons8-edit-50.png" />
           </button>
         </section>
@@ -51,10 +51,12 @@ const props = defineProps({
   crud: Boolean,
   id: Number,
   user: String,
+  travel_id: Number
+
 })
 const emits = defineEmits(['delete'])
 const editTravel = (id) => {
-  router.push({ name: 'edit', params: { id } })
+  router.push({ name: 'edit', params: {id} })
 }
 const deleteTravel = (id) => {
   emits('delete', id)
@@ -77,9 +79,11 @@ const deleteTravel = (id) => {
 }
 .principal {
   display: grid;
+  height: 100%;
   grid-template-rows: 5fr auto;
   justify-content: center;
   gap: 1rem;
+  padding-top: 3.6rem ;
   align-items: center;
 }
 

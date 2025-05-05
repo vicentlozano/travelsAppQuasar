@@ -1,12 +1,13 @@
 <template>
-  <div class="login-page">
-    <transition name="fade" mode="out-in">
-      <RegisterCard />
-    </transition>
-  </div>
+  <section class="login-page">
+    <RegisterCard />
+  </section>
 </template>
 <script setup>
 import RegisterCard from '../components/SignUpCard.vue'
+
+//data
+
 </script>
 
 <style lang="scss" scoped>
@@ -28,9 +29,10 @@ import RegisterCard from '../components/SignUpCard.vue'
   display: flex;
   justify-content: center;
   align-items: center;
-
-  background: linear-gradient(-127deg, $blue-gray 50%, $accent 67%);
+  background: linear-gradient(-127deg, $blue-gray 50%, $gray-accent 67%);
   background-size: 800% 800%;
   animation: gradient 20s ease infinite;
 }
+
+
 </style>

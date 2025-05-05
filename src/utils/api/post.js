@@ -63,6 +63,10 @@ function closeUserSession(error) {
 export function createTravel(travel) {
   return post('Travels/wsCreateTravel', travel)
 }
+export function updateTravel
+(travel) {
+  return post('Travels/wsUpdateTravelById', travel)
+}
 
 export const logIn = (user) => {
   return post('Login/wsLogin', user)

@@ -1,53 +1,50 @@
 <template>
   <HeaderComponent />
-
-  <div class="container">
-    <h2>TODOS MIS VIAJES</h2>
-    <div v-if="travels.length == 0" class="spinner">
-      <q-spinner-oval color="purple" size="4em" class="spinner" />
+  <div class="page-basic">
+    <div class="search-input">
+      <h3 class="title">MIS VIAJES</h3>
+      <q-input v-model="search" debounce="500" filled placeholder="Search">
+        <template v-slot:append>
+          <q-icon name="search" />
+        </template>
+      </q-input>
     </div>
+
     <section v-if="travels.length > 0" class="all-travels">
       <TravelCard
-        v-for="travel in travels"
+        v-for="travel in travelsSearched"
         :key="travel.id"
         :name="travel.name"
         :days="travel.days"
         :places="travel.places"
         :price="travel.price"
         :background-image="travel.background_image"
-        :year="travel.travel_date"
-        :crud="true"
+        :travel_date="travel.travel_date"
         :user="travel.user_name"
-        :id="travel.id"
+        :id="travel.user_id"
+        :crud="true"
         @delete="deleteTravelSelected"
+        :travel_id="travel.id"
       />
       <section class="card">
         <h4 class="add-text">Añadir nuevo viaje</h4>
-        <button @click="goAdd" class="add"></button>
-      </section>
-    </section>
-
-    <section v-if="travels.length == 0" class="no-travels">
-      <h3 class="message-empty">Sin viajes actualmente!</h3>
-      <section class="card">
-        <h4 class="add-text">Añadir nuevo viaje</h4>
-        <button @click="goAdd" class="add"></button>
+        <RouterLink to="/add"><q-icon name="mdi-plus" size="30px" /></RouterLink>
       </section>
     </section>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
-import { getAllTravels } from '../utils/api/get'
-import { deleteTravelById } from '../utils/api/delete'
+import TravelCard from 'src/components/TravelCard.vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
-import TravelCard from '../components/TravelCard.vue'
-import { useRouter } from 'vue-router'
-import { useUserStore } from '../stores/user'
+import { ref, onMounted, computed } from 'vue'
+import { useUserStore } from 'src/stores/user'
+import { getAllTravels } from '../utils/api'
 const auth = useUserStore()
-const router = useRouter()
 const travels = ref([])
+const search = ref('')
+const userId = ref(null)
+import { deleteTravelById } from '../utils/api/delete'
 const deleteTravelSelected = async (idSelected) => {
   try {
     await deleteTravelById({ id: idSelected })
@@ -57,13 +54,38 @@ const deleteTravelSelected = async (idSelected) => {
   }
 }
 
-const goAdd = () => {
-  router.push('/add')
-}
+const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+//computed
+const travelsSearched = computed(() => {
+  return search.value
+    ? travels.value.filter(
+        (travel) =>
+          removeAccents(travel.name.toLowerCase()).includes(
+            removeAccents(search.value.toLowerCase()),
+          ) ||
+          (Array.isArray(travel.places) &&
+            travel.places.some((place) =>
+              removeAccents(place.toLowerCase()).includes(
+                removeAccents(search.value.toLowerCase()),
+              ),
+            )) ||
+          removeAccents(travel.user_name.toLowerCase()).includes(
+            removeAccents(search.value.toLowerCase()),
+          ),
+      )
+    : travels.value
+})
+//hooks
 onMounted(async () => {
-  const response = await getAllTravels()
-  const userId = auth.userId
-  travels.value = response.data.data.filter((travel) => travel.user_id === userId)
+  userId.value = auth.userId
+  console.log(userId.value)
+  try {
+    let response = await getAllTravels()
+    response = response.data
+    travels.value = response.data.filter((travel) => travel.user_id === userId.value)
+  } catch (error) {
+    console.log(error)
+  }
 })
 </script>
 
@@ -74,83 +96,58 @@ onMounted(async () => {
   grid-gap: 3rem;
   justify-items: center;
   align-items: center;
-  padding: 2rem;
-  background-color: rgb(198, 228, 235);
+  height: 100%;
+  padding: 11.6rem 2rem 2rem 2rem;
+  background-color: transparent;
 }
-.no-travels {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  justify-content: center;
-  align-items: center;
-  font-size: 2em;
-  font-weight: bold;
-  background-color: rgb(198, 228, 235);
-  height: 80vh;
-  color: black;
-  transition: all 1s ease;
+.page-basic {
+  display: grid;
+  padding-top: 3.4rem;
+  height: 100%;
+  width: 100%;
+  grid-template-rows: 0.2fr 1fr;
 }
 
-.no-travels h3 {
-  font-weight: 500;
-}
-h2 {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.search-input {
   width: 100%;
-  text-align: center;
-  font-size: 2em;
-  font-weight: 700;
-  height: 200px;
-  background-color: azure;
-  color: rgb(49, 47, 47);
-}
-.add {
-  background-image: url('../assets/icons/icons8-add-100.png');
-  height: 100px;
-  width: 100px;
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
+  position: fixed;
+  z-index: 3;
+  background-color: white;
 }
 .card {
-  display: grid;
-  grid-template-rows: 1fr 1fr;
-  justify-content: center;
-  justify-items: center;
-  align-items: center;
-  text-align: center;
-  width: 400px;
-  height: 100%;
-  background-color: white;
-  border-radius: 25px;
-}
-h4 {
-  color: black;
-  font-size: 2em;
-  text-wrap: auto;
-  font-weight: 700;
-}
-.spinner {
   display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.container {
-  display: grid;
-  grid-template-rows: auto 1fr;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  margin-top: 3.4rem;
+  padding: 5rem;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 70%, rgba(12, 12, 12, 0.757));
+  border-radius: 25px;
 }
-
+.title {
+  color: white;
+  z-index: 3;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 40%, rgba(12, 12, 12, 0.757));
+}
+@media (max-width: 1310px) {
+  .all-travels {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+  }
+}
 @media (max-width: 450px) {
   .all-travels {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-gap: 1rem;
+    padding-top: 12rem;
+    padding-bottom: 3.6rem;
   }
-  .card {
-    width: 300px;
+  .page-basic {
+    padding-top: 0rem;
   }
 }
 </style>
