@@ -18,7 +18,6 @@ import { useUserStore } from '../stores/user'
 const auth = useUserStore()
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
-console.log(windowWidth.value)
 
 //methods
 const updateWidth = () => {
