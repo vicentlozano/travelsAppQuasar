@@ -13,7 +13,7 @@
     dark
     header-class="background-header"
   >
-    <q-step :name="0" icon="account_circle" :done="step > 0">
+    <q-step :name="0" icon="account_circle" :done="step > 0" title="">
       <section class="inputs-name">
         <q-input
           outlined
@@ -47,8 +47,8 @@
         />
       </section>
     </q-step>
-    <q-step :name="1" icon="event" :done="step > 1">
-      <section v-if="step === 1" class="inputs-name" transition-hide="jump-up">
+    <q-step :name="1" icon="event" :done="step > 1" title="">
+      <section v-if="step === 1" class="inputs-name" >
         <q-input
           filled
           v-model="dateStamp"
@@ -95,7 +95,7 @@
         />
       </section>
     </q-step>
-    <q-step :name="2" icon="password" :done="step > 2">
+    <q-step :name="2" icon="password" :done="step > 2" title="">
       <section v-if="step === 2" class="inputs-email">
         <q-input
           outlined
@@ -168,7 +168,7 @@
         </q-input>
       </section>
     </q-step>
-    <q-step :name="3" icon="add_a_photo" :done="step > 3">
+    <q-step :name="3" icon="add_a_photo" :done="step > 3" title="">
       <section v-if="step === 3" class="avatar">
         <q-avatar size="149.60px" font-size="52px" text-color="white" color="teal">
           <img v-if="imageUrl" :src="imageUrl" />
@@ -182,7 +182,6 @@
           name="avatar"
           label-color="white"
           label="Add your photo"
-          @rejected="onRejected"
           @update:model-value="onFileChange"
         >
           <template v-slot:append>

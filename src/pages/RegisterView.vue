@@ -1,8 +1,6 @@
 <template>
   <div class="login-page">
-    <transition name="fade" mode="out-in">
       <RegisterCard />
-    </transition>
   </div>
 </template>
 <script setup>
