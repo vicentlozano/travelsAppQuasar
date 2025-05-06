@@ -7,6 +7,7 @@ export default {
   registerMessage: 'Regístrate para empezar el viaje',
   registerSuccesfull: 'Vaya a sus mensajes para verificar la dirección de correo electrónico!',
   minutesStamp: 'minutos',
+  hoursStamp: 'horas',
   errorSendMessage: 'Error al enviar el mensaje',
 
 }

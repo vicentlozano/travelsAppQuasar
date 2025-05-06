@@ -1,17 +1,23 @@
 <template>
   <div class="bar">
-    <div class="q-pa-md slider" style="height: 80px">
+    <q-separator v-if="mobilView" />
+    <div class="q-pa-md slider" style="height: fit-content">
       <q-avatar
         v-for="contact in contacts"
         :key="contact.id"
         size="40px"
-        class="overlapping"
         @click="emits('recipienSelected', contact)"
+        class="avatar"
       >
         <img v-if="contact.avatar" :src="contact.avatar" />
-        <p v-else class="initial">{{ name.charAt(0).toUpperCase() }}</p>
+        <p v-else class="initial">
+          {{
+            contactChat.name.charAt(0).toUpperCase() + contactChat.lastname.charAt(0).toUpperCase()
+          }}
+        </p>
       </q-avatar>
     </div>
+    <q-separator :vertical="!mobilView" />
   </div>
 </template>
 
@@ -28,11 +34,19 @@ const props = defineProps({
 })
 const emits = defineEmits(['recipientSelected'])
 //data
-
+const mobilView = ref(null)
+let windowWidth = ref(window.innerWidth)
 const contacts = ref(null)
 
+//methods
+const updateWidth = () => {
+  windowWidth.value = window.innerWidth
+  windowWidth.value < 450 ? (mobilView.value = true) : (mobilView.value = false)
+}
 //hooks
 onMounted(async () => {
+  mobilView.value = window.innerWidth < 450
+  window.addEventListener('resize', updateWidth)
   try {
     const response = await getContactsById({ userId: props.userId })
     if (!response.data.error.status) {
@@ -46,9 +60,6 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
-.overlapping {
-  border: 2px solid white;
-}
 .slider {
   display: grid;
   grid-template-columns: repeat(auto-fit, 40px);
@@ -56,12 +67,22 @@ onMounted(async () => {
 }
 .bar {
   display: grid;
-  grid-template-columns: fit-content 2fr;
+  grid-template-columns: 1fr min-content;
   width: 100%;
-  gap: 1rem;
+  margin-top: 6.8rem;
 }
 .initial {
   margin: 0;
   font-weight: 400;
+}
+.avatar:hover {
+  cursor: pointer;
+}
+@media (max-width: 450px) {
+  .bar {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+} 
 }
 </style>

@@ -6,34 +6,38 @@
         <q-icon name="search" />
       </template>
     </q-input>
-    <FriendsContacts :userId="user.userId" @recipientSelected="reciveRecipient" />
+    <FriendsContacts
+      :userId="user.userId"
+      @recipientSelected="reciveRecipient"
+      class="friendsAvatars"
+    />
 
     <section class="chat" v-if="recipientId">
       <ChatDialog :contactChat="recipientId ? recipientId : null" />
-      <q-input
-        standout
-        bottom-slots
-        v-model="messageText"
-        label="Label"
-        :dense="dense"
-        class="keyboard"
-      >
-        <template v-slot:before>
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/img/avatar5.jpg" />
-          </q-avatar>
-        </template>
-
-        <template v-slot:append>
-          <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
-          <q-icon name="schedule" />
-        </template>
-
-        <template v-slot:after>
-          <q-btn round dense flat icon="send" @click="sendMessage" />
-        </template>
-      </q-input>
     </section>
+    <q-input
+      standout
+      bottom-slots
+      v-model="messageText"
+      label="Label"
+      :dense="dense"
+      class="keyboard"
+    >
+      <template v-slot:before>
+        <q-avatar>
+          <img :src="user.avatar" />
+        </q-avatar>
+      </template>
+
+      <template v-slot:append>
+        <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
+        <q-icon name="schedule" />
+      </template>
+
+      <template v-slot:after>
+        <q-btn round dense flat icon="send" @click="sendMessage" />
+      </template>
+    </q-input>
   </div>
 </template>
 
@@ -65,6 +69,7 @@ const sendMessage = async () => {
     })
     if (!response.data.error?.status) {
       console.log('okey!')
+      messageText.value = ''
     }
   } catch (error) {
     notifyError($t('errorSendMessage'), error)
@@ -76,25 +81,30 @@ const sendMessage = async () => {
 .chat {
   display: grid;
   grid-template-rows: auto 1fr auto;
-  padding-top: 3.9rem;
   align-items: center;
   justify-items: center;
   width: 100%;
   height: 100%;
+  padding: 0rem 0rem 3.6rem 0rem;
   z-index: 1;
+  grid-column: 2/2;
+  grid-row: 2/3;
 }
 .keyboard {
   width: 100%;
   position: fixed;
   bottom: 0;
-  padding: 1rem;
+  padding:0rem 1rem 1rem 1rem;
+  z-index: 4;
+  background-color: white;
 }
 .page-basic {
   display: grid;
   padding-top: 3.4rem;
   max-height: 100%;
   width: 100%;
-  grid-template-rows: 0.2fr 1fr;
+  grid-template-columns: min-content 1fr;
+  grid-template-rows: 0.2fr 1fr 0.2fr;
 }
 .absolute-top {
   position: relative;
@@ -112,16 +122,29 @@ const sendMessage = async () => {
 .contacts {
   width: 100%;
 }
+.friendsAvatars {
+  margin-top: 3.5rem;
+  width: 100%;
+  grid-column: 1/2;
+  grid-row: 2/3;
+
+  
+}
 @media (max-width: 450px) {
   .page-basic {
     padding-top: 0rem;
     padding-bottom: 3.6rem;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.2fr 0.2fr 1fr 0.2fr;
   }
   .keyboard {
     width: 100%;
     position: fixed;
     bottom: 0;
     padding: 1rem 1rem 3.6rem 1rem;
+  }
+  .chat {
+    padding: 0rem 0rem 6.8rem 0rem;
   }
 }
 </style>
