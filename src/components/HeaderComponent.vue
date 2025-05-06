@@ -95,10 +95,8 @@ h1 {
   background-color: rgba(0, 0, 0, 0.63);
   backdrop-filter: blur(0.7px);
   align-items: center;
-  height: 3.4rem;
+  height:3.6rem;
   padding: 0.3rem;
-  position: fixed;
-  top: 0;
   z-index: 1;
   .link {
     margin: 0;
@@ -119,6 +117,8 @@ h1 {
   align-items: center;
   padding: 0.3rem;
   position: fixed;
+  height:3.6rem;
+
   bottom: 0;
   .link {
     margin: 0;

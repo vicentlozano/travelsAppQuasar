@@ -1,6 +1,5 @@
 <template>
   <div class="bar">
-    <q-separator v-if="mobilView" />
     <div class="q-pa-md slider" style="height: fit-content">
       <q-avatar
         v-for="contact in contacts"
@@ -69,7 +68,6 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: 1fr min-content;
   width: 100%;
-  margin-top: 6.8rem;
 }
 .initial {
   margin: 0;

@@ -1,5 +1,5 @@
 <template>
-  <HeaderComponent />
+  <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
       <template v-slot:append>
@@ -93,6 +93,9 @@ onMounted(async () => {
   top: 1;
   z-index: 3;
   background-color: white;
+}
+.fixed-header{
+  position: fixed;
 }
 @media (max-width: 1310px) {
   .all-travels {

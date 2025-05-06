@@ -40,10 +40,9 @@ onMounted(async () => {})
 <style lang="scss" scoped>
 .page-basic {
   display: grid;
-  padding-top: 3.4rem;
   height: 100%;
   width: 100%;
-  grid-template-rows: 0.2fr 1fr;
+  grid-template-rows: min-content 1fr;
 }
 .absolute-top {
   position: fixed;
@@ -56,7 +55,6 @@ onMounted(async () => {})
   height: 100%;
   width: 100%;
   gap: 1rem;
-  padding-top: 3.4rem;
   grid-template-rows: auto auto;
   justify-content: center;
   align-content: center;

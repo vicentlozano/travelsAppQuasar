@@ -1,43 +1,52 @@
 <template>
-  <div class="chat-dialog">
-    <q-chat-message label="Sunday, 19th" />
-    <q-chat-message
-      v-for="message in messages"
-      :key="message.message"
-      :name="message.sendFrom === user.userId ? user.username : contactChat.name"
-      :avatar="message.sendFrom === user.userId ? user.avatar : contactAvatar"
-      :text="[message.message]"
-      :stamp="
-        moment().diff(message.date, 'minutes') < 60
-          ? `${moment().diff(message.date, 'minutes')} ${$t('minutesStamp')}`
-          : `${moment().diff(message.date, 'hours')} ${$t('hoursStamp')}`
-      "
-      :sent="user.userId === message.sendFrom"
+   <q-scroll-area
+      :thumb-style="thumbStyle"
+      :bar-style="barStyle"
+      style="height: 100%; width: 100%;"
+      id="scroll-area-with-virtual-scroll-1"
     >
-      <template v-slot:avatar v-if="user.userId !== message.sendFrom && !contactAvatar">
-        <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
-          {{
-            contactChat.name.charAt(0).toUpperCase() + contactChat.lastname.charAt(0).toUpperCase()
-          }}
-        </q-avatar>
-      </template>
-    </q-chat-message>
-    <q-chat-message
-      v-if="constactIsWritting"
-      :name="contactChat.name"
-      :avatar="contactAvatar"
-      :sent="false"
-    >
-      <template v-slot:avatar v-if="!contactAvatar">
-        <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
-          {{
-            contactChat.name.charAt(0).toUpperCase() + contactChat.lastname.charAt(0).toUpperCase()
-          }}
-        </q-avatar>
-      </template>
-      <q-spinner-dots size="2rem" />
-    </q-chat-message>
-  </div>
+    <div class="chat-dialog">
+      <q-chat-message label="Sunday, 19th" />
+      <q-chat-message
+        v-for="message in messages"
+        :key="message.message"
+        :name="message.sendFrom === user.userId ? user.username : contactChat.name"
+        :avatar="message.sendFrom === user.userId ? user.avatar : contactAvatar"
+        :text="[message.message]"
+        :stamp="
+          moment().diff(message.date, 'minutes') < 60
+            ? `${moment().diff(message.date, 'minutes')} ${$t('minutesStamp')}`
+            : `${moment().diff(message.date, 'hours')} ${$t('hoursStamp')}`
+        "
+        :sent="user.userId === message.sendFrom"
+      >
+        <template v-slot:avatar v-if="user.userId !== message.sendFrom && !contactAvatar">
+          <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
+            {{
+              contactChat.name.charAt(0).toUpperCase() +
+              contactChat.lastname.charAt(0).toUpperCase()
+            }}
+          </q-avatar>
+        </template>
+      </q-chat-message>
+      <q-chat-message
+        v-if="constactIsWritting"
+        :name="contactChat.name"
+        :avatar="contactAvatar"
+        :sent="false"
+      >
+        <template v-slot:avatar v-if="!contactAvatar">
+          <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
+            {{
+              contactChat.name.charAt(0).toUpperCase() +
+              contactChat.lastname.charAt(0).toUpperCase()
+            }}
+          </q-avatar>
+        </template>
+        <q-spinner-dots size="2rem" />
+      </q-chat-message>
+    </div>
+  </q-scroll-area>
 </template>
 
 <script setup>
@@ -65,7 +74,8 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .chat-dialog {
   width: 100%;
-  padding: 1rem 1rem 1rem 1rem;
   max-width: 900px;
+  padding: 1rem 3rem;
+
 }
 </style>

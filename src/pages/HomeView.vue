@@ -1,5 +1,5 @@
 <template>
-  <HeaderComponent />
+  <HeaderComponent class="fixed-header"/>
   <div class="basic-container">
     <section class="paralax"></section>
     <h2>MIS ÚLTIMOS VIAJES</h2>
@@ -115,6 +115,9 @@ h2 {
   top: 1;
   background-color: $gray-accent;
   height: 3.4rem;
+}
+.fixed-header{
+  position: fixed;
 }
 @media (max-width: 1310px) {
   .last-travels {
