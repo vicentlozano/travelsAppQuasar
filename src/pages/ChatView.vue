@@ -145,6 +145,7 @@ const sendMessage = async () => {
   .chat {
     padding: 0rem 0rem 0rem;
     grid-row: 3/4;
+    grid-column: 1/-1;
   }
   .friendsAvatars {
     width: 100%;
