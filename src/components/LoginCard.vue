@@ -41,7 +41,7 @@
       </section>
       <section class="buttons">
         <q-btn label="Register" @click="goRegister" type="button" class="button" />
-        <q-btn class="button" label="Loggin" v-close-popup type="submit" />
+        <q-btn class="button" label="Login" v-close-popup type="submit" />
       </section>
     </q-form>
   </section>

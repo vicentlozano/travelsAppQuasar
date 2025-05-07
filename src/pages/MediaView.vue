@@ -1,5 +1,5 @@
 <template>
-  <HeaderComponent />
+  <HeaderComponent  class="fixed-header"/>
   <div class="page-basic">
     <div class="search-input">
       <h3 class="title">MIS VIAJES</h3>
@@ -131,6 +131,9 @@ onMounted(async () => {
   text-align: center;
   padding: 2rem;
   background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 40%, rgba(12, 12, 12, 0.757));
+}
+.fixed-header{
+  position: fixed;
 }
 @media (max-width: 1310px) {
   .all-travels {

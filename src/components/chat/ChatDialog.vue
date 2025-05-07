@@ -1,48 +1,99 @@
 <template>
-  <div class="chat-dialog">
-    <q-chat-message label="Sunday, 19th" />
-
-    <q-chat-message
-      name="me"
-      avatar="https://cdn.quasar.dev/img/avatar4.jpg"
-      :text="['hey, how are you?']"
-      sent
-      stamp="7 minutes ago"
-    />
-    <q-chat-message
-      name="Jane"
-      avatar="https://cdn.quasar.dev/img/avatar3.jpg"
-      :text="['hey, how are you?']"
-      stamp="4 minutes ago"
-    />
-    <q-chat-message
-      v-for="message in messages"
-      :key="message.message"
-      :name="message.id"
-      avatar="https://cdn.quasar.dev/img/avatar3.jpg"
-      :text="[message.message]"
-      :stamp="message.date"
-      :sent="user.userId === message.sendFrom"
-    />
-  </div>
+  <q-scroll-area
+    :thumb-style="thumbStyle"
+    :bar-style="barStyle"
+    style="height: 100%; width: 100%"
+    id="scroll-area-with-virtual-scroll-1"
+  >
+    <div class="chat-dialog">
+      <q-chat-message :label="messages[0]?.date? moment(messages[0]?.date).format('DD MMMM'): ''" />
+      <q-chat-message
+        v-for="message in messages"
+        :key="message.message"
+        :name="message.sendFrom === user.userId ? user.username : contactChat.name"
+        :avatar="message.sendFrom === user.userId ? user.avatar : contactAvatar"
+        :text="[message.message]"
+        :stamp="
+          moment().diff(message.date, 'minutes') < 60
+            ? `${moment().diff(message.date, 'minutes')} ${$t('minutesStamp')}`
+            : `${moment().diff(message.date, 'hours')} ${$t('hoursStamp')}`
+        "
+        :sent="user.userId === message.sendFrom"
+      >
+        <template v-slot:avatar v-if="user.userId !== message.sendFrom && !contactAvatar">
+          <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
+            {{
+              contactChat.name.charAt(0).toUpperCase() +
+              contactChat.lastname.charAt(0).toUpperCase()
+            }}
+          </q-avatar>
+        </template>
+      </q-chat-message>
+      <q-chat-message
+        v-if="constactIsWritting"
+        :name="contactChat.name"
+        :avatar="contactAvatar"
+        :sent="false"
+      >
+        <template v-slot:avatar v-if="!contactAvatar">
+          <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
+            {{
+              contactChat.name.charAt(0).toUpperCase() +
+              contactChat.lastname.charAt(0).toUpperCase()
+            }}
+          </q-avatar>
+        </template>
+        <q-spinner-dots size="2rem" />
+      </q-chat-message>
+    </div>
+  </q-scroll-area>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { getMessages } from 'src/utils/api/get'
 import { useUserStore } from 'src/stores/user'
+import moment from 'moment'
+import { notifyError } from 'src/utils/utilsNotify'
+//props&emits
+const props = defineProps({
+  contactChat: Object,
+})
+//data
 const user = useUserStore()
 const messages = ref([])
+const contactAvatar = ref(null)
+const constactIsWritting = ref(true)
+//computed
+watch(
+  () => props.contactChat,
+  async (newVal) => {
+    if (newVal) {
+      try {
+        messages.value = await getMessages({ userId: user.userId, friendId: newVal.id })
+        messages.value = messages.value.data.data
+        contactAvatar.value = newVal?.avatar.length > 0 ? newVal?.avatar : ''
+      } catch (error) {
+        notifyError(error)
+      }
+    }
+  },
+)
 onMounted(async () => {
-  messages.value = await getMessages({ userId: user.userId })
-  messages.value = messages.value.data.data
+  try {
+    messages.value = await getMessages({ userId: user.userId, friendId: props.contactChat.id })
+    messages.value = messages.value.data.data
+    contactAvatar.value = props.contactChat?.avatar.length > 0 ? props.contactChat?.avatar : ''
+  } catch (error) {
+    notifyError(error)
+  }
 })
 </script>
 
 <style lang="scss" scoped>
 .chat-dialog {
   width: 100%;
-  padding: 3rem 1rem 5rem 1rem  ;
-  max-width: 600px;
+  max-width: 900px;
+  padding: 1rem 3rem;
 }
 </style>
