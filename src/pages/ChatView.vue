@@ -150,7 +150,7 @@ const sendMessage = async () => {
   .friendsAvatars {
     width: 100%;
     grid-row: 2/3;
-    padding: 0rem 1rem;
+    padding: 0rem 0rem;
   }
   .search-input {
     width: 100%;
@@ -161,8 +161,8 @@ const sendMessage = async () => {
   .header-top {
     grid-row: 5/5;
   }
-  .nav-footer{
-position: relative;
+  .nav-footer {
+    position: relative;
   }
 }
 </style>

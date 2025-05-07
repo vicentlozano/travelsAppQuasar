@@ -5,7 +5,7 @@
         v-for="contact in contacts"
         :key="contact.id"
         size="40px"
-        @click="emits('recipienSelected', contact)"
+        @click="emits('recipientSelected', contact), console.log(contact)"
         class="avatar"
       >
         <img v-if="contact.avatar" :src="contact.avatar" />

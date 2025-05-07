@@ -118,11 +118,11 @@ h1 {
   padding: 0.3rem;
   position: fixed;
   height:3.6rem;
-
   bottom: 0;
   .link {
     margin: 0;
     width: fit-content;
+    padding: 0rem;
   }
   .link:hover {
   transform: scale(1.0);
