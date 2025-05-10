@@ -9,19 +9,23 @@
     </q-input>
     <FriendsContacts
       :userId="user.userId"
+      :contactSearch="search"
       @recipientSelected="reciveRecipient"
       class="friendsAvatars"
     />
 
     <section class="chat" v-if="recipientId">
-      <ChatDialog :contactChat="recipientId ? recipientId : null" />
+      <ChatDialog :contactChat="recipientId ? recipientId : null" :isWritting="isWritting" />
     </section>
     <q-input
       standout
       bottom-slots
       v-model="messageText"
       label="Label"
-      :dense="dense"
+      @focus="writting"
+      @blur="stopWritting"
+      @keyup.enter="sendMessage"
+      bg-color="gray"
       class="keyboard"
     >
       <template v-slot:before>
@@ -31,12 +35,26 @@
       </template>
 
       <template v-slot:append>
-        <q-icon v-if="text !== ''" name="close" @click="text = ''" class="cursor-pointer" />
+        <q-icon
+          v-if="messageText !== ''"
+          name="close"
+          @click="messageText = ''"
+          class="cursor-pointer"
+        />
         <q-icon name="schedule" />
       </template>
 
       <template v-slot:after>
         <q-btn round dense flat icon="send" @click="sendMessage" />
+      </template>
+      <template v-slot:control>
+        <input
+          class="q-field__native q-placeholder"
+          type="text"
+          :value="messageText"
+          @input="(e) => (messageText = e.target.value)"
+          @keydown.enter="sendMessage"
+        />
       </template>
     </q-input>
   </div>
@@ -48,15 +66,18 @@ import FriendsContacts from 'src/components/chat/FriendsContacts.vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useUserStore } from 'src/stores/user'
 import { notifyError } from 'src/utils/utilsNotify'
-import { ref } from 'vue'
+import { ref, inject, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { sendMessageById } from 'src/utils/api'
 
 //data
+const mqtt = inject('appGlobal/mqtt')
 const user = useUserStore()
 const recipientId = ref(null)
 const messageText = ref('')
 const $t = useI18n()
+const search = ref('')
+const isWritting = ref(false)
 //methods
 const reciveRecipient = (value) => {
   recipientId.value = value
@@ -69,13 +90,43 @@ const sendMessage = async () => {
       recipientId: recipientId.value.id,
     })
     if (!response.data.error?.status) {
-      console.log('okey!')
       messageText.value = ''
     }
   } catch (error) {
     notifyError($t('errorSendMessage'), error)
   }
 }
+const stopWritting = () => {
+  mqtt.publish(
+    `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value.id}`,
+    JSON.stringify({ isWritting: false }),
+  )
+}
+const writting = () => {
+  mqtt.publish(
+    `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value.id}`,
+    JSON.stringify({ isWritting: true }),
+  )
+}
+//computed
+
+//watch
+
+watch(recipientId, (newRecipient, oldRecipent) => {
+  if (newRecipient?.id) {
+    mqtt.publish(
+      `TRAVELS/ISWRITTING/${user.userId}/${newRecipient.id}`,
+      JSON.stringify({ isWritting: false }),
+    )
+    mqtt.subscribe(`TRAVELS/ISWRITTING/${newRecipient.id}/${user.userId}`, (isWriting) => {
+      isWritting.value = JSON.parse(isWriting).isWriting
+    })
+    if (oldRecipent) {
+      mqtt.unSubscribe(`TRAVELS/ISWRITTING/${oldRecipent.id}/${user.userId}`)
+    }
+  }
+})
+//hooks
 </script>
 
 <style lang="scss" scoped>

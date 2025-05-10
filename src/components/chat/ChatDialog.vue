@@ -1,8 +1,6 @@
 <template>
   <q-scroll-area
     ref="chatScroll"
-    :thumb-style="thumbStyle"
-    :bar-style="barStyle"
     style="height: 100%; width: 100%"
     id="scroll-area-with-virtual-scroll-1"
   >
@@ -12,7 +10,7 @@
       />
       <q-chat-message
         v-for="message in messages"
-        :key="message.message"
+        :key="message.message + message.date"
         :name="message.sendFrom === user.userId ? user.username : contactChat.name"
         :avatar="message.sendFrom === user.userId ? user.avatar : contactAvatar"
         :text="[message.message]"
@@ -33,7 +31,7 @@
         </template>
       </q-chat-message>
       <q-chat-message
-        v-if="constactIsWritting"
+        v-if="isWritting"
         :name="contactChat.name"
         :avatar="contactAvatar"
         :sent="false"
@@ -53,7 +51,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch, inject,nextTick  } from 'vue'
+import { ref, onMounted, watch, inject, nextTick, onUnmounted } from 'vue'
 import { getMessages } from 'src/utils/api/get'
 import { useUserStore } from 'src/stores/user'
 import moment from 'moment'
@@ -62,33 +60,32 @@ import { notifyError } from 'src/utils/utilsNotify'
 //props&emits
 const props = defineProps({
   contactChat: Object,
+  isWritting: Boolean,
 })
-
 //data
 const mqtt = inject('appGlobal/mqtt')
 const user = useUserStore()
 const messages = ref([])
 const contactAvatar = ref(null)
-const constactIsWritting = ref(true)
 const chatScroll = ref(null)
 
 //computed
 watch(
   () => props.contactChat,
-  async (oldVal, newVal) => {
+  async (newVal, oldVal) => {
     if (newVal) {
       try {
-        let newTopic = user.userId + props.contactChat.id
-        let oldTopic = user.userId + oldVal.id
+        let newTopic = [user.userId, newVal.id].sort((a, b) => a - b).join('-')
+        let oldTopic = [user.userId, oldVal.id].sort((a, b) => a - b).join('-')
 
         messages.value = await getMessages({ userId: user.userId, friendId: newVal.id })
         messages.value = messages.value.data.data
         contactAvatar.value = newVal?.avatar.length > 0 ? newVal?.avatar : ''
         mqtt.unSubscribe(`TRAVELS/UPDATES/${oldTopic}`)
-
         mqtt.subscribe(`TRAVELS/UPDATES/${newTopic}`, (message) => {
           messages.value.push(JSON.parse(message))
         })
+
         scrollToBottom(true)
       } catch (error) {
         notifyError(error)
@@ -96,19 +93,21 @@ watch(
     }
   },
 )
-watch(messages, () => {
-  scrollToBottom()
-})
+watch(
+  () => messages.value.length,
+  () => {
+    scrollToBottom()
+  }
+)
 
 //methods
-
 function scrollToBottom() {
   nextTick(() => {
     const scrollEl = chatScroll.value?.getScrollTarget?.()
     if (scrollEl) {
       scrollEl.scrollTo({
         top: scrollEl.scrollHeight,
-        behavior: 'smooth' // <-- ¡Este es el scroll suave real!
+        behavior: 'smooth',
       })
     }
   })
@@ -119,7 +118,8 @@ onMounted(async () => {
     messages.value = await getMessages({ userId: user.userId, friendId: props.contactChat.id })
     messages.value = messages.value.data.data
     contactAvatar.value = props.contactChat?.avatar.length > 0 ? props.contactChat?.avatar : ''
-    let topic = user.userId + props.contactChat.id
+    const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
+    const topic = `${id1}-${id2}`
     mqtt.subscribe(`TRAVELS/UPDATES/${topic}`, (message) => {
       messages.value.push(JSON.parse(message))
     })
@@ -127,6 +127,11 @@ onMounted(async () => {
   } catch (error) {
     notifyError(error)
   }
+})
+onUnmounted(() => {
+  const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
+  const topic = `${id1}-${id2}`
+  mqtt.unSubscribe(`TRAVELS/UPDATES/${topic}`)
 })
 </script>
 
