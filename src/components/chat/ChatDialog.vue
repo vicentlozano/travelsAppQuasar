@@ -30,22 +30,25 @@
           </q-avatar>
         </template>
       </q-chat-message>
-      <q-chat-message
-        v-if="isWritting"
-        :name="contactChat.name"
-        :avatar="contactAvatar"
-        :sent="false"
-      >
-        <template v-slot:avatar v-if="!contactAvatar">
-          <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
-            {{
-              contactChat.name.charAt(0).toUpperCase() +
-              contactChat.lastname.charAt(0).toUpperCase()
-            }}
-          </q-avatar>
-        </template>
-        <q-spinner-dots size="2rem" />
-      </q-chat-message>
+      <transition name="fade-slide" @after-leave="onDotsHidden">
+        <q-chat-message
+          v-show="isContactWritting"
+          :name="contactChat.name"
+          :avatar="contactAvatar"
+          :sent="false"
+          class="animation"
+        >
+          <template v-slot:avatar v-if="!contactAvatar">
+            <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
+              {{
+                contactChat.name.charAt(0).toUpperCase() +
+                contactChat.lastname.charAt(0).toUpperCase()
+              }}
+            </q-avatar>
+          </template>
+          <q-spinner-dots size="2rem" />
+        </q-chat-message>
+      </transition>
     </div>
   </q-scroll-area>
 </template>
@@ -60,7 +63,7 @@ import { notifyError } from 'src/utils/utilsNotify'
 //props&emits
 const props = defineProps({
   contactChat: Object,
-  isWritting: Boolean,
+  isContactWritting: Boolean,
 })
 //data
 const mqtt = inject('appGlobal/mqtt')
@@ -68,7 +71,36 @@ const user = useUserStore()
 const messages = ref([])
 const contactAvatar = ref(null)
 const chatScroll = ref(null)
+const wasWritting = ref(false)
+const pendingMessage = ref(null)
 
+//methods
+function isAtBottom() {
+  const scrollEl = chatScroll.value?.getScrollTarget?.()
+  if (!scrollEl) return false
+  return scrollEl.scrollTop + scrollEl.clientHeight >= scrollEl.scrollHeight - 330 // tolerancia
+}
+function scrollToBottom() {
+  nextTick(() => {
+    const scrollEl = chatScroll.value?.getScrollTarget?.()
+    if (scrollEl) {
+      scrollEl.scrollTo({
+        top: scrollEl.scrollHeight,
+        behavior: 'smooth',
+      })
+    }
+  })
+}
+function onDotsHidden() {
+  // Esperem un pel·lín per assegurar-nos que l'animació ha acabat
+  setTimeout(() => {
+    if (pendingMessage.value) {
+      messages.value.push(pendingMessage.value)
+      pendingMessage.value = null
+    }
+    scrollToBottom()
+  }, 50)
+}
 //computed
 watch(
   () => props.contactChat,
@@ -83,7 +115,13 @@ watch(
         contactAvatar.value = newVal?.avatar.length > 0 ? newVal?.avatar : ''
         mqtt.unSubscribe(`TRAVELS/UPDATES/${oldTopic}`)
         mqtt.subscribe(`TRAVELS/UPDATES/${newTopic}`, (message) => {
-          messages.value.push(JSON.parse(message))
+          const parsed = JSON.parse(message)
+          if (wasWritting.value) {
+            // Guardem el missatge fins que acabe l'animació dels dots
+            pendingMessage.value = parsed
+          } else {
+            messages.value.push(parsed)
+          }
         })
 
         scrollToBottom(true)
@@ -96,22 +134,30 @@ watch(
 watch(
   () => messages.value.length,
   () => {
-    scrollToBottom()
-  }
+    if (wasWritting.value) {
+      // si justo antes estaba escribiendo, da un poco de tiempo
+      setTimeout(() => {
+        scrollToBottom()
+        wasWritting.value = false // reseteamos
+      }, 100)
+    } else {
+      scrollToBottom()
+    }
+  },
 )
-
-//methods
-function scrollToBottom() {
-  nextTick(() => {
-    const scrollEl = chatScroll.value?.getScrollTarget?.()
-    if (scrollEl) {
-      scrollEl.scrollTo({
-        top: scrollEl.scrollHeight,
-        behavior: 'smooth',
+watch(
+  () => props.isContactWritting,
+  (val) => {
+    if (val && isAtBottom()) {
+      // Solo hacemos scroll si estamos abajo
+      nextTick(() => {
+        scrollToBottom()
       })
     }
-  })
-}
+    wasWritting.value = val
+  },
+)
+
 //hooks
 onMounted(async () => {
   try {
@@ -140,5 +186,21 @@ onUnmounted(() => {
   width: 100%;
   max-width: 900px;
   padding: 1rem 3rem;
+}
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.4s ease,
+    transform 0.4s ease;
+}
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
 }
 </style>

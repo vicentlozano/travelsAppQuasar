@@ -15,7 +15,10 @@
     />
 
     <section class="chat" v-if="recipientId">
-      <ChatDialog :contactChat="recipientId ? recipientId : null" :isWritting="isWritting" />
+      <ChatDialog
+        :contactChat="recipientId ? recipientId : null"
+        :isContactWritting="isWrittingStatus"
+      />
     </section>
     <q-input
       standout
@@ -24,7 +27,7 @@
       label="Label"
       @focus="writting"
       @blur="stopWritting"
-      @keyup.enter="sendMessage"
+      @keydown.enter="sendMessage"
       bg-color="gray"
       class="keyboard"
     >
@@ -77,7 +80,8 @@ const recipientId = ref(null)
 const messageText = ref('')
 const $t = useI18n()
 const search = ref('')
-const isWritting = ref(false)
+const isWrittingStatus = ref(false)
+
 //methods
 const reciveRecipient = (value) => {
   recipientId.value = value
@@ -114,16 +118,17 @@ const writting = () => {
 
 watch(recipientId, (newRecipient, oldRecipent) => {
   if (newRecipient?.id) {
+    if (oldRecipent) {
+      mqtt.unSubscribe(`TRAVELS/ISWRITTING/${oldRecipent.id}/${user.userId}`)
+    }
     mqtt.publish(
       `TRAVELS/ISWRITTING/${user.userId}/${newRecipient.id}`,
       JSON.stringify({ isWritting: false }),
     )
-    mqtt.subscribe(`TRAVELS/ISWRITTING/${newRecipient.id}/${user.userId}`, (isWriting) => {
-      isWritting.value = JSON.parse(isWriting).isWriting
+    mqtt.subscribe(`TRAVELS/ISWRITTING/${newRecipient.id}/${user.userId}`, (isWritting) => {
+      let message = JSON.parse(isWritting)
+      isWrittingStatus.value = message.isWritting
     })
-    if (oldRecipent) {
-      mqtt.unSubscribe(`TRAVELS/ISWRITTING/${oldRecipent.id}/${user.userId}`)
-    }
   }
 })
 //hooks
