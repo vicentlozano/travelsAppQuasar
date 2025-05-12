@@ -72,7 +72,6 @@ const messages = ref([])
 const contactAvatar = ref(null)
 const chatScroll = ref(null)
 const wasWritting = ref(false)
-const pendingMessage = ref(null)
 
 //methods
 function isAtBottom() {
@@ -92,14 +91,10 @@ function scrollToBottom() {
   })
 }
 function onDotsHidden() {
-  // Esperem un pel·lín per assegurar-nos que l'animació ha acabat
+  // Esperes un breu moment i forces scroll suau
   setTimeout(() => {
-    if (pendingMessage.value) {
-      messages.value.push(pendingMessage.value)
-      pendingMessage.value = null
-    }
     scrollToBottom()
-  }, 50)
+  }, 300)
 }
 //computed
 watch(
@@ -115,13 +110,7 @@ watch(
         contactAvatar.value = newVal?.avatar.length > 0 ? newVal?.avatar : ''
         mqtt.unSubscribe(`TRAVELS/UPDATES/${oldTopic}`)
         mqtt.subscribe(`TRAVELS/UPDATES/${newTopic}`, (message) => {
-          const parsed = JSON.parse(message)
-          if (wasWritting.value) {
-            // Guardem el missatge fins que acabe l'animació dels dots
-            pendingMessage.value = parsed
-          } else {
-            messages.value.push(parsed)
-          }
+          messages.value.push(JSON.parse(message))
         })
 
         scrollToBottom(true)
@@ -139,7 +128,7 @@ watch(
       setTimeout(() => {
         scrollToBottom()
         wasWritting.value = false // reseteamos
-      }, 100)
+      }, 20)
     } else {
       scrollToBottom()
     }
@@ -190,8 +179,8 @@ onUnmounted(() => {
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition:
-    opacity 0.4s ease,
-    transform 0.4s ease;
+    opacity 0.1s ease,
+    transform 0.1s ease;
 }
 .fade-slide-enter-from,
 .fade-slide-leave-to {

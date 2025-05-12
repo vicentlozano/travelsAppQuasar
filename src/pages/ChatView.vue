@@ -102,6 +102,7 @@ const sendMessage = async () => {
 }
 const stopWritting = () => {
   mqtt.publish(
+    
     `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value.id}`,
     JSON.stringify({ isWritting: false }),
   )
