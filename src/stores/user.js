@@ -10,6 +10,7 @@ export const useUserStore = defineStore(
     const email = ref(null)
     const role = ref(null)
     const avatar = ref(null)
+    const mqttAlertSubscribe = ref(false)
 
     function deleteUser() {
       userId.value = null
@@ -17,6 +18,7 @@ export const useUserStore = defineStore(
       email.value = null
       role.value = null
       avatar.value = null
+      mqttAlertSubscribe.value = false
       LocalStorage.removeItem('token')
     }
     function setUser(id, name, userEmail, userRole,userAvatar) {
@@ -25,10 +27,14 @@ export const useUserStore = defineStore(
       email.value = userEmail
       role.value = userRole
       avatar.value = userAvatar
+      mqttAlertSubscribe.value = false
     }
     function updateUser() {}
+    function subscribeAlert(bool){
+      mqttAlertSubscribe.value = bool
+    }
 
-    return { userId, username, email, role, avatar, deleteUser, setUser, updateUser }
+    return { userId, username, email, role, avatar,mqttAlertSubscribe, deleteUser, setUser, updateUser,subscribeAlert }
   },
   {
     persist: true,

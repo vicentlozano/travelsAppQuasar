@@ -16,20 +16,19 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue'
+import { onMounted,inject } from 'vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
-import { useQuasar } from 'quasar'
 
 //data
 const auth = useUserStore()
 const router = useRouter()
-const $q = useQuasar()
+const mqtt = inject('appGlobal/mqtt')
 //methods
 const logout = () => {
-  $q.localStorage.removeItem('token')
-
+  mqtt.unSubscribeFromAllTopics()
+  auth.deleteUser()
   router.push({ name: 'login' })
 }
 

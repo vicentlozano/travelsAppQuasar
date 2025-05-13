@@ -1,14 +1,14 @@
 import { defineBoot } from '#q-app/wrappers'
-import MQTT from "src/utils/mqttManager";
+import MQTT from 'src/utils/mqttManager'
 
 export default defineBoot(({ app }) => {
-    const ip = "localhost";
-  const port = "9001";
+  const ip = 'localhost'
+  const port = '9001'
 
   if (ip && port) {
-    let mqtt = new MQTT(ip, port);
-    mqtt.connect();
+    let mqtt = new MQTT(ip, port)
+    mqtt.connect()
 
-    app.provide("appGlobal/mqtt", mqtt);
+    app.provide('appGlobal/mqtt', mqtt)
   }
-});
+})
