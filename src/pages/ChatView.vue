@@ -69,7 +69,7 @@ import FriendsContacts from 'src/components/chat/FriendsContacts.vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useUserStore } from 'src/stores/user'
 import { notifyError } from 'src/utils/utilsNotify'
-import { ref, inject, watch } from 'vue'
+import { ref, inject, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { sendMessageById } from 'src/utils/api'
 
@@ -131,6 +131,11 @@ watch(recipientId, (newRecipient, oldRecipent) => {
       isWrittingStatus.value = message.isWritting
     })
   }
+})
+
+onUnmounted(()=> {
+  mqtt.unSubscribe(`TRAVELS/ISWRITTING/${recipientId.value.id}/${user.userId}`)
+
 })
 //hooks
 </script>
