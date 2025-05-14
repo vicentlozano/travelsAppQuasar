@@ -110,6 +110,9 @@ watch(
         contactAvatar.value = newVal?.avatar.length > 0 ? newVal?.avatar : ''
         mqtt.unSubscribe(`TRAVELS/UPDATES/${oldTopic}`)
         mqtt.subscribe(`TRAVELS/UPDATES/${newTopic}`, (message) => {
+          let count = user.countMessages
+          console.log(count)
+          user.recountNewMessages(count - 1)
           messages.value.push(JSON.parse(message))
         })
 
@@ -156,7 +159,11 @@ onMounted(async () => {
     const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
     const topic = `${id1}-${id2}`
     mqtt.subscribe(`TRAVELS/UPDATES/${topic}`, (message) => {
+       let count = user.countMessages
+             console.log(count)
+      user.recountNewMessages(count-1)
       messages.value.push(JSON.parse(message))
+     
     })
     scrollToBottom(true)
   } catch (error) {
