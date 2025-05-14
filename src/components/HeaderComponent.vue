@@ -2,7 +2,11 @@
   <header :class="mobilView ? 'nav-footer' : 'nav-header'">
     <RouterLink class="link" to="/"><q-icon name="mdi-home" class="icons-header" /></RouterLink>
     <RouterLink class="link" to="/chat">
-      <q-icon name="mdi-chat" class="icons-header" :color="alertChat ? 'red' : 'white'" />
+      <q-icon
+        name="mdi-chat"
+        class="icons-header"
+        :color="auth.countMessages > 0 ? 'red' : 'white'"
+      />
     </RouterLink>
     <RouterLink class="link" to="/media"
       ><q-icon name="mdi-multimedia" class="icons-header"
@@ -24,7 +28,6 @@ const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
 const mqtt = inject('appGlobal/mqtt')
 const alertChat = ref(false)
-const unreadMessages = ref(0)
 
 //methods
 const updateWidth = () => {
@@ -33,7 +36,6 @@ const updateWidth = () => {
 }
 //hooks
 onMounted(() => {
-  console.log(auth.mqttAlertSubscribe)
   mobilView.value = window.innerWidth < 450
   window.addEventListener('resize', updateWidth)
   if (auth.mqttAlertSubscribe === false) {
@@ -41,7 +43,7 @@ onMounted(() => {
       mqtt.subscribe(`TRAVELS/ALERTS/CHAT/${auth.userId}`, (haveNewMessage) => {
         let data = JSON.parse(haveNewMessage)
         alertChat.value = data.haveNewMessage
-        unreadMessages.value = data.unreadMessages
+        auth.recountNewMessages(data.unreadMessages)
       })
       auth.subscribeAlert(true)
     } catch (err) {

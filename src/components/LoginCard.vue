@@ -86,6 +86,7 @@ const loginAction = async () => {
         response.data.email,
         response.data.role,
         response.data.avatar,
+        response.data.newMessages
       )
 
       notifySuccess('User is logged')

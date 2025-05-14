@@ -79,8 +79,7 @@ export default defineRouter(function (/* { store, ssrContext } */) {
     } else {
       if (isRegisterRoute) {
         next()
-      }
-      else if(isVerifyRoute){
+      } else if (isVerifyRoute) {
         console.log('aquiiiiii')
         next()
       } else {
