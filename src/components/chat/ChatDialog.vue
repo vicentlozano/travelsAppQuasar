@@ -146,7 +146,7 @@ watch(
         scrollToBottom()
       })
     }
-    wasWritting.value = val
+    wasWritting.value = val 
   },
 )
 
