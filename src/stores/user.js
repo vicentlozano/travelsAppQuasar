@@ -29,9 +29,14 @@ export const useUserStore = defineStore(
       email.value = userEmail
       role.value = userRole
       avatar.value = userAvatar
-      countMessages.value = countMessagesValue? countMessagesValue : countMessages.value 
+      countMessages.value = countMessagesValue ? countMessagesValue : countMessages.value
     }
-    function updateUser() {}
+    function updateUserAvatar(avatarUrl) {
+      avatar.value = avatarUrl
+    }
+    function setName(name) {
+      username.value = name
+    }
     function subscribeAlert(bool) {
       mqttAlertSubscribe.value = bool
     }
@@ -47,17 +52,18 @@ export const useUserStore = defineStore(
       avatar,
       mqttAlertSubscribe,
       countMessages,
+      setName,
       deleteUser,
       setUser,
-      updateUser,
+      updateUserAvatar,
       subscribeAlert,
       recountNewMessages,
     }
   },
- {
-  persist: {
-    storage: sessionStorage,
-    pick: ['countMessages','mqttAlertSubscribe'],
+  {
+    persist: {
+      storage: sessionStorage,
+      pick: ['countMessages', 'mqttAlertSubscribe'],
+    },
   },
-}
 )

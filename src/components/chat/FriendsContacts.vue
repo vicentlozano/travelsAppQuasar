@@ -108,12 +108,12 @@ onMounted(async () => {
 }
 .avatar:hover {
   cursor: pointer;
-  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6); /* sombra verde difusa */
-  border-radius: 50%; /* por si es un avatar circular */
+  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6); 
+  border-radius: 50%; 
 }
 .selected {
-  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6); /* sombra verde difusa */
-  border-radius: 50%; /* por si es un avatar circular */
+  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6); 
+  border-radius: 50%; 
 }
 @media (max-width: 450px) {
   .bar {
