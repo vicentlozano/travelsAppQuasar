@@ -1,16 +1,15 @@
 <template>
+  <HeaderComponent class="fixed-header" />
   <div class="page-basic">
-    <HeaderComponent />
     <div class="tabs">
       <q-btn
         flat
         dense
-        color="teal"
+        color="white"
         class="tab-buttons"
         label="profile"
         @click="tabName = 'profile'"
       ></q-btn>
-      <q-separator vertical />
       <q-btn
         flat
         dense
@@ -19,7 +18,6 @@
         label="contacts"
         @click="tabName = 'contacts'"
       ></q-btn>
-      <q-separator vertical />
 
       <q-btn
         flat
@@ -67,16 +65,23 @@ onMounted(async () => {})
 .page-basic {
   display: grid;
   height: 100%;
+  padding-top: 3.6rem;
   width: 100%;
-  grid-template-rows: min-content min-content 1fr;
+  grid-template-rows: 1rem 1fr;
 }
 
 .tabs {
   display: grid;
-  grid-template-columns: 1fr min-content 1fr min-content 1fr;
-  gap: 0.3rem;
-  padding: 1rem;
-  height: min-content;
+  position: sticky;
+  top: 3.6rem;
+  width: 100%;
+  z-index: 1;
+  grid-template-columns: 1fr 1fr 1fr;
+  backdrop-filter: blur(12px);
+  justify-content: center;
+  background-color: rgba(36, 65, 139, 0.767);
+  height: 3.6rem;
+
 }
 
 .tab-buttons {
@@ -90,12 +95,20 @@ onMounted(async () => {})
 .fade-leave-to {
   opacity: 0;
 }
+.fixed-header {
+  position: fixed;
+}
 @media (max-width: 450px) {
-
   .page-basic {
     padding-top: 0rem;
     padding-bottom: 3.4rem;
     grid-template-rows: min-content 1fr auto;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr  1fr 1fr;
+    border-bottom: 1px solid rgba(17, 62, 9, 0.667);
+    top: 0;
   }
 }
 </style>

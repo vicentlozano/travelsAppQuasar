@@ -13,8 +13,8 @@
         <q-icon name="search" />
       </template>
     </q-input>
-    <q-scroll-area class="scroll-area"
-      ><section class="my-contacts" v-for="contact in displayedContacts" :key="contact.id">
+    <div class="contacts">
+      <section class="my-contacts" v-for="contact in displayedContacts" :key="contact.id">
         <q-avatar size="60px" class="avatar selected">
           <img v-if="contact.avatar" :src="contact.avatar" />
           <p v-else class="initial">
@@ -41,8 +41,9 @@
             color="red"
             @click="deleteContact(contact.id)"
           ></q-btn>
-        </section></section
-    ></q-scroll-area>
+        </section>
+      </section>
+    </div>
   </div>
   <div v-else class="no-contacts">
     <h3>Contacts List Empty!</h3>
@@ -124,16 +125,26 @@ onMounted(async () => {
 <style lang="scss" scoped>
 .my-contacts {
   display: grid;
-  grid-template-columns: min-content 1fr min-content;
+  grid-template-columns: 1fr;
   height: min-content;
   align-items: center;
   justify-items: center;
   gap: 1rem;
-  padding: 0.5rem 1rem;
-  background-color: rgba(241, 160, 8, 0.164);
+  padding: 1rem;
+  color: whitesmoke;
+  background-color: rgb(49, 49, 48);
   border-radius: 13px;
-  width: 80vw;
-  max-width: 1000px;
+  width: 12rem;
+}
+.contacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 2rem;
+  height: fit-content;
+  justify-content: top;
+  padding-top: 3.4rem;
 }
 .name {
   text-align: center;
@@ -155,25 +166,16 @@ onMounted(async () => {
 .search-input {
   width: 100%;
   position: sticky;
-  top: 0rem;
+  top: 7.2rem;
+  backdrop-filter: blur(10px);
   z-index: 3;
-}
-.scroll-area {
-  width: 100%;
-  height: 99%;
-}
-::v-deep(.q-scrollarea__content) {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  align-items: center;
-  padding: 0rem 1rem 0rem 0rem;
 }
 
 .contacts-panel {
   display: grid;
   grid-template-rows: min-content 1fr;
   width: 100%;
+  padding-bottom: 3rem;
   gap: 1rem;
   height: 100%;
 }
@@ -186,5 +188,28 @@ onMounted(async () => {
   width: 100%;
 }
 @media (max-width: 450px) {
+  .search-input {
+    top: 3.6rem;
+    z-index: 1;
+  }
+  .contacts-panel {
+    padding-bottom: 4rem;
+  }
+  .my-contacts {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100%;
+
+}
+.contacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem;
+  height: fit-content;
+  justify-content: top;
+  padding-top: 0.4rem;
+}
 }
 </style>

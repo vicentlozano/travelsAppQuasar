@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="center">
     <section class="profile">
       <div class="avatar-section">
         <q-avatar color="primary" text-color="white" size="200px" class="avatar">
@@ -18,18 +18,30 @@
         </q-badge>
       </div>
       <section class="info">
+        <q-separator spaced color="secondary" />
+
         <div class="form">
           <span class="title">Nombre</span>
-          <q-separator vertical />
-          <p>{{ auth.username }}</p>
-          <q-separator vertical />
+          <p v-if="!editUserName">
+            {{ auth.username
+            }}<q-btn
+              @click="editUserName = true"
+              flat
+              icon="edit"
+              size="8px"
+              class="btn-edit"
+            ></q-btn>
+          </p>
           <q-input
+            v-if="editUserName"
             ref="nameInput"
             v-model="textName"
             name="username"
             for="username"
-            outlined
+            class="custom-input"
             dense
+            autofocus
+            @blur="editUserName = false"
             clearable
             lazy-rules
           >
@@ -46,24 +58,41 @@
             </template>
           </q-input>
         </div>
-        <q-separator />
-        <div class="formPassword">
+        <q-separator spaced color="secondary" />
+        <div class="email">
           <span class="title">Correo</span>
-          <q-separator vertical />
 
           <p>{{ auth.email }}</p>
-          <q-separator vertical />
-
-          <q-btn @click="showPasswordDialog = true">Change password</q-btn>
         </div>
+        <q-separator spaced color="secondary" />
+
+        <div class="formPassword">
+          <span class="title">Password</span>
+
+          <q-btn
+            @click="showPasswordDialog = true"
+            flat
+            rounded
+            color="primary"
+            label="Change password"
+          />
+        </div>
+        <q-separator spaced color="secondary" />
       </section>
 
       <section class="conf">
-        <q-btn class="close-account" @click="closeAccount">Close account</q-btn>
+        <q-btn
+          class="close-account"
+          outline
+          color="red"
+          label="Close account"
+          @click="closeAccount"
+        />
 
-        <q-btn @click="logout">Logout</q-btn>
+        <q-btn class="custom-btn" outline  color="primary" label="Logout" @click="logout" />
       </section>
     </section>
+
     <DialogPhoto :show="showDialog" @close-dialog="closeDialog" />
     <DialogPassword :show="showPasswordDialog" @close-dialog="closePasswordDialog" />
   </div>
@@ -87,7 +116,7 @@ const showPasswordDialog = ref(false)
 const textName = ref('')
 const nameInput = ref(null)
 const auth = useUserStore()
-
+const editUserName = ref(false)
 //methods
 const closeAccount = () => {}
 
@@ -123,16 +152,21 @@ const saveName = async () => {
 </script>
 
 <style lang="scss" scoped>
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .profile {
   display: grid;
   height: 100%;
-  width: 100%;
+  width: 80%;
   grid-template-rows: min-content min-content min-content;
-  justify-content: center;
   align-content: top;
+  justify-items: center;
   place-items: center;
   gap: 2rem;
-  padding: 2rem;
+  padding: 5rem 0.3rem 3.8rem 0.3rem;
 }
 .badge-avatar {
   position: absolute;
@@ -146,6 +180,8 @@ const saveName = async () => {
 }
 p {
   margin: 0;
+  width: 100%;
+  text-align: right;
 }
 .badge-avatar:hover {
   cursor: pointer;
@@ -162,38 +198,90 @@ p {
 }
 .info {
   display: grid;
-  grid-template-rows: 1fr min-content 1fr;
-  padding: 0rem 1rem;
-  background-color: rgb(217, 225, 226);
+  grid-template-rows: min-content 1fr min-content 1fr min-content 1fr min-content;
   border-radius: 15px;
+  width: 100%;
+  gap: 0.7rem;
 }
 .form {
   display: grid;
-  grid-template-columns: 1fr min-content 2fr min-content 1fr;
+  grid-template-columns: 1fr 3fr;
   gap: 0.5rem;
   place-items: center;
-  padding: 1rem;
 }
 .formPassword {
-  display: grid;
-  grid-template-columns: 1fr min-content 2fr min-content 1fr;
+  display: flex;
+  justify-content: space-between;
   place-items: center;
   gap: 0.5rem;
-  padding: 1rem;
+}
+.email {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  place-items: center;
 }
 .title {
   font-weight: bold;
-  text-align: center;
+  text-align: left;
+  width: 100%;
 }
 .conf {
   display: flex;
   flex-direction: row;
-  gap: 2rem;
+  gap: 4rem;
 }
 .close-account {
   background-color: rgba(255, 0, 0, 0.596);
+  padding: 0.3rem;
 }
 .save-icon:hover {
   cursor: pointer;
 }
+.custom-input {
+  align-self: self-end;
+}
+.custom-btn {
+    padding: 0.5rem;
+
+}
+@media (max-width: 450px) {
+  .info {
+    display: grid;
+    grid-template-rows: min-content 1fr min-content 1fr min-content 1fr min-content;
+    border-radius: 15px;
+    width: 100%;
+    gap: 0.3rem;
+  }
+  .profile {
+    display: grid;
+    height: 100%;
+    width: 80%;
+    grid-template-rows: min-content min-content min-content;
+    align-content: top;
+    justify-items: center;
+    place-items: center;
+    gap: 2rem;
+  }
+  .avatar {
+    height: 150px;
+    width: 150px;
+  }
+  .badge-avatar {
+    top: 119px;
+  }
+}
+@media (max-width: 400px) {
+   .profile {
+    display: grid;
+    height: 100%;
+    width: 80%;
+    grid-template-rows: min-content min-content min-content;
+    align-content: top;
+    padding: 1rem 0.3rem 3.8rem 0.3rem;
+    justify-items: center;
+    place-items: center;
+    gap: 2rem;
+  }
+}
+
 </style>
