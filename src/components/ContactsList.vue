@@ -130,8 +130,8 @@ onMounted(async () => {
   justify-items: center;
   gap: 1rem;
   padding: 0.5rem 1rem;
-  border: 2px solid orange;
-  border-radius: 15px;
+  background-color: rgba(241, 160, 8, 0.164);
+  border-radius: 13px;
   width: 80vw;
   max-width: 1000px;
 }
