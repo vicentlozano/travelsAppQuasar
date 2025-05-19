@@ -94,3 +94,6 @@ export const updateName = async (name) => {
 export const resetPassword = async (password) => {
   return post('User/wsResetPassword', password)
 }
+export const deleteContactById = async (contact) => {
+  return post('Contacts/wsDeleteContactById', contact)
+}

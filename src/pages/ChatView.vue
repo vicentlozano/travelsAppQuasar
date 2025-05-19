@@ -10,6 +10,7 @@
     <FriendsContacts
       :userId="user.userId"
       :contactSearch="search"
+      :contactSelected="route.params.contactId"
       @recipientSelected="reciveRecipient"
       class="friendsAvatars"
     />
@@ -72,10 +73,12 @@ import { notifyError } from 'src/utils/utilsNotify'
 import { ref, inject, watch, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { sendMessageById } from 'src/utils/api'
+import { useRoute } from 'vue-router'
 
 //data
 const mqtt = inject('appGlobal/mqtt')
 const user = useUserStore()
+const route = useRoute()
 const recipientId = ref(null)
 const messageText = ref('')
 const $t = useI18n()
@@ -102,7 +105,6 @@ const sendMessage = async () => {
 }
 const stopWritting = () => {
   mqtt.publish(
-    
     `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value.id}`,
     JSON.stringify({ isWritting: false }),
   )
@@ -133,9 +135,8 @@ watch(recipientId, (newRecipient, oldRecipent) => {
   }
 })
 
-onUnmounted(()=> {
+onUnmounted(() => {
   mqtt.unSubscribe(`TRAVELS/ISWRITTING/${recipientId.value.id}/${user.userId}`)
-
 })
 //hooks
 </script>
@@ -164,6 +165,13 @@ onUnmounted(()=> {
   grid-row: 3/4;
   overflow-y: hidden;
 }
+.friendsAvatars {
+  width: 100%;
+  grid-column: 1/2;
+  grid-row: 3/4;
+  padding: 1rem 0rem;
+  overflow-y: hidden;
+}
 .keyboard {
   width: 100%;
   grid-column: 1/-1;
@@ -188,12 +196,7 @@ onUnmounted(()=> {
 .contacts {
   width: 100%;
 }
-.friendsAvatars {
-  width: 100%;
-  grid-column: 1/2;
-  grid-row: 3/4;
-  padding: 2rem 0rem;
-}
+
 @media (max-width: 450px) {
   .page-basic {
     display: grid;
@@ -213,6 +216,7 @@ onUnmounted(()=> {
     width: 100%;
     grid-row: 2/3;
     padding: 0rem 0rem;
+    overflow-x: hidden;
   }
   .search-input {
     width: 100%;
