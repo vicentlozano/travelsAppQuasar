@@ -277,7 +277,7 @@ p {
     width: 80%;
     grid-template-rows: min-content min-content min-content;
     align-content: top;
-    padding: 1rem 0.3rem 3.8rem 0.3rem;
+    padding: 5rem 0.3rem 3.8rem 0.3rem;
     justify-items: center;
     place-items: center;
     gap: 2rem;

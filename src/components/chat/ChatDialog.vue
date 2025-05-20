@@ -1,44 +1,24 @@
 <template>
-  <q-scroll-area
-    ref="chatScroll"
-    style="height: 100%; width: 100%"
-    id="scroll-area-with-virtual-scroll-1"
-  >
-    <div class="chat-dialog">
-      <q-chat-message
-        :label="messages[0]?.date ? moment(messages[0]?.date).format('DD MMMM') : ''"
-      />
-      <q-chat-message
-        v-for="message in messages"
-        :key="message.message + message.date"
-        :name="message.sendFrom === user.userId ? user.username : contactChat.name"
-        :avatar="message.sendFrom === user.userId ? user.avatar : contactAvatar"
-        :text="[message.message]"
-        :stamp="
-          moment().diff(message.date, 'minutes') < 60
-            ? `${moment().diff(message.date, 'minutes')} ${$t('minutesStamp')}`
-            : `${moment().diff(message.date, 'hours')} ${$t('hoursStamp')}`
-        "
-        :sent="user.userId === message.sendFrom"
-      >
-        <template v-slot:avatar v-if="user.userId !== message.sendFrom && !contactAvatar">
-          <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
-            {{
-              contactChat.name.charAt(0).toUpperCase() +
-              contactChat.lastname.charAt(0).toUpperCase()
-            }}
-          </q-avatar>
-        </template>
-      </q-chat-message>
-      <transition name="fade-slide" @after-leave="onDotsHidden">
+  <q-scroll-area ref="chatScroll" class="scroll" id="scroll-area-with-virtual-scroll-1">
+    <div class="chat-wrapper">
+      <div class="chat-dialog">
         <q-chat-message
-          v-show="isContactWritting"
-          :name="contactChat.name"
-          :avatar="contactAvatar"
-          :sent="false"
-          class="animation"
+          :label="messages[0]?.date ? moment(messages[0]?.date).format('DD MMMM') : ''"
+        />
+        <q-chat-message
+          v-for="message in messages"
+          :key="message.message + message.date"
+          :name="message.sendFrom === user.userId ? user.username : contactChat.name"
+          :avatar="message.sendFrom === user.userId ? user.avatar : contactAvatar"
+          :text="[message.message]"
+          :stamp="
+            moment().diff(message.date, 'minutes') < 60
+              ? `${moment().diff(message.date, 'minutes')} ${$t('minutesStamp')}`
+              : `${moment().diff(message.date, 'hours')} ${$t('hoursStamp')}`
+          "
+          :sent="user.userId === message.sendFrom"
         >
-          <template v-slot:avatar v-if="!contactAvatar">
+          <template v-slot:avatar v-if="user.userId !== message.sendFrom && !contactAvatar">
             <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
               {{
                 contactChat.name.charAt(0).toUpperCase() +
@@ -46,9 +26,27 @@
               }}
             </q-avatar>
           </template>
-          <q-spinner-dots size="2rem" />
         </q-chat-message>
-      </transition>
+        <transition name="fade-slide" @after-leave="onDotsHidden">
+          <q-chat-message
+            v-show="isContactWritting"
+            :name="contactChat.name"
+            :avatar="contactAvatar"
+            :sent="false"
+            class="animation"
+          >
+            <template v-slot:avatar v-if="!contactAvatar">
+              <q-avatar color="primary" class="q-message-avatar q-message-avatar--received">
+                {{
+                  contactChat.name.charAt(0).toUpperCase() +
+                  contactChat.lastname.charAt(0).toUpperCase()
+                }}
+              </q-avatar>
+            </template>
+            <q-spinner-dots size="2rem" />
+          </q-chat-message>
+        </transition>
+      </div>
     </div>
   </q-scroll-area>
 </template>
@@ -146,7 +144,7 @@ watch(
         scrollToBottom()
       })
     }
-    wasWritting.value = val 
+    wasWritting.value = val
   },
 )
 
@@ -159,11 +157,10 @@ onMounted(async () => {
     const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
     const topic = `${id1}-${id2}`
     mqtt.subscribe(`TRAVELS/UPDATES/${topic}`, (message) => {
-       let count = user.countMessages
-             console.log(count)
-      user.recountNewMessages(count-1)
+      let count = user.countMessages
+      console.log(count)
+      user.recountNewMessages(count - 1)
       messages.value.push(JSON.parse(message))
-     
     })
     scrollToBottom(true)
   } catch (error) {
@@ -178,10 +175,24 @@ onUnmounted(() => {
 </script>
 
 <style lang="scss" scoped>
+.scroll {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.chat-wrapper {
+  display: flex;
+  justify-content: center; // centra el contingut interior
+  width: 100%;
+}
+
 .chat-dialog {
   width: 100%;
   max-width: 900px;
-  padding: 1rem 3rem;
+  padding: 1rem 2rem;
 }
 .fade-slide-enter-active,
 .fade-slide-leave-active {

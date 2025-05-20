@@ -67,25 +67,24 @@ onMounted(async () => {})
   height: 100%;
   padding-top: 3.6rem;
   width: 100%;
-  grid-template-rows: 1rem 1fr;
+  grid-template-rows: min-content 1fr;
 }
 
 .tabs {
   display: grid;
-  position: sticky;
+  position: fixed;
   top: 3.6rem;
   width: 100%;
   z-index: 1;
   grid-template-columns: 1fr 1fr 1fr;
   backdrop-filter: blur(12px);
   justify-content: center;
-  background-color: rgba(36, 65, 139, 0.767);
+  border-top: 2px solid white;
+  background-color: rgba(27, 30, 37, 0.767);
   height: 3.6rem;
-
 }
 
-.tab-buttons {
-}
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.2s ease;
@@ -106,7 +105,7 @@ onMounted(async () => {})
   }
   .tabs {
     display: grid;
-    grid-template-columns: 1fr  1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
     border-bottom: 1px solid rgba(17, 62, 9, 0.667);
     top: 0;
   }

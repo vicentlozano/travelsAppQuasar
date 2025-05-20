@@ -1,12 +1,12 @@
 <template>
-  <div class="contacts-panel" v-if="displayedContacts">
+  <div class="contacts-panel" v-if="contacts.length">
     <q-input
       v-if="displayedContacts"
       v-model="search"
       debounce="500"
       filled
       placeholder="Search"
-      class="search-input"
+      :class="isScrolled ? 'scrolled search-input' : 'search-input'"
       bg-accent
     >
       <template v-slot:append>
@@ -45,19 +45,20 @@
       </section>
     </div>
   </div>
-  <div v-else class="no-contacts">
-    <h3>Contacts List Empty!</h3>
-  </div>
+  <InnerLoading v-else>
+    <h3 class="message">No contacts yet!</h3>
+  </InnerLoading>
 </template>
 
 <script setup>
 import { useUserStore } from '../stores/user'
 // import { useRouter } from 'vue-router'
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, computed, watch, onUnmounted } from 'vue'
 import { getContactsById } from 'src/utils/api'
 import { notifyError, notifySuccess } from 'src/utils/utilsNotify'
 import { useRouter } from 'vue-router'
 import { deleteContactById } from 'src/utils/api'
+import InnerLoading from './InnerLoading.vue'
 
 //data
 const auth = useUserStore()
@@ -65,10 +66,15 @@ const router = useRouter()
 
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
-const contacts = ref(null)
+const contacts = ref([])
 const filteredContacts = ref([])
 const search = ref('')
+const isScrolled = ref(false)
+
 //methods
+const handleScroll = () => {
+  isScrolled.value = window.scrollY > 20 // pots ajustar el valor segons el teu cas
+}
 const updateWidth = () => {
   windowWidth.value = window.innerWidth
   windowWidth.value < 450 ? (mobilView.value = true) : (mobilView.value = false)
@@ -76,6 +82,7 @@ const updateWidth = () => {
 const sendMessage = (contactId) => {
   router.push({ name: 'chat', params: { contactId: contactId } })
 }
+
 const deleteContact = async (contactId) => {
   try {
     const response = await deleteContactById({ userId: auth.userId, contactId: contactId })
@@ -109,6 +116,7 @@ watch(
 )
 //hooks
 onMounted(async () => {
+  window.addEventListener('scroll', handleScroll)
   mobilView.value = window.innerWidth < 450
   window.addEventListener('resize', updateWidth)
   try {
@@ -119,6 +127,9 @@ onMounted(async () => {
   } catch (error) {
     notifyError(error)
   }
+})
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
 })
 </script>
 
@@ -139,12 +150,14 @@ onMounted(async () => {
 .contacts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  justify-content: center;
+  align-content: center;
   width: 100%;
   padding: 2rem;
+  gap:1rem;
+  justify-items: center;
   height: fit-content;
-  justify-content: top;
-  padding-top: 3.4rem;
+  padding-top: 5rem;
 }
 .name {
   text-align: center;
@@ -169,6 +182,15 @@ onMounted(async () => {
   top: 7.2rem;
   backdrop-filter: blur(10px);
   z-index: 3;
+  &.scrolled {
+    background-color: #333;
+    color: white;
+
+    // Aconsegueix que el placeholder també canvii
+    ::v-deep input::placeholder {
+      color: #ccc;
+    }
+  }
 }
 
 .contacts-panel {
@@ -179,13 +201,10 @@ onMounted(async () => {
   gap: 1rem;
   height: 100%;
 }
-.no-contacts {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+.message {
   text-align: center;
-  height: 100%;
-  width: 100%;
+  color: gray;
 }
 @media (max-width: 450px) {
   .search-input {
@@ -196,20 +215,19 @@ onMounted(async () => {
     padding-bottom: 4rem;
   }
   .my-contacts {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 100%;
-
-}
-.contacts {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  padding: 1rem;
-  height: fit-content;
-  justify-content: top;
-  padding-top: 0.4rem;
-}
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100%;
+  }
+  .contacts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
+    height: fit-content;
+    justify-content: top;
+    padding-top: 3.6rem;
+  }
 }
 </style>
