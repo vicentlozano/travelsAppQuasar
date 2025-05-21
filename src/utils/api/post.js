@@ -97,3 +97,6 @@ export const resetPassword = async (password) => {
 export const deleteContactById = async (contact) => {
   return post('Contacts/wsDeleteContactById', contact)
 }
+export const setRequestById = async (request) => {
+  return post('Contacts/wsDeleteContactById', request)
+}

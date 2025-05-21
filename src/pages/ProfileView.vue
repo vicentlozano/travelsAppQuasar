@@ -80,7 +80,7 @@ onMounted(async () => {})
   backdrop-filter: blur(12px);
   justify-content: center;
   border-top: 2px solid white;
-  background-color: rgba(27, 30, 37, 0.767);
+  background-color: rgba(0, 0, 0, 0.667);
   height: 3.6rem;
 }
 

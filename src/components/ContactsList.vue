@@ -15,13 +15,16 @@
     </q-input>
     <div class="contacts">
       <section class="my-contacts" v-for="contact in displayedContacts" :key="contact.id">
-        <q-avatar size="60px" class="avatar selected">
+        <q-avatar size="140px" square class="avatar">
           <img v-if="contact.avatar" :src="contact.avatar" />
           <p v-else class="initial">
             {{ contact.name.charAt(0).toUpperCase() + contact.lastname.charAt(0).toUpperCase() }}
           </p>
         </q-avatar>
-        <span class="name">{{ contact.name }} {{ contact.lastname }} </span>
+        <div class="info">
+          <span class="name">{{ contact.name }} {{ contact.lastname }} </span>
+          <span class="minor-info">{{ contact.name }} {{ contact.lastname }} </span>
+        </div>
         <section class="actions">
           <q-btn
             flat
@@ -136,50 +139,51 @@ onUnmounted(() => {
 <style lang="scss" scoped>
 .my-contacts {
   display: grid;
-  grid-template-columns: 1fr;
-  height: min-content;
+  grid-template-columns: min-content 1fr min-content;
+  grid-template-rows: 1fr;
+  height: 100%;
+  width: 100%;
   align-items: center;
   justify-items: center;
-  gap: 1rem;
+  gap: 0.1rem;
   padding: 1rem;
-  color: whitesmoke;
-  background-color: rgb(49, 49, 48);
+  color: rgb(234, 225, 225);
+  background-color: transparent;
+  border: 1px solid rgba(214, 203, 203, 0.543);
   border-radius: 13px;
-  width: 12rem;
 }
 .contacts {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  justify-content: center;
+  grid-template-columns: 1fr 1fr;
+  justify-content: start;
   align-content: center;
   width: 100%;
+  max-width: 1400px;
   padding: 2rem;
-  gap:1rem;
+  gap: 0.2rem;
   justify-items: center;
   height: fit-content;
   padding-top: 5rem;
 }
 .name {
-  text-align: center;
-  font-weight: bold;
+  font-weight: bolder;
+  font-size: 1.4em;
+  color: black;
 }
 .avatar:hover {
   cursor: pointer;
-  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6);
-  border-radius: 50%;
 }
-.selected {
-  box-shadow: 0 0 12px 4px rgba(40, 137, 167, 0.925);
-  border-radius: 50%;
+.avatar {
+  border-radius: 10px;
 }
 .actions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
 }
 .search-input {
   width: 100%;
   position: sticky;
-  top: 7.2rem;
+  top: 7.1rem;
   backdrop-filter: blur(10px);
   z-index: 3;
   &.scrolled {
@@ -190,6 +194,9 @@ onUnmounted(() => {
     ::v-deep input::placeholder {
       color: #ccc;
     }
+    ::v-deep input {
+      color: #ccc;
+    }
   }
 }
 
@@ -197,6 +204,7 @@ onUnmounted(() => {
   display: grid;
   grid-template-rows: min-content 1fr;
   width: 100%;
+  justify-items: center;
   padding-bottom: 3rem;
   gap: 1rem;
   height: 100%;
@@ -205,6 +213,54 @@ onUnmounted(() => {
 .message {
   text-align: center;
   color: gray;
+}
+.info {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+.minor-info {
+  color: rgb(35, 34, 34);
+}
+@media (min-width: 700px) and (max-width: 1000px) {
+   .my-contacts {
+    padding: 0.6rem;
+  }
+  .contacts {
+    display: grid;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.5rem;
+    height: fit-content;
+    justify-content: top;
+    padding-top: 3.6rem;
+  }
+  .avatar {
+    height: 90px;
+    width: 90px;
+  }
+}
+@media  (min-width: 450px) and (max-width: 700px){
+  
+  .contacts-panel {
+    padding-bottom: 4rem;
+  }
+  .my-contacts {
+    padding: 0.6rem;
+  }
+  .contacts {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    width: 100%;
+    padding: 0.5rem;
+    height: fit-content;
+    justify-content: top;
+    padding-top: 3.6rem;
+  }
+  .avatar {
+    height: 90px;
+    width: 90px;
+  }
 }
 @media (max-width: 450px) {
   .search-input {
@@ -215,19 +271,21 @@ onUnmounted(() => {
     padding-bottom: 4rem;
   }
   .my-contacts {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    width: 100%;
+    padding: 0.6rem;
   }
   .contacts {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: 1fr;
     gap: 1rem;
     width: 100%;
-    padding: 1rem;
+    padding: 0.5rem;
     height: fit-content;
     justify-content: top;
     padding-top: 3.6rem;
+  }
+  .avatar {
+    height: 90px;
+    width: 90px;
   }
 }
 </style>
