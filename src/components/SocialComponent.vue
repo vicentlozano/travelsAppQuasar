@@ -3,123 +3,38 @@
     <section v-if="requests" class="my-requests">
       <h5 class="title">Friends Request</h5>
 
-      <section class="friends-request" ref="requestContainer">
-        <div class="request" v-for="request in requests" :key="request.id">
-          <div class="image-container">
-            <img v-if="request.avatar" :src="request.avatar" class="image-contact" />
-            <p v-else class="initial">
-              {{ request.name.charAt(0).toUpperCase() + request.lastname.charAt(0).toUpperCase() }}
-            </p>
-          </div>
-          <div class="info">
-            <span class="name">{{ request.name }} {{ request.lastname }} </span>
-            <span class="minor-info">14 travels </span>
-          </div>
-          <section class="actions">
-            <q-btn
-              dense
-              label="confirm"
-              unelevated
-              size="14px"
-              color="primary"
-              class="action-btn"
-              @click="setRequest(request.id, true)"
-            ></q-btn>
-            <q-btn
-              dense
-              label="delete"
-              size="14px"
-              color="grey"
-              text-color="black"
-              class="action-btn"
-              @click="setRequest(request.id, false)"
-            ></q-btn>
-          </section>
-        </div>
-        <transition name="fade">
-          <q-btn
-            v-show="showLeftArrow"
-            flat
-            icon="chevron_left"
-            color="black"
-            size="17px"
-            class="position-left"
-            @click="scrollLeft"
-          />
-        </transition>
-        <transition name="fade">
-          <q-btn
-            v-show="showRightArrow"
-            flat
-            icon="chevron_right"
-            color="black"
-            size="17px"
-            class="position-right"
-            @click="scrollRight"
-          />
-        </transition>
-      </section>
+        <CardsSlider :discover="true" :cardObjects="requests" />
+    </section>
+
+    <section class="discover">
+      <h5 class="title">Discover People</h5>
+
+      <CardsSlider :discover="true" :cardObjects="requests" />
     </section>
     <section class="discover">
-      
+      <h5 class="title">Discover People</h5>
+
+      <CardsSlider :discover="true" :cardObjects="requests" />
     </section>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref, nextTick, onUnmounted } from 'vue'
-import { getRequestsById, setRequestById } from 'src/utils/api'
+import { onMounted, ref} from 'vue'
+import { getRequestsById } from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
 import { notifyError } from 'src/utils/utilsNotify'
+import CardsSlider from './CardsSlider.vue'
 
 //data
 const user = useUserStore()
 const requests = ref(null)
-const requestContainer = ref(null)
-const showLeftArrow = ref(false)
-const showRightArrow = ref(false)
+ref(false)
 
 //methods
-const scrollRight = () => {
-  if (requestContainer.value) {
-    requestContainer.value.scrollBy({
-      left: 270, // Quantitat de píxels a desplaçar cap a la dreta
-      behavior: 'smooth',
-    })
-  }
-}
 
-const scrollLeft = () => {
-  if (requestContainer.value) {
-    requestContainer.value.scrollBy({
-      left: -270, // Quantitat de píxels a desplaçar cap a la esquerra
-      behavior: 'smooth',
-    })
-  }
-}
-const checkScrollPosition = () => {
-  const el = requestContainer.value
-  if (el) {
-    const maxScrollLeft = el.scrollWidth - el.clientWidth
-    const buffer = 20 // marge de tolerància en píxels
-    showLeftArrow.value = el.scrollLeft > buffer
-    showRightArrow.value = el.scrollLeft < maxScrollLeft - buffer
-  }
-}
-const setRequest = async (contact, result) => {
-  try {
-    const response = await setRequestById({
-      userId: user.userId,
-      contactId: contact,
-      status: result,
-    })
-    if (!response.data.error?.status) {
-      requests.value = requests.value.filter((request) => request.id !== contact)
-    }
-  } catch (error) {
-    notifyError('errorSendMessage', error)
-  }
-}
+
+
 //hooks
 onMounted(async () => {
   try {
@@ -128,22 +43,13 @@ onMounted(async () => {
     })
     if (!response.data.error?.status) {
       requests.value = response.data.data
-      await nextTick()
 
-      requestContainer.value?.addEventListener('scroll', checkScrollPosition, { passive: true })
-      window.addEventListener('resize', checkScrollPosition)
-
-      // Comprova posició inicial
-      checkScrollPosition()
     }
   } catch (error) {
     notifyError('errorSendMessage', error)
   }
 })
-onUnmounted(() => {
-  requestContainer.value?.removeEventListener('scroll', checkScrollPosition)
-  window.removeEventListener('resize', checkScrollPosition)
-})
+
 </script>
 
 <style lang="scss" scoped>
@@ -161,7 +67,6 @@ onUnmounted(() => {
 .my-requests {
   position: relative;
   display: grid;
-  grid-template-rows: 220px;
   grid-template-rows: min-content 1fr;
 }
 .friends-request {
@@ -177,17 +82,17 @@ onUnmounted(() => {
   background-color: white;
   height: fit-content;
   scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-
+  -webkit-overflow-scrolling: touch;
 }
 
 .request {
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 3fr min-content min-content;
-  height: 400px;
+  height: 430px;
   width: 100%;
   min-width: 250px;
+  max-width: 300px;
   align-items: center;
   justify-items: center;
   gap: 0.1rem;
@@ -269,6 +174,14 @@ onUnmounted(() => {
   .social {
     padding-top: 4rem;
     padding-bottom: 3.4rem;
+  }
+
+  .request {
+    grid-template-rows: 2fr min-content min-content;
+    height: 350px;
+    width: 100%;
+    min-width: 200px;
+    max-width: 200px;
   }
 }
 </style>
