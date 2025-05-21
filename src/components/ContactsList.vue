@@ -23,7 +23,7 @@
         </q-avatar>
         <div class="info">
           <span class="name">{{ contact.name }} {{ contact.lastname }} </span>
-          <span class="minor-info">{{ contact.name }} {{ contact.lastname }} </span>
+          <span class="minor-info">14 travels </span>
         </div>
         <section class="actions">
           <q-btn
@@ -217,6 +217,8 @@ onUnmounted(() => {
 .info {
   display: grid;
   grid-template-rows: 1fr 1fr;
+  width: 100%;
+  padding: 0rem 1rem;
 }
 .minor-info {
   color: rgb(35, 34, 34);

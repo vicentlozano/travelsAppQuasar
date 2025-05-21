@@ -2,7 +2,7 @@
   <div class="page-basic">
     <HeaderComponent class="header-top" />
 
-    <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input" >
+    <q-input v-model="search" debounce="500" filled placeholder="Search" class="search-input">
       <template v-slot:append>
         <q-icon name="search" />
       </template>

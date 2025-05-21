@@ -4,65 +4,71 @@
       <h5 class="title">Friends Request</h5>
       <section class="friends-request">
         <div class="request" v-for="request in requests" :key="request.id">
-          <q-avatar size="110px" class="avatar selected">
-            <img v-if="request.avatar" :src="request.avatar" />
+          <div class="image-container">
+            <img v-if="request.avatar" :src="request.avatar" class="image-contact" />
             <p v-else class="initial">
               {{ request.name.charAt(0).toUpperCase() + request.lastname.charAt(0).toUpperCase() }}
             </p>
-          </q-avatar>
-          <span class="name">{{ request.name }} {{ request.lastname }} </span>
+          </div>
+          <div class="info">
+            <span class="name">{{ request.name }} {{ request.lastname }} </span>
+            <span class="minor-info">14 travels </span>
+          </div>
           <section class="actions">
             <q-btn
-              flat
               dense
-              round
-              icon="close"
+              label="confirm"
+              unelevated
               size="14px"
-              color="red"
-              @click="setRequest(request.id, false)"
+              color="primary"
+              class="action-btn"
+              @click="setRequest(request.id, true)"
             ></q-btn>
             <q-btn
-              flat
               dense
-              round
-              icon="check_circle"
+              label="delete"
               size="14px"
-              color="green"
-              @click="setRequest(request.id, true)"
+              color="grey"
+              text-color="black"
+              class="action-btn"
+              @click="setRequest(request.id, false)"
             ></q-btn>
           </section>
         </div>
       </section>
     </section>
     <section v-if="requests" class="my-requests">
-      <h5 class="title">Discover People</h5>
+      <h5 class="title">Discover people</h5>
       <section class="friends-request">
         <div class="request" v-for="request in requests" :key="request.id">
-          <q-avatar size="60px" class="avatar selected">
-            <img v-if="request.avatar" :src="request.avatar" />
+          <div class="image-container">
+            <img v-if="request.avatar" :src="request.avatar" class="image-contact" />
             <p v-else class="initial">
               {{ request.name.charAt(0).toUpperCase() + request.lastname.charAt(0).toUpperCase() }}
             </p>
-          </q-avatar>
-          <span class="name">{{ request.name }} {{ request.lastname }} </span>
+          </div>
+          <div class="info">
+            <span class="name">{{ request.name }} {{ request.lastname }} </span>
+            <span class="minor-info">14 travels </span>
+          </div>
           <section class="actions">
             <q-btn
-              flat
               dense
-              round
-              icon="close"
+              label="confirm"
+              unelevated
               size="14px"
-              color="red"
-              @click="setRequest(request.id, false)"
+              color="primary"
+              class="action-btn"
+              @click="setRequest(request.id, true)"
             ></q-btn>
             <q-btn
-              flat
               dense
-              round
-              icon="check_circle"
+              label="delete"
               size="14px"
-              color="green"
-              @click="setRequest(request.id, true)"
+              color="grey"
+              text-color="black"
+              class="action-btn"
+              @click="setRequest(request.id, false)"
             ></q-btn>
           </section>
         </div>
@@ -114,10 +120,15 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .social {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   height: 100%;
   width: 100%;
-  padding-top: 7.4rem;
+  justify-content: start;
+  align-content: center;
+  justify-self: center;
+  padding-top: 3.6rem;
+  max-width: 1400px;
 }
 .my-requests {
   position: relative;
@@ -126,47 +137,70 @@ onMounted(async () => {
   grid-template-rows: min-content 1fr;
 }
 .friends-request {
-   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 350px));
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   justify-content: start;
   align-content: center;
   width: 100%;
-  padding: 2rem;
-  gap:0.2rem;
+  padding: 1rem 2rem 2rem 2rem;
+  gap: 01rem;
   justify-items: center;
   height: fit-content;
-  padding-top: 5rem;
 }
 
 .request {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 4fr 1fr 1fr;
+  grid-template-rows: 4fr min-content 2fr;
   height: 100%;
   width: 100%;
   align-items: center;
   justify-items: center;
   gap: 0.1rem;
-  padding: 1rem;
-  color: rgb(234, 225, 225);
-  background-color:rgb(49, 49, 48);;
+  border: 1px solid rgb(209, 205, 205);
   border-radius: 13px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 .title {
   display: flex;
   justify-content: start;
-  padding: 1rem 1rem 0rem 1rem;
+  padding: 2rem 1rem 0rem 2rem;
   align-items: center;
   text-align: left;
-  color: rgb(179, 184, 189);
+  font-weight: bold;
+  color: rgb(25, 25, 26);
 }
-.selected {
-  box-shadow: 0 0 12px 4px rgba(40, 137, 167, 0.925);
-  border-radius: 50%;
+.image-container {
+  width: 100%;
+  height: 100%;
 }
-.name{
+
+.name {
   font-weight: bolder;
   font-size: 1.4em;
+}
+.actions {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  gap: 0.5rem;
+}
+.action-btn {
+  width: 100%;
+}
+.image-contact {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.info {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  width: 100%;
+  padding: 1rem 1rem 0rem 1rem;
 }
 @keyframes gradient {
   0% {

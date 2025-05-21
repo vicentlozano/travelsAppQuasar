@@ -22,7 +22,7 @@
 
         <div class="form">
           <span class="title">Nombre</span>
-          <p v-if="!editUserName">
+          <p v-if="!editUserName" class="data">
             {{ auth.username
             }}<q-btn
               @click="editUserName = true"
@@ -62,7 +62,7 @@
         <div class="email">
           <span class="title">Correo</span>
 
-          <p>{{ auth.email }}</p>
+          <p class="data">{{ auth.email }} </p>
         </div>
         <q-separator spaced color="secondary" />
 
@@ -156,11 +156,13 @@ const saveName = async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  align-self: center;
 }
 .profile {
   display: grid;
   height: 100%;
   width: 80%;
+  max-width: 1400px;
   grid-template-rows: min-content min-content min-content;
   align-content: top;
   justify-items: center;
@@ -224,6 +226,7 @@ p {
   font-weight: bold;
   text-align: left;
   width: 100%;
+  padding-left: 2rem;
 }
 .conf {
   display: flex;
@@ -243,6 +246,8 @@ p {
 .custom-btn {
     padding: 0.5rem;
 
+}.data{
+  padding-right: 1rem;
 }
 @media (max-width: 450px) {
   .info {
