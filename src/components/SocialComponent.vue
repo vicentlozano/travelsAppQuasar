@@ -3,7 +3,7 @@
     <section v-if="requests" class="my-requests">
       <h5 class="title">Friends Request</h5>
 
-      <CardsSlider :discover="false" :cardObjects="requests" />
+      <CardsSlider :discover="false" :cardObjects="requests" @filter-requests="filterList" @load-contacts="loadContacts"/>
     </section>
 
     <section class="discover">
@@ -32,16 +32,33 @@ const loadPeople = async () => {
   try {
     const response = await getFiveContactsById({
       userId: user.userId,
-      excludeIds: lastContacts,
+      excludeIds: lastContacts.value,
     })
+    console.log(lastContacts.value)
     if (!response.data.error?.status) {
-      requests.value = response.data.data
+      contacts.value = response.data.data
     }
   } catch (error) {
     notifyError('errorSendMessage', error)
   }
 }
-
+const filterList = (id) => {
+  requests.value = requests.value.filter((request) => request.id !== id)
+  console.log(requests.value)
+}
+const loadContacts = async()=> {
+  if(contacts.value.length<5){
+     try {
+    const responseContacts = await getFiveContactsById({ userId: user.userId })
+    if (!responseContacts.data.error?.status) {
+      contacts.value = responseContacts.data.data
+      contacts.value.forEach((contact) => lastContacts.value.push(contact.id))
+    }
+  } catch (error) {
+    notifyError('errorSendMessage', error)
+  }
+  }
+}
 //hooks
 onMounted(async () => {
   try {
@@ -52,7 +69,7 @@ onMounted(async () => {
       requests.value = response.data.data
     }
     const responseContacts = await getFiveContactsById({ userId: user.userId })
-    if (!response.data.error?.status) {
+    if (!responseContacts.data.error?.status) {
       contacts.value = responseContacts.data.data
       contacts.value.forEach((contact) => lastContacts.value.push(contact.id))
     }
@@ -120,7 +137,6 @@ onMounted(async () => {
   align-items: center;
   text-align: left;
   justify-self: center;
-
   width: 100%;
   font-weight: bold;
   color: rgb(25, 25, 26);

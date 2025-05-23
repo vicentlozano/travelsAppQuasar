@@ -98,7 +98,7 @@ export const deleteContactById = async (contact) => {
   return post('Contacts/wsDeleteContactById', contact)
 }
 export const setRequestById = async (request) => {
-  return post('Contacts/wsDeleteContactById', request)
+  return post('Contacts/wsSetRequestById', request)
 }
 
 export const sendRequest = async (demand) => {

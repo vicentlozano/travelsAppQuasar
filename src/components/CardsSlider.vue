@@ -35,7 +35,7 @@
         </section>
       </div>
       <div v-if="discover" class="view-more">
-        <span class="discover-span">Discover more people</span>
+        <span class="discover-span">More people</span>
         <q-btn
           class="discover-btn"
           color="blue"
@@ -78,7 +78,6 @@ import { notifyError, notifySuccess } from 'src/utils/utilsNotify'
 
 //data
 const user = useUserStore()
-const requests = ref(null)
 const requestContainerValue = ref(null)
 const showLeftArrow = ref(false)
 const showRightArrow = ref(false)
@@ -86,7 +85,7 @@ const props = defineProps({
   cardObjects: Array,
   discover: Boolean,
 })
-const emits = defineEmits(['more-people'])
+const emits = defineEmits(['more-people','filter-requests','load-contacts'])
 //computed
 watch(
   () => props.cardObjects,
@@ -131,7 +130,10 @@ const setRequest = async (contact, result) => {
       status: result,
     })
     if (!response.data.error?.status) {
-      requests.value = requests.value.filter((request) => request.id !== contact)
+      emits('filter-requests', contact)
+      if(result === false){
+        emits('load-contacts')
+      }
     }
   } catch (error) {
     notifyError('errorSendMessage', error)
@@ -191,7 +193,7 @@ onUnmounted(() => {
 .request {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 3fr min-content min-content;
+  grid-template-rows: 240.8px 1fr 1fr;
   height: 430px;
   width: 100%;
   min-width: 250px;
@@ -203,7 +205,7 @@ onUnmounted(() => {
   border-radius: 13px;
   overflow: hidden;
   background-color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   scroll-snap-align: start;
 }
 .view-more {
@@ -211,6 +213,7 @@ onUnmounted(() => {
   grid-template-columns: 1fr;
   grid-template-rows: min-content 1fr;
   max-height: 430px;
+  min-height: 350px;
   min-width: 250px;
   width: 100%;
   max-width: 300px;
@@ -221,9 +224,10 @@ onUnmounted(() => {
   border-radius: 13px;
   overflow: hidden;
   background-color: white;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   scroll-snap-align: start;
 }
+
 .discover-span {
   height: fit-content;
   width: fit-content;
@@ -251,7 +255,7 @@ onUnmounted(() => {
 }
 .image-container {
   width: 100%;
-  height: 100%;
+  height: 240.8px;
 }
 
 .name {
@@ -306,17 +310,27 @@ onUnmounted(() => {
 
 @media (max-width: 450px) {
   .request {
-    grid-template-rows: 2fr min-content min-content;
+    grid-template-rows: 200px min-content 1fr;
     height: 350px;
     width: 100%;
     min-width: 200px;
     max-width: 200px;
+  }
+  .info {
+    padding: 0.2rem 0rem 0rem 0.4rem;
+  }
+  .actions {
+    padding: 0.4rem;
   }
   .view-more {
     height: 350px;
     width: 100%;
     min-width: 200px;
     max-width: 200px;
+  }
+  .image-container {
+    width: 100%;
+    height: 200px;
   }
 }
 </style>
