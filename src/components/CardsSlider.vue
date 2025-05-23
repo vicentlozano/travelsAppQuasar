@@ -15,7 +15,7 @@
         <section class="actions">
           <q-btn
             dense
-            label="confirm"
+            :label="discover ? 'send friend request' : 'confirm'"
             unelevated
             size="14px"
             color="primary"
@@ -33,6 +33,16 @@
             @click="setRequest(request.id, false)"
           ></q-btn>
         </section>
+      </div>
+      <div v-if="discover" class="view-more">
+        <span class="discover-span">Discover more people</span>
+        <q-btn
+          class="discover-btn"
+          color="blue"
+          size="40px"
+          icon="add"
+          @click="emits('more-people')"
+        />
       </div>
       <transition name="fade">
         <q-btn
@@ -76,6 +86,7 @@ const props = defineProps({
   cardObjects: Array,
   discover: Boolean,
 })
+const emits = defineEmits(['more-people'])
 //computed
 watch(
   () => props.cardObjects,
@@ -168,6 +179,7 @@ onUnmounted(() => {
   width: 100%;
   justify-self: center;
   margin: 1rem 1rem;
+  padding: 0rem 0.6rem;
   gap: 01rem;
   justify-items: center;
   background-color: white;
@@ -193,6 +205,37 @@ onUnmounted(() => {
   background-color: white;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   scroll-snap-align: start;
+}
+.view-more {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: min-content 1fr;
+  max-height: 430px;
+  min-width: 250px;
+  width: 100%;
+  max-width: 300px;
+  align-items: center;
+  justify-items: center;
+  gap: 0.1rem;
+  border: 1px solid rgb(209, 205, 205);
+  border-radius: 13px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  scroll-snap-align: start;
+}
+.discover-span {
+  height: fit-content;
+  width: fit-content;
+  padding: 1rem;
+  font-size: 1.1rem;
+  text-align: center;
+  font-weight: bold;
+  color: black;
+  border-bottom: 2px solid rgb(0, 106, 255);
+}
+.discover-btn {
+  border-radius: 50%;
 }
 .title {
   display: flex;
@@ -260,9 +303,16 @@ onUnmounted(() => {
 .fade-leave-to {
   opacity: 0;
 }
+
 @media (max-width: 450px) {
   .request {
     grid-template-rows: 2fr min-content min-content;
+    height: 350px;
+    width: 100%;
+    min-width: 200px;
+    max-width: 200px;
+  }
+  .view-more {
     height: 350px;
     width: 100%;
     min-width: 200px;

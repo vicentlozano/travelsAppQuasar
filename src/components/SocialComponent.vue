@@ -3,25 +3,19 @@
     <section v-if="requests" class="my-requests">
       <h5 class="title">Friends Request</h5>
 
-        <CardsSlider :discover="true" :cardObjects="requests" />
+      <CardsSlider :discover="false" :cardObjects="requests" />
     </section>
 
     <section class="discover">
       <h5 class="title">Discover People</h5>
-
-      <CardsSlider :discover="true" :cardObjects="requests" />
-    </section>
-    <section class="discover">
-      <h5 class="title">Discover People</h5>
-
-      <CardsSlider :discover="true" :cardObjects="requests" />
+      <CardsSlider :discover="true" :cardObjects="contacts" @more-people="loadPeople" />
     </section>
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref} from 'vue'
-import { getRequestsById } from 'src/utils/api'
+import { onMounted, ref } from 'vue'
+import { getRequestsById, getFiveContactsById } from 'src/utils/api'
 import { useUserStore } from 'src/stores/user'
 import { notifyError } from 'src/utils/utilsNotify'
 import CardsSlider from './CardsSlider.vue'
@@ -29,11 +23,24 @@ import CardsSlider from './CardsSlider.vue'
 //data
 const user = useUserStore()
 const requests = ref(null)
+const contacts = ref(null)
+const lastContacts = ref([])
 ref(false)
 
 //methods
-
-
+const loadPeople = async () => {
+  try {
+    const response = await getFiveContactsById({
+      userId: user.userId,
+      excludeIds: lastContacts,
+    })
+    if (!response.data.error?.status) {
+      requests.value = response.data.data
+    }
+  } catch (error) {
+    notifyError('errorSendMessage', error)
+  }
+}
 
 //hooks
 onMounted(async () => {
@@ -43,13 +50,16 @@ onMounted(async () => {
     })
     if (!response.data.error?.status) {
       requests.value = response.data.data
-
+    }
+    const responseContacts = await getFiveContactsById({ userId: user.userId })
+    if (!response.data.error?.status) {
+      contacts.value = responseContacts.data.data
+      contacts.value.forEach((contact) => lastContacts.value.push(contact.id))
     }
   } catch (error) {
     notifyError('errorSendMessage', error)
   }
 })
-
 </script>
 
 <style lang="scss" scoped>
