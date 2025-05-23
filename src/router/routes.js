@@ -15,12 +15,13 @@ const routes = [
     component: () => import('../pages/RegisterView.vue'),
   },
   {
-    path: '/chat',
+    path: '/chat:contactId?',
     name: 'chat',
     // route level code-splitting
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../pages/ChatView.vue'),
+    props: true,
   },
   {
     path: '/media',
@@ -53,7 +54,7 @@ const routes = [
     // this generates a separate chunk (About.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import('../pages/EditView.vue'),
-    props:true,
+    props: true,
   },
   {
     path: '/add',

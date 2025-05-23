@@ -45,6 +45,12 @@ export const getTravelById = (idTravel) => {
 export const getContactsById = (idUser) => {
   return get('Contacts/wsGetContactsById', idUser)
 }
+export const getRequestsById = (idUser) => {
+  return get('Contacts/wsGetRequestsById', idUser)
+}
+export const getFiveContactsById = (idUser) => {
+  return get('Contacts/wsGetFiveContactsById', idUser)
+}
 
 function closeUserSession(error) {
   //si la sesión ha caducado o el token es invalido y no se esta cerrando sesión por el usuario

@@ -311,7 +311,6 @@ const repeatPasswordRef = ref(null)
 const dialog = ref(null)
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
-console.log(mobilView.value)
 //methods
 const onFileChange = () => {
   imageUrl.value = URL.createObjectURL(imageFile.value)

@@ -1,37 +1,62 @@
 <template>
+  <HeaderComponent class="fixed-header" />
   <div class="page-basic">
-      <HeaderComponent />
-    <section class="profile">
-      <p>{{ auth.email }}</p>
-      <q-avatar color="primary" text-color="white" size="200px">
-        <img v-if="auth.avatar" :src="auth.avatar" />
-        <span v-else>{{ auth.username.charAt(0) }}</span
-        ><q-badge color="teal"><q-icon class="edit"></q-icon></q-badge>
-      </q-avatar>
+    <div class="tabs">
+      <q-btn
+        flat
+        dense
+        color="white"
+        class="tab-buttons"
+        label="profile"
+        @click="tabName = 'profile'"
+      ></q-btn>
+      <q-btn
+        flat
+        dense
+        color="orange"
+        class="tab-buttons"
+        label="contacts"
+        @click="tabName = 'contacts'"
+      ></q-btn>
 
-      <p>Hola {{ auth.username }} !</p>
-      <q-btn @click="logout">Logout</q-btn>
-    </section>
+      <q-btn
+        flat
+        dense
+        color="blue"
+        class="tab-buttons"
+        label="social"
+        @click="tabName = 'social'"
+      ></q-btn>
+    </div>
+    <transition name="fade" mode="out-in">
+      <component :is="currentTabComponent" :key="tabName" />
+    </transition>
   </div>
 </template>
 
 <script setup>
-import { onMounted,inject } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
-import { useUserStore } from '../stores/user'
-import { useRouter } from 'vue-router'
+import ProfileData from 'src/components/ProfileData.vue'
+import ContactsList from 'src/components/ContactsList.vue'
+import SocialComponent from 'src/components/SocialComponent.vue'
 
 //data
-const auth = useUserStore()
-const router = useRouter()
-const mqtt = inject('appGlobal/mqtt')
-//methods
-const logout = () => {
-  mqtt.unSubscribeFromAllTopics()
-  auth.deleteUser()
-  router.push({ name: 'login' })
-}
+const tabName = ref('profile')
 
+//computed
+const currentTabComponent = computed(() => {
+  switch (tabName.value) {
+    case 'profile':
+      return ProfileData
+    case 'contacts':
+      return ContactsList
+    case 'social':
+      return SocialComponent
+    default:
+      return ProfileData
+  }
+})
 //hooks
 onMounted(async () => {})
 </script>
@@ -40,36 +65,49 @@ onMounted(async () => {})
 .page-basic {
   display: grid;
   height: 100%;
+  padding-top: 3.6rem;
   width: 100%;
   grid-template-rows: min-content 1fr;
 }
-.absolute-top {
-  position: fixed;
-  top: 0;
-  background-color: $gray-accent;
-  height: 3.4rem;
-}
-.profile {
+
+.tabs {
   display: grid;
-  height: 100%;
+  position: fixed;
+  top: 3.6rem;
   width: 100%;
-  gap: 1rem;
-  grid-template-rows: auto auto;
+  z-index: 1;
+  grid-template-columns: 1fr 1fr 1fr;
+  backdrop-filter: blur(12px);
   justify-content: center;
-  align-content: center;
-  place-items: center;
-  padding: 2rem;
+  border-top: 2px solid white;
+  background-color: rgba(0, 0, 0, 0.667);
+  height: 3.6rem;
+}
+
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+.fixed-header {
+  position: fixed;
 }
 @media (max-width: 450px) {
-  .all-travels {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
-    padding-top: 5rem;
-    padding-bottom: 3.6rem;
-  }
   .page-basic {
     padding-top: 0rem;
+    padding-bottom: 3.4rem;
+    grid-template-rows: min-content 1fr auto;
+  }
+  .tabs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    border-bottom: 1px solid rgba(17, 62, 9, 0.667);
+    top: 0;
   }
 }
 </style>

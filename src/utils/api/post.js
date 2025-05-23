@@ -85,3 +85,22 @@ export const verifyEmail = async (token) => {
 export const sendMessageById = async (message) => {
   return post('Messages/wsSendMessageById', message)
 }
+export const changeAvatar = async (avatarFile) => {
+  return post('User/wsChangeAvatar', avatarFile)
+}
+export const updateName = async (name) => {
+  return post('User/wsChangeName', name)
+}
+export const resetPassword = async (password) => {
+  return post('User/wsResetPassword', password)
+}
+export const deleteContactById = async (contact) => {
+  return post('Contacts/wsDeleteContactById', contact)
+}
+export const setRequestById = async (request) => {
+  return post('Contacts/wsSetRequestById', request)
+}
+
+export const sendRequest = async (demand) => {
+  return post('Contacts/wsSendRequestById', demand)
+}

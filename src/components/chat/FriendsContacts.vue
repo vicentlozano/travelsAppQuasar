@@ -1,6 +1,6 @@
 <template>
   <div class="bar">
-    <div class="q-pa-md slider" style="height: fit-content">
+    <div class="q-pa-md slider">
       <q-avatar
         v-for="contact in displayedContacts"
         :key="contact.id"
@@ -25,6 +25,7 @@
         </p>
       </q-avatar>
     </div>
+
     <q-separator :vertical="!mobilView" />
   </div>
 </template>
@@ -43,6 +44,8 @@ const props = defineProps({
     type: String,
     required: false,
   },
+  contactSelected: String,
+  String,
 })
 const emits = defineEmits(['recipientSelected'])
 //data
@@ -59,13 +62,12 @@ const displayedContacts = computed(() => {
 watch(
   () => props.contactSearch,
   (newValue) => {
-    if (newValue && newValue.length>0) {
+    if (newValue && newValue.length > 0) {
       filteredContacts.value = contacts.value.filter((contact) =>
         (contact.name || contact.lastname).includes(newValue),
       )
-    }
-    else {
-      filteredContacts.value =[]
+    } else {
+      filteredContacts.value = []
     }
   },
 )
@@ -82,8 +84,16 @@ onMounted(async () => {
     const response = await getContactsById({ userId: props.userId })
     if (!response.data.error.status) {
       contacts.value = response.data.data
-      emits('recipientSelected', contacts.value[0])
-      avatarSelected.value = contacts.value[0].id
+      if (props.contactSelected) {
+        let contact = contacts.value.filter(
+          (contact) => contact.id === Number(props.contactSelected),
+        )
+        emits('recipientSelected', contact[0])
+        avatarSelected.value = Number(props.contactSelected)
+      } else {
+        emits('recipientSelected', contacts.value[0])
+        avatarSelected.value = contacts.value[0].id
+      }
     }
   } catch (error) {
     notifyError(error)
@@ -93,9 +103,14 @@ onMounted(async () => {
 
 <style lang="scss" scoped>
 .slider {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, 40px);
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
+  max-height: 100%;
+  gap: 1.1rem;
+  width: max-content;
 }
 .bar {
   display: grid;
@@ -108,18 +123,28 @@ onMounted(async () => {
 }
 .avatar:hover {
   cursor: pointer;
-  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6); /* sombra verde difusa */
-  border-radius: 50%; /* por si es un avatar circular */
+  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6);
+  border-radius: 50%;
 }
 .selected {
-  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6); /* sombra verde difusa */
-  border-radius: 50%; /* por si es un avatar circular */
+  box-shadow: 0 0 12px 4px rgba(40, 167, 69, 0.6);
+  border-radius: 50%;
 }
 @media (max-width: 450px) {
   .bar {
     display: grid;
     grid-template-columns: 1fr;
     width: 100%;
+  }
+  .slider {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    overflow-y: hidden;
+    height: min-content;
+    gap: 1.1rem;
+    width: 100%;
+    white-space: nowrap;
   }
 }
 </style>

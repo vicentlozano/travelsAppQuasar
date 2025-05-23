@@ -114,8 +114,9 @@ h1 {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-items: center;
   border-top: 2px solid white;
-  background-color: rgba(0, 0, 0, 0.63);
-  backdrop-filter: blur(0.7px);
+  background-color: rgba(0, 0, 0, 0.77);
+  backdrop-filter: blur(10px) saturate(10%);;
+  
   align-items: center;
   height: 3.6rem;
   padding: 0.3rem;
@@ -134,12 +135,13 @@ h1 {
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   justify-items: center;
   border-top: 2px solid white;
-  background-color: rgba(0, 0, 0, 0.63);
-  backdrop-filter: blur(0.7px);
+  background-color: rgba(0, 0, 0, 0.77);
+  backdrop-filter: blur(10px);
   align-items: center;
   padding: 0.3rem;
   position: fixed;
   height: 3.6rem;
+  z-index: 1;
   bottom: 0;
   .link {
     margin: 0;
