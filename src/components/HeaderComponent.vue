@@ -9,7 +9,7 @@
       />
     </RouterLink>
     <RouterLink class="link" to="/media"
-      ><q-icon name="mdi-multimedia" class="icons-header"
+      ><q-icon name="mdi-airplane" class="icons-header"
     /></RouterLink>
     <RouterLink class="link" to="/search"
       ><q-icon name="mdi-magnify" class="icons-header"

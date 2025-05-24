@@ -1,8 +1,8 @@
 <template>
-  <HeaderComponent  class="fixed-header"/>
+  <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <h3 class="title">MIS VIAJES</h3>
+      <div class="title-image"><h3 class="title">Mis viajes</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
@@ -18,8 +18,7 @@
         :days="travel.days"
         :places="travel.places"
         :price="travel.price"
-        :background-image="travel.background_image"
-        :travel_date="travel.travel_date"
+        :travel_date="moment(travel.travel_date).format('DD - MM - YY')"
         :user="travel.user_name"
         :id="travel.user_id"
         :crud="true"
@@ -39,6 +38,7 @@ import TravelCard from 'src/components/TravelCard.vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
+import moment from 'moment'
 import { getAllTravels } from '../utils/api'
 const auth = useUserStore()
 const travels = ref([])
@@ -83,6 +83,7 @@ onMounted(async () => {
     let response = await getAllTravels()
     response = response.data
     travels.value = response.data.filter((travel) => travel.user_id === userId.value)
+    console.log( travels.value)
   } catch (error) {
     console.log(error)
   }
@@ -90,14 +91,15 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 .all-travels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-  grid-gap: 3rem;
-  justify-items: center;
-  align-items: center;
+  grid-gap: 0.1rem;
+  justify-items: start;
+  align-items: start;
   height: 100%;
-  padding: 11.6rem 2rem 2rem 2rem;
+  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
   background-color: transparent;
 }
 .page-basic {
@@ -105,7 +107,7 @@ onMounted(async () => {
   padding-top: 3.4rem;
   height: 100%;
   width: 100%;
-  grid-template-rows: 0.2fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 .search-input {
@@ -117,40 +119,48 @@ onMounted(async () => {
 .card {
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 100%;
+  height: 42vh;
+  min-height: 300px;
   padding: 5rem;
   justify-content: center;
   align-items: center;
   background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 70%, rgba(12, 12, 12, 0.757));
-  border-radius: 25px;
+}
+.title-image {
+  text-align: center;
+  align-self: center;
+  color: rgba(24, 24, 24, 0.831);
 }
 .title {
-  color: white;
-  z-index: 3;
-  text-align: center;
-  padding: 2rem;
-  background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 40%, rgba(12, 12, 12, 0.757));
+  font-family: 'Pacifico', cursive;
+  font-weight: 300;
+  padding: 0.2rem;
+  font-style: italic;
+  font-size: 2em;
 }
-.fixed-header{
+
+.fixed-header {
   position: fixed;
 }
-@media (max-width: 1310px) {
+@media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   }
 }
 @media (max-width: 450px) {
   .all-travels {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
     padding-top: 12rem;
     padding-bottom: 3.6rem;
+    padding: 7.4rem 0.2rem 3.6rem 0.2rem;
   }
   .page-basic {
     padding-top: 0rem;
+  }
+  .card {
+    height: 30vh;
   }
 }
 </style>

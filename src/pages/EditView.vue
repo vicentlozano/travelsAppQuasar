@@ -1,6 +1,7 @@
 <template>
+  <HeaderComponent class="fixed-header" />
+
   <div class="page-basic">
-    <HeaderComponent />
     <div class="container">
       <TravelCard
         v-if="travel"
@@ -36,7 +37,12 @@
           />
           <span v-if="errors.price" class="error">{{ errors.price }}</span>
 
-          <input class="custom-input" v-model="travel_date" placeholder="introduce la fecha" type="date" />
+          <input
+            class="custom-input"
+            v-model="travel_date"
+            placeholder="introduce la fecha"
+            type="date"
+          />
           <span v-if="errors.year" class="error">{{ errors.year }}</span>
 
           <input
@@ -123,6 +129,9 @@ const handleSubmit = async () => {
 </script>
 
 <style scoped>
+.fixed-header {
+  position: fixed;
+}
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,16 +1,13 @@
 <template>
+  <HeaderComponent class="fixed-header" />
   <div class="page-basic">
-    <HeaderComponent />
-    <TravelCard
-      v-if="backgroundImage"
+    <CreateOrEditTravel
       :name="name"
       :days="days"
-      :places="places"
       :price="price"
-      :background-image="backgroundImage"
       :travel_date="travel_date"
     />
-    <section class="edit">
+    <section class="edit" v-show="false">
       <form @submit.prevent="handleSubmit" class="edit">
         <input class="custom-input" v-model="name" placeholder="Introduce el nombre" required />
         <span v-if="errors.name" class="error">{{ errors.name }}</span>
@@ -61,7 +58,7 @@
         />
         <span v-if="errors.backgroundImage" class="error">{{ errors.backgroundImage }}</span>
 
-        <button class="save" type="submit">Guardar</button>
+        <q-btn class="save" type="submit" label='Guardar'/>
       </form>
     </section>
   </div>
@@ -72,17 +69,17 @@ import { ref, onMounted } from 'vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useRouter } from 'vue-router'
 import { createTravel } from '../utils/api/post'
-import TravelCard from '../components/TravelCard.vue'
+import CreateOrEditTravel from '../components/CreateOrEditTravel.vue'
 import { useUserStore } from '../stores/user'
 import { notifyError, notifySuccess } from 'src/utils/utilsNotify'
 const auth = useUserStore()
 const router = useRouter()
 
-const name = ref('')
+const name = ref('España')
 const days = ref('')
 const places = ref([])
 const placesInput = ref('')
-const price = ref('')
+const price = ref(0)
 const travel_date = ref('')
 const backgroundImage = ref('')
 const errors = ref({})
@@ -106,7 +103,6 @@ const handleSubmit = async () => {
       places: places.value,
       price: price.value,
       travel_date: travel_date.value,
-      background_image: backgroundImage.value,
       user_id: auth.userId,
       user_name: auth.username,
     }
@@ -139,12 +135,16 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.fixed-header {
+  position: fixed;
+}
 .page-basic {
   display: grid;
   padding-top: 3.4rem;
+  place-items: center;
   height: 100%;
   width: 100%;
-  grid-template-rows: 0.2fr 1fr;
+  grid-template-rows: 1fr;
 }
 .edit {
   display: flex;
@@ -157,6 +157,7 @@ onMounted(() => {
   color: white;
   border: none;
   padding: 0.4rem;
+  width: fit-content;
   font-weight: bold;
   cursor: pointer;
   transition: background-color 0.4s ease;
@@ -174,5 +175,11 @@ onMounted(() => {
 .error {
   color: red;
   font-size: 0.8rem;
+}
+@media (max-width: 450px) {
+.page-basic{
+  padding-top: 0;
+  padding-bottom: 3.4rem;
+}
 }
 </style>
