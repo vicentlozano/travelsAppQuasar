@@ -15,8 +15,7 @@
             <span>Select country</span>
           </div>
           <q-select
-            rounded
-            outlined
+            filled
             dense
             use-input
             input-debounce="0"
@@ -35,8 +34,7 @@
             <span>Select number of places</span>
           </div>
           <q-select
-            rounded
-            outlined
+            filled
             dense
             :behavior="mobilView ? '' : 'menu'"
             optionsdense
@@ -49,7 +47,7 @@
       </section>
     </q-step>
 
-    <q-step :name="2" prefix="2" title="Create an ad group" caption="Optional">
+    <q-step :name="2" prefix="2" title="Introduce travel's date and price" >
       <section class="settings">
         <div class="selects-date">
           <div class="title-selects">
@@ -460,20 +458,17 @@ onMounted(() => {
   place-items: center;
 }
 .selects-date {
-  display: grid;
-  grid-template-rows: min-content 1fr;
+ display: grid;
+  grid-template-rows: 1fr 1fr;
   gap: 1rem;
-  width: 100%;
-  place-items: start;
+  place-items: center;
 }
 .title-selects {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.7rem;
-  width: 100%;
   align-items: center;
-  justify-items: start;
-  padding-left: 0.5rem;
+  justify-self: start;
 }
 .carrusel {
   width: 100%;
