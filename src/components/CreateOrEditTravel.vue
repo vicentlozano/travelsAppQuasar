@@ -18,10 +18,13 @@
             rounded
             outlined
             dense
+            use-input
+            input-debounce="0"
+            @filter="filterFn"
             :behavior="mobilView ? '' : 'menu'"
             :style="mobilView ? 'width: 100%' : 'width: 200px'"
             v-model="country"
-            :options="optionsCountry"
+            :options="options"
             label="Country"
             menu-anchor="bottom left"
           />
@@ -47,7 +50,36 @@
     </q-step>
 
     <q-step :name="2" prefix="2" title="Create an ad group" caption="Optional">
-      An ad group contains one or more ads which target a shared set of keywords.
+      <section class="settings">
+        <div class="selects-date">
+          <div class="title-selects">
+            <q-avatar color="orange" text-color="white" size="32px"> 3 </q-avatar>
+            <span>Select date for travel</span>
+          </div>
+          <div class="labels">
+            <q-input filled dense v-model="dateForm" mask="date" :rules="['date']">
+              <template v-slot:append>
+                <q-icon name="event" class="cursor-pointer">
+                  <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                    <q-date v-model="date">
+                      <div class="row items-center justify-end">
+                        <q-btn v-close-popup label="Close" color="primary" flat />
+                      </div>
+                    </q-date>
+                  </q-popup-proxy>
+                </q-icon>
+              </template>
+            </q-input>
+          </div>
+        </div>
+        <div class="selects-date">
+          <div class="title-selects">
+            <q-avatar color="orange" text-color="white" size="32px"> 2 </q-avatar>
+            <span>Select travel's price</span>
+          </div>
+          <q-input filled dense v-model="priceForm" label="price" mask="number" :rules="['date']" />
+        </div>
+      </section>
     </q-step>
 
     <q-step :name="3" prefix="3" title="Create an ad">
@@ -58,7 +90,7 @@
 
     <template v-slot:navigation>
       <q-carousel
-        v-if="step > 1"
+        v-if="step > 2"
         arrows
         animated
         v-model="slide"
@@ -180,6 +212,9 @@ const numberPlaces = ref(1)
 const country = ref('')
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
+const options = ref()
+const dateForm = ref(null)
+const priceForm = ref(null)
 const optionsCountry = [
   'Afganistán',
   'Albania',
@@ -391,6 +426,19 @@ const updateWidth = () => {
   windowWidth.value = window.innerWidth
   windowWidth.value < 450 ? (mobilView.value = true) : (mobilView.value = false)
 }
+const filterFn = (val, update) => {
+  if (val === '') {
+    update(() => {
+      options.value = optionsCountry
+    })
+    return
+  }
+
+  update(() => {
+    const needle = val.toLowerCase()
+    options.value = optionsCountry.filter((v) => v.toLowerCase().indexOf(needle) > -1)
+  })
+}
 //hooks
 onMounted(() => {
   mobilView.value = window.innerWidth < 450
@@ -403,18 +451,29 @@ onMounted(() => {
   display: grid;
   grid-template-columns: 1fr 1fr;
   place-items: center;
+  gap: 1rem;
 }
 .selects {
   display: grid;
   grid-template-rows: 1fr 1fr;
   gap: 1rem;
+  place-items: center;
+}
+.selects-date {
+  display: grid;
+  grid-template-rows: min-content 1fr;
+  gap: 1rem;
+  width: 100%;
   place-items: start;
 }
 .title-selects {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.7rem;
+  width: 100%;
   align-items: center;
+  justify-items: start;
+  padding-left: 0.5rem;
 }
 .carrusel {
   width: 100%;
@@ -472,6 +531,11 @@ onMounted(() => {
 .plus:hover {
   background: rgba(0, 0, 0, 0.364) !important;
 }
+.btn-calendar {
+  display: flex;
+  width: 100%;
+  place-content: center;
+}
 @media (max-width: 1310px) {
   .travel-image {
     min-height: 200px;
@@ -515,6 +579,14 @@ onMounted(() => {
     height: 100%;
   }
   .selects {
+    width: 100%;
+  }
+  .selects-date {
+    display: grid;
+    grid-template-columns: 1fr min-content;
+    gap: 1rem;
+    place-items: start;
+    align-items: center;
     width: 100%;
   }
 }
