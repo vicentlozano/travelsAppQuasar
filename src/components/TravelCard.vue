@@ -1,5 +1,14 @@
 <template>
-  <q-carousel arrows animated v-model="slide" class="carrusel" control-type="unelevated">
+  <q-carousel
+    arrows
+    swipeable
+    animated
+    v-model:fullscreen="fullscreen"
+    v-model="slide"
+    infinite
+    class="carrusel"
+    control-type="unelevated"
+  >
     <q-carousel-slide
       v-for="place in props.places"
       :key="place.place_id"
@@ -17,26 +26,40 @@
         </q-avatar>
         <q-btn
           icon="add"
-          flat
-          class="edit plus"
-          size="18px"
+          push
+          round
+          dense
+          style="height: fit-content; align-self: center"
+          text-color="white"
           v-if="!moreInfo[place]"
           @click="toggleMoreInfo(place)"
-          ><q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
+          ><q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]" class="bg-blue">
             <strong>More info</strong>
           </q-tooltip></q-btn
         >
         <section class="actions" v-if="moreInfo[place]">
-           <q-btn
-          icon="mdi-cash-multiple"
-          flat
-          class="edit plus"
-          size="15px"
-          ><q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]">
-            <strong>{{price}} EUR</strong>
-          </q-tooltip></q-btn
-        >
-          <q-btn flat icon="event" size="15px" class="cursor-pointer edit plus">
+          <q-btn
+            icon="mdi-cash-multiple"
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+            ><q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]" class="bg-blue">
+              <strong>{{ price }} EUR</strong>
+            </q-tooltip></q-btn
+          >
+          <q-btn
+            icon="event"
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+          >
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]" class="bg-blue">
+              <strong>More info</strong>
+            </q-tooltip>
             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
               <q-date v-model="date" readonly class="calendar">
                 <div class="row items-center justify-end">
@@ -45,17 +68,51 @@
               </q-date>
             </q-popup-proxy>
           </q-btn>
-          <q-btn flat class="edit plus" icon="edit" @click="editTravel(travel_id)" />
-          <section class="delete"><q-btn icon="delete" @click="deleteTravel(travel_id)" class="edit plus" flat></q-btn></section>
           <q-btn
-            flat
-            class="edit plus"
+            v-if="crud"
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+            icon="edit"
+            @click="editTravel(travel_id)"
+          />
+          <section v-if="crud" class="delete">
+            <q-btn
+              icon="delete"
+              @click="deleteTravel(travel_id)"
+              push
+              round
+              dense
+              style="height: fit-content; align-self: center"
+              text-color="white"
+            ></q-btn>
+          </section>
+          <q-btn
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
             icon="mdi-arrow-u-left-top"
             @click="toggleMoreInfo(place)"
           />
         </section>
       </section>
     </q-carousel-slide>
+    <template v-slot:control>
+      <q-carousel-control position="bottom-right" :offset="[18, 18]">
+        <q-btn
+          push
+          round
+          dense
+          text-color="white"
+          :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          @click="fullscreen = !fullscreen"
+        />
+      </q-carousel-control>
+    </template>
   </q-carousel>
 </template>
 
@@ -68,9 +125,8 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const props = defineProps({
   name: String,
-  days: [String, Number],
   places: [Object],
-  price: [String, Number],
+  price: [Number,String],
   travel_date: [String, Number],
   crud: Boolean,
   id: Number,
@@ -80,6 +136,7 @@ const props = defineProps({
 const auth = useUserStore()
 const slide = ref(props.places[0].place)
 const date = { from: '2020/07/08', to: '2020/07/17' }
+const fullscreen = ref(false)
 const moreInfo = ref({})
 
 // methods
@@ -88,6 +145,7 @@ const toggleMoreInfo = (place) => {
 }
 const emits = defineEmits(['delete'])
 const editTravel = (id) => {
+  console.log('hola', id)
   router.push({ name: 'edit', params: { id } })
 }
 const deleteTravel = (id) => {
@@ -98,7 +156,8 @@ const deleteTravel = (id) => {
 <style lang="scss" scoped>
 .carrusel {
   width: 100%;
-  height: 42vh;
+  min-height: 42vh;
+
   min-height: 300px;
 }
 .custom-caption {
@@ -126,13 +185,8 @@ const deleteTravel = (id) => {
   width: 190px;
 }
 .carrusel :deep(.q-carousel__arrow) {
-  background: rgba(0, 0, 0, 0.7) !important;
-  color: #fff !important;
-  border-radius: 50%;
+  backdrop-filter: blur(1px);
   place-self: center;
-}
-.carrusel :deep(.q-carousel__arrow:hover) {
-  background: rgba(0, 0, 0, 0.364) !important;
 }
 
 .actions {
@@ -167,7 +221,7 @@ const deleteTravel = (id) => {
 
 @media (max-width: 450px) {
   .carrusel {
-    height: 30vh;
+    min-height: 30vh;
   }
 }
 </style>

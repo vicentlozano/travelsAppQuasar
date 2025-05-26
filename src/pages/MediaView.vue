@@ -23,13 +23,22 @@
         :id="travel.user_id"
         :crud="true"
         @delete="deleteTravelSelected"
-        :travel_id="travel.id"
+        :travel_id="travel.travel_id"
       />
       <section class="card">
         <h4 class="add-text">Añadir nuevo viaje</h4>
-        <RouterLink to="/add"><q-icon name="mdi-plus" size="30px" /></RouterLink>
+        <q-btn
+          push
+          round
+          dense
+          text-color="white"
+          icon="mdi-plus"
+          size="30px"
+          @click="showDialog = true"
+        />
       </section>
     </section>
+    <CreateTravelDialog :show="showDialog" @close-dialog="closeDialog" />
   </div>
 </template>
 
@@ -42,9 +51,15 @@ import moment from 'moment'
 import { getAllTravels } from '../utils/api'
 const auth = useUserStore()
 const travels = ref([])
+const showDialog = ref(false)
 const search = ref('')
 const userId = ref(null)
 import { deleteTravelById } from '../utils/api/delete'
+import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
+//methods
+const closeDialog = (bool) => {
+  showDialog.value = bool
+}
 const deleteTravelSelected = async (idSelected) => {
   try {
     await deleteTravelById({ id: idSelected })
@@ -78,12 +93,10 @@ const travelsSearched = computed(() => {
 //hooks
 onMounted(async () => {
   userId.value = auth.userId
-  console.log(userId.value)
   try {
     let response = await getAllTravels()
     response = response.data
     travels.value = response.data.filter((travel) => travel.user_id === userId.value)
-    console.log( travels.value)
   } catch (error) {
     console.log(error)
   }

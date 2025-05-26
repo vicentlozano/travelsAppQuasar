@@ -65,11 +65,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref} from 'vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { useRouter } from 'vue-router'
 import { createTravel } from '../utils/api/post'
-import CreateOrEditTravel from '../components/CreateOrEditTravel.vue'
+import CreateOrEditTravel from '../components/CreateTravelDialog.vue'
 import { useUserStore } from '../stores/user'
 import { notifyError, notifySuccess } from 'src/utils/utilsNotify'
 const auth = useUserStore()
@@ -129,9 +129,7 @@ const updatePlaces = () => {
     .filter((place) => place.length > 0)
 }
 
-onMounted(() => {
-  backgroundImage.value = 'https://www.reykjavikcars.com/es/assets/img/blog/702.png'
-})
+
 </script>
 
 <style scoped>

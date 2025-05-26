@@ -6,7 +6,7 @@
         flat
         dense
         color="white"
-        class="tab-buttons"
+        :class="tabName=== 'profile'? 'tab-buttons tab-selected' : 'tab-buttons'"
         label="profile"
         @click="tabName = 'profile'"
       ></q-btn>
@@ -14,7 +14,7 @@
         flat
         dense
         color="orange"
-        class="tab-buttons"
+        :class="tabName=== 'contacts'? 'tab-buttons tab-selected' : 'tab-buttons'"
         label="contacts"
         @click="tabName = 'contacts'"
       ></q-btn>
@@ -23,7 +23,7 @@
         flat
         dense
         color="blue"
-        class="tab-buttons"
+        :class="tabName=== 'social'? 'tab-buttons tab-selected' : 'tab-buttons'"
         label="social"
         @click="tabName = 'social'"
       ></q-btn>
@@ -82,6 +82,9 @@ onMounted(async () => {})
   border-top: 2px solid white;
   background-color: rgba(0, 0, 0, 0.667);
   height: 3.6rem;
+}
+.tab-selected{
+  background-color: rgba(137, 140, 141, 0.356);
 }
 
 
