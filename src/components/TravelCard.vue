@@ -127,7 +127,7 @@ const props = defineProps({
   name: String,
   places: [Object],
   price: [Number,String],
-  travel_date: [String, Number],
+  travel_date: [String, Number,Object],
   crud: Boolean,
   id: Number,
   user: String,

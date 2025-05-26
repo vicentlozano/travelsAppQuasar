@@ -1,9 +1,5 @@
 <template>
-  <q-dialog
-    v-model="isShow"
-    @hide="emits('close-dialog', false)"
-    backdrop-filter="blur(5px) saturate(150%)"
-  >
+  <q-dialog v-model="isShow" @hide="closeDialog" backdrop-filter="blur(5px) saturate(150%)">
     <q-stepper
       v-model="step"
       ref="stepper"
@@ -137,7 +133,17 @@
                   v-model="places[index].place"
                   label="Place's name"
                   :style="mobilView ? 'width: 100%' : 'width: 250px'"
-                  :rules="[(val) => !!val || 'This field cannot be empty']"
+                  :rules="[
+                    (val) => !!val || 'El lugar es obligatorio',
+                    (val) => {
+                      const trimmed = val.trim().toLowerCase()
+                      const currentIndex = intoStep - 1
+                      const exists = places.value?.some(
+                        (p, i) => i !== currentIndex && p.place.trim().toLowerCase() === trimmed,
+                      )
+                      return !exists || 'Este lugar ya está añadido'
+                    },
+                  ]"
                 />
               </div>
               <div class="selects-date">
@@ -159,10 +165,21 @@
                     label="Add your photo"
                     accept="image/*"
                     :rules="[
-                      (val) => !!val || 'The image is required',
+                      (val) => !!val || 'La imagen es obligatoria',
                       (val) =>
-                        (val && val.type && val.type.startsWith('image/')) ||
-                        'Only image files are allowed',
+                        (val.type && val.type.startsWith('image/')) ||
+                        'El archivo debe ser una imagen',
+                      (val) => {
+                        const currentIndex = intoStep - 1
+                        const exists = places.value?.some(
+                          (p, i) =>
+                            i !== currentIndex &&
+                            p.imageFile &&
+                            p.imageFile.name === val.name &&
+                            p.imageFile.size === val.size,
+                        )
+                        return !exists || 'Esta imagen ya está utilizada'
+                      },
                     ]"
                     @update:model-value="onFileChange(index)"
                   >
@@ -460,6 +477,7 @@ const optionsCountry = [
   'Zimbabue',
 ]
 // methods
+const closeDialog = () => emits('close-dialog', false)
 
 const updateWidth = () => {
   windowWidth.value = window.innerWidth
@@ -547,11 +565,11 @@ const isStepValid = computed(() => {
   if (step.value === 1) {
     return !!country.value && numberPlaces.value > 0
   } else if (step.value === 2) {
-    // Validación para el paso 2
     return !!dateRange.value && Number(priceForm.value) > 0
   } else if (step.value === 3) {
-    // Validación para el paso 3 (si aplica)
-    return true // Por ejemplo, si no hay validación en el último paso
+    return true
+  } else if (step.value === 4) {
+    return true
   }
   return false
 })
@@ -560,13 +578,23 @@ const isIntoStepValid = computed(() => {
   const currentPlace = places.value[currentIndex]
   if (!currentPlace) return false
 
-  const isPlaceValid = !!currentPlace.place && currentPlace.place.trim() !== ''
-  const isImageValid =
-    !!currentPlace.imageFile &&
-    currentPlace.imageFile.type &&
-    currentPlace.imageFile.type.startsWith('image/')
+  const { place, imageFile } = currentPlace
 
-  return isPlaceValid && isImageValid
+  const trimmedPlace = (place || '').trim().toLowerCase()
+  const isPlaceRequired = !!place && trimmedPlace !== ''
+  const isPlaceUnique = !places.value.some(
+    (p, i) => i !== currentIndex && p.place.trim().toLowerCase() === trimmedPlace,
+  )
+
+  const isImageRequired = !!imageFile
+  const isImageFormatValid = imageFile?.type?.startsWith('image/')
+  const currentImage = places.value[currentIndex]?.image
+
+  const isImageUnique = !places.value?.some(
+    (p, i) => i !== currentIndex && p.image && p.image === currentImage,
+  )
+
+  return isPlaceRequired && isPlaceUnique && isImageRequired && isImageFormatValid && isImageUnique
 })
 
 //watch
@@ -582,7 +610,7 @@ watch(numberPlaces, (newVal) => {
   if (newVal > currentLength) {
     // Añadir nuevos objetos si hace falta
     for (let i = currentLength; i < newVal; i++) {
-      places.value.push({ place: '', image: '', imageFile: '' })
+      places.value.push({ place: '', image: '', imageFile: null })
     }
   } else if (newVal < currentLength) {
     // Eliminar si hay más de la cuenta
@@ -713,7 +741,7 @@ onMounted(() => {
 
 @media (max-width: 450px) {
   .carrusel {
-    height: 30vh;
+    min-height: 30vh;
     aspect-ratio: auto;
   }
   .settings {
@@ -725,7 +753,6 @@ onMounted(() => {
     place-items: center;
   }
   .stepper {
-    height: 100%;
     width: 100%;
     display: grid;
     padding-bottom: 1rem;
