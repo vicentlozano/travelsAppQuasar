@@ -21,7 +21,6 @@
               use-input
               input-debounce="0"
               @filter="filterFn"
-              :behavior="mobilView ? '' : 'menu'"
               :style="
                 mobilView ? 'width: 100%; padding-bottom:20px' : 'width: 250px; padding-bottom:20px'
               "
@@ -39,7 +38,6 @@
             <q-select
               filled
               dense
-              :behavior="mobilView ? '' : 'menu'"
               optionsdense
               :style="
                 mobilView ? 'width: 100%; padding-bottom:20px' : 'width: 250px; padding-bottom:20px'
@@ -238,7 +236,7 @@
       <template v-slot:navigation>
         <q-stepper-navigation v-if="step !== 3">
           <q-btn
-            @click="$refs.stepper.next()"
+            @click="handleStepAction"
             color="deep-orange"
             :label="step === 4 ? 'Finish' : 'Continue'"
             :disable="!isStepValid"
@@ -279,6 +277,7 @@ let windowWidth = ref(window.innerWidth)
 const options = ref()
 const dateForm = ref('')
 const priceForm = ref(null)
+const stepper = ref(null)
 
 const optionsCountry = [
   'Afganistán',
@@ -536,6 +535,18 @@ const validateDateNotFuture = (val) => {
 const onFileChange = (index) => {
   places.value[index].image = URL.createObjectURL(places.value[index].imageFile)
 }
+const submitTravel = () => {
+  console.log('hoalaaaaaaaaaaaaa')
+  closeDialog()
+}
+const handleStepAction = () => {
+  if (step.value < 4) {
+    stepper.value?.next()
+  } else {
+    submitTravel()
+  }
+}
+
 //computed
 const dateRange = computed({
   get() {
