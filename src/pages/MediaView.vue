@@ -13,9 +13,8 @@
     <section v-if="travels.length > 0" class="all-travels">
       <TravelCard
         v-for="travel in travelsSearched"
-        :key="travel.id"
+        :key="travel.travel_id"
         :name="travel.name"
-        :days="travel.days"
         :places="travel.places"
         :price="travel.price"
         :travel_date="moment(travel.travel_date).format('DD - MM - YY')"
@@ -38,7 +37,7 @@
         />
       </section>
     </section>
-    <CreateTravelDialog :show="showDialog" @close-dialog="closeDialog" />
+    <CreateTravelDialog :show="showDialog" @close-dialog="closeDialog" @new-travel="checkTravels" />
   </div>
 </template>
 
@@ -70,9 +69,18 @@ const deleteTravelSelected = async (idSelected) => {
 }
 
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+const checkTravels = async () => {
+  try {
+    let response = await getAllTravels()
+    response = response.data
+    travels.value = response.data.filter((travel) => travel.user_id === userId.value)
+  } catch (error) {
+    console.log(error)
+  }
+}
 //computed
 const travelsSearched = computed(() => {
-  return search.value
+  return search.value.trim().length > 0
     ? travels.value.filter(
         (travel) =>
           removeAccents(travel.name.toLowerCase()).includes(
@@ -80,7 +88,7 @@ const travelsSearched = computed(() => {
           ) ||
           (Array.isArray(travel.places) &&
             travel.places.some((place) =>
-              removeAccents(place.toLowerCase()).includes(
+              removeAccents(place.place.toLowerCase()).includes(
                 removeAccents(search.value.toLowerCase()),
               ),
             )) ||

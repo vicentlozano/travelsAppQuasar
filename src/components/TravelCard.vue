@@ -12,7 +12,7 @@
     <q-carousel-slide
       v-for="place in props.places"
       :key="place.place_id"
-      :name="place.place"
+      :name="place.place + place.place_id"
       :img-src="place.image"
     >
       <div class="absolute-bottom custom-caption">
@@ -117,7 +117,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useRouter } from 'vue-router'
 
@@ -126,15 +126,16 @@ const router = useRouter()
 const props = defineProps({
   name: String,
   places: [Object],
-  price: [Number,String],
-  travel_date: [String, Number,Object],
+  price: [Number, String],
+  travel_date: [String, Number, Object],
   crud: Boolean,
   id: Number,
   user: String,
   travel_id: Number,
+  slide: String,
 })
 const auth = useUserStore()
-const slide = ref(props.places[0].place)
+const slide = ref(props.places[0]?.place + props.places[0]?.place_id || '')
 const date = { from: '2020/07/08', to: '2020/07/17' }
 const fullscreen = ref(false)
 const moreInfo = ref({})
@@ -151,14 +152,24 @@ const editTravel = (id) => {
 const deleteTravel = (id) => {
   emits('delete', id)
 }
+//watch
+watch(
+  () => props.places,
+  (newPlaces) => {
+    if (Array.isArray(newPlaces) && newPlaces.length > 0) {
+      slide.value = newPlaces[0].place + newPlaces[0].place_id
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style lang="scss" scoped>
 .carrusel {
   width: 100%;
-  min-height: 42vh;
-
+  height: 100%;
   min-height: 300px;
+  max-height: 42vh;
 }
 .custom-caption {
   text-align: center;

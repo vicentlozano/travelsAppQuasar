@@ -37,6 +37,8 @@ const userId = ref(null)
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 //computed
 const travelsSearched = computed(() => {
+  console.log(travelsSearched)
+
   return search.value
     ? travels.value.filter(
         (travel) =>
@@ -45,7 +47,7 @@ const travelsSearched = computed(() => {
           ) ||
           (Array.isArray(travel.places) &&
             travel.places.some((place) =>
-              removeAccents(place.toLowerCase()).includes(
+              removeAccents(place.place.toLowerCase()).includes(
                 removeAccents(search.value.toLowerCase()),
               ),
             )) ||
@@ -94,7 +96,7 @@ onMounted(async () => {
   z-index: 3;
   background-color: white;
 }
-.fixed-header{
+.fixed-header {
   position: fixed;
 }
 @media (max-width: 1310px) {

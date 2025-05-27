@@ -229,7 +229,7 @@
           :price="priceForm"
           :travel_date="dateForm"
           :user="auth.username"
-          :id="auth.id"
+          :id="auth.userId"
           :crud="false"
         />
       </q-step>
@@ -259,11 +259,13 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useUserStore } from '../stores/user'
 import TravelCard from './TravelCard.vue'
+import { createTravel } from 'src/utils/api'
+import { notifySuccessCenter } from 'src/utils/utilsNotify'
 //data
 const props = defineProps({
   show: Boolean,
 })
-const emits = defineEmits(['close-dialog', 'delete'])
+const emits = defineEmits(['close-dialog', 'new-travel'])
 const isShow = ref(false)
 const auth = useUserStore()
 const places = ref([{ place: '', image: '', imageFile: null }])
@@ -535,9 +537,33 @@ const validateDateNotFuture = (val) => {
 const onFileChange = (index) => {
   places.value[index].image = URL.createObjectURL(places.value[index].imageFile)
 }
-const submitTravel = () => {
-  console.log('hoalaaaaaaaaaaaaa')
-  closeDialog()
+const submitTravel = async () => {
+  try {
+    const formData = new FormData()
+    formData.append('name', country.value)
+    formData.append('price', priceForm.value)
+    formData.append('travel_date', dateForm.value)
+    formData.append('user_id', auth.userId)
+    formData.append('user_name', auth.username)
+    formData.append('places', JSON.stringify(places.value.map((place) => place.place)))
+
+    if (places.value) {
+      places.value.forEach((place) => {
+        formData.append('images', place.imageFile)
+      })
+    }
+
+    const response = await createTravel(formData)
+    if (!response.data.error.status) {
+      emits('new-travel')
+      closeDialog()
+      notifySuccessCenter('Travel uploaded!')
+    } else {
+      notifySuccessCenter('An error ocurred when upload travel')
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 const handleStepAction = () => {
   if (step.value < 4) {
