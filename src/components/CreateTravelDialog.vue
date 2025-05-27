@@ -549,18 +549,17 @@ const submitTravel = async () => {
       emits('new-travel')
       closeDialog()
       notifySuccessCenter('Travel uploaded!')
-      places.value =[{ place: '', image: '', imageFile: null }]
-      slide.value =places.value.length > 0 ? places.value[0].place : ''
-      step.value =1
-      intoStep.value =1
-      numberPlaces.value =1
-      country.value =''
-      mobilView.value =null
-      windowWidth.value =window.innerWidth
-      options.value =
-      dateForm.value =''
-      priceForm.value =null
-      stepper.value =null
+      places.value = [{ place: '', image: '', imageFile: null }]
+      slide.value = places.value.length > 0 ? places.value[0].place : ''
+      step.value = 1
+      intoStep.value = 1
+      numberPlaces.value = 1
+      country.value = ''
+      mobilView.value = null
+      windowWidth.value = window.innerWidth
+      options.value = dateForm.value = ''
+      priceForm.value = null
+      stepper.value = null
     } else {
       notifySuccessCenter('An error ocurred when upload travel')
     }

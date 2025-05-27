@@ -47,13 +47,14 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api'
+import { deleteTravelById } from '../utils/api/delete'
+import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
 const auth = useUserStore()
 const travels = ref([])
 const showDialog = ref(false)
 const search = ref('')
 const userId = ref(null)
-import { deleteTravelById } from '../utils/api/delete'
-import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
+
 //methods
 const closeDialog = (bool) => {
   showDialog.value = bool
@@ -141,7 +142,7 @@ onMounted(async () => {
   flex-direction: column;
   width: 100%;
   height: 100%;
-  min-height: 300px;
+  min-height: 350px;
   padding: 5rem;
   gap: 1rem;
   color: white;
@@ -171,7 +172,6 @@ onMounted(async () => {
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   }
 }
-
 
 @media (max-width: 450px) {
   .all-travels {
