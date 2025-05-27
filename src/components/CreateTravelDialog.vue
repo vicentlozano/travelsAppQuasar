@@ -3,9 +3,9 @@
     <q-stepper
       v-model="step"
       ref="stepper"
-      animated
+      :animated="!mobilView"
       active-color="purple"
-      :contracted="mobilView"
+      :vertical="mobilView"
       class="stepper"
     >
       <q-step :name="1" prefix="1" title="Select travel settings">
@@ -151,12 +151,10 @@
                   </q-avatar>
                   <span>Select travel's image</span>
                 </div>
-                <div>
                   <q-file
                     v-model="place.imageFile"
                     filled
                     dense
-                    class="ellipsis"
                     :style="mobilView ? 'width: 100%' : 'width: 250px'"
                     name="avatar"
                     label-color="black"
@@ -198,7 +196,6 @@
                     </template>
                   </q-file>
                 </div>
-              </div>
             </section>
           </q-step>
           <template v-slot:navigation>
@@ -538,6 +535,9 @@ const onFileChange = (index) => {
   places.value[index].image = URL.createObjectURL(places.value[index].imageFile)
 }
 const submitTravel = async () => {
+  if (typeof dateForm.value === 'object') {
+    dateForm.value = `${dateForm.value.from}-${dateForm.value.to}`
+  }
   try {
     const formData = new FormData()
     formData.append('name', country.value)
@@ -546,7 +546,6 @@ const submitTravel = async () => {
     formData.append('user_id', auth.userId)
     formData.append('user_name', auth.username)
     formData.append('places', JSON.stringify(places.value.map((place) => place.place)))
-
     if (places.value) {
       places.value.forEach((place) => {
         formData.append('images', place.imageFile)
@@ -696,23 +695,7 @@ onMounted(() => {
   align-items: center;
   justify-self: start;
 }
-.carrusel {
-  width: 100%;
-  min-height: 42vh;
-  min-height: 300px;
-}
-.custom-caption {
-  text-align: center;
-  padding: 12px;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.3);
-}
-.gadgets {
-  display: grid;
-  grid-template-columns: 1fr min-content;
-  justify-content: space-between;
-  width: 100%;
-}
+
 .data {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -722,35 +705,7 @@ onMounted(() => {
   width: 100%;
   background-color: rgba(24, 24, 24, 0.831);
 }
-.calendar {
-  width: 190px;
-}
-.carrusel :deep(.q-carousel__arrow) {
-  backdrop-filter: blur(1px);
-  place-self: center;
-}
 
-.actions {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  gap: 0.3rem;
-  place-items: center;
-}
-.edit {
-  border-radius: 50%;
-  padding: 0.5rem;
-  background: rgba(0, 0, 0, 0.7) !important;
-  color: #fff !important;
-  border-radius: 50%;
-}
-.plus:hover {
-  background: rgba(0, 0, 0, 0.364) !important;
-}
-.btn-calendar {
-  display: flex;
-  width: 100%;
-  place-content: center;
-}
 :deep(input[type='number'])::-webkit-outer-spin-button,
 :deep(input[type='number'])::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -762,25 +717,14 @@ onMounted(() => {
   -moz-appearance: textfield;
   appearance: textfield;
 }
-@media (max-width: 1310px) {
-  .travel-image {
-    min-height: 200px;
-    min-width: 300px;
-    background-image: url(../assets/landsphoto.jfif);
-    border-bottom-left-radius: 0px;
-    border-top-right-radius: 25px;
-  }
-
-  h3 {
-    border-bottom-left-radius: 0px;
-  }
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 375px;
 }
 
-@media (max-width: 450px) {
-  .carrusel {
-    min-height: 30vh;
-    aspect-ratio: auto;
-  }
+@media (max-width: 650px) {
   .settings {
     display: grid;
     grid-template-columns: 1fr;
@@ -809,5 +753,8 @@ onMounted(() => {
   .selects-date {
     width: 100%;
   }
+  :deep  .q-stepper__step-inner {
+    padding: 1rem 2rem 32px 3rem;
+}
 }
 </style>

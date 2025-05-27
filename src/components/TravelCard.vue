@@ -16,8 +16,10 @@
       :img-src="place.image"
     >
       <div class="absolute-bottom custom-caption">
-        <div class="text-h2">{{ name }}</div>
-        <div class="text-subtitle1">{{ place.place }}</div>
+        <div class="text-h2">{{ name.charAt(0).toUpperCase() + name.slice(1) }}</div>
+        <div class="text-subtitle1">
+          {{ place.place.charAt(0).toUpperCase() + place.place.slice(1) }}
+        </div>
       </div>
       <section class="gadgets">
         <q-avatar color="primary" text-color="white" size="50px" class="avatar">
@@ -127,7 +129,7 @@ const props = defineProps({
   name: String,
   places: [Object],
   price: [Number, String],
-  travel_date: [String, Number, Object],
+  travel_date: [String, Object],
   crud: Boolean,
   id: Number,
   user: String,
@@ -136,9 +138,9 @@ const props = defineProps({
 })
 const auth = useUserStore()
 const slide = ref(props.places[0]?.place + props.places[0]?.place_id || '')
-const date = { from: '2020/07/08', to: '2020/07/17' }
 const fullscreen = ref(false)
 const moreInfo = ref({})
+const date = props.travel_date
 
 // methods
 const toggleMoreInfo = (place) => {
@@ -169,8 +171,8 @@ watch(
   width: 100%;
   height: 100%;
   min-height: 300px;
-  max-height: 42vh;
 }
+
 .custom-caption {
   text-align: center;
   padding: 12px;
@@ -183,15 +185,7 @@ watch(
   justify-content: space-between;
   width: 100%;
 }
-.data {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  place-items: center;
-  height: 1005;
-  width: 100%;
-  background-color: rgba(24, 24, 24, 0.831);
-}
+
 .calendar {
   width: 190px;
 }
@@ -216,23 +210,13 @@ watch(
 .plus:hover {
   background: rgba(0, 0, 0, 0.364) !important;
 }
-@media (max-width: 1310px) {
-  .travel-image {
-    min-height: 200px;
-    min-width: 300px;
-    background-image: url(../assets/landsphoto.jfif);
-    border-bottom-left-radius: 0px;
-    border-top-right-radius: 25px;
-  }
-
-  h3 {
-    border-bottom-left-radius: 0px;
-  }
+ :deep .q-carousel__slide {
+ min-height: 300px !important;
 }
 
 @media (max-width: 450px) {
   .carrusel {
-    min-height: 30vh;
+    min-height: 300px;
   }
 }
 </style>

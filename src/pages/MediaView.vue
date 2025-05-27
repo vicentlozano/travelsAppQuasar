@@ -10,14 +10,14 @@
       </q-input>
     </div>
 
-    <section v-if="travels.length > 0" class="all-travels">
+    <section class="all-travels">
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
         :name="travel.name"
         :places="travel.places"
         :price="travel.price"
-        :travel_date="moment(travel.travel_date).format('DD - MM - YY')"
+        :travel_date="travel.travel_date"
         :user="travel.user_name"
         :id="travel.user_id"
         :crud="true"
@@ -46,7 +46,6 @@ import TravelCard from 'src/components/TravelCard.vue'
 import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
-import moment from 'moment'
 import { getAllTravels } from '../utils/api'
 const auth = useUserStore()
 const travels = ref([])
@@ -119,7 +118,7 @@ onMounted(async () => {
   grid-gap: 0.1rem;
   justify-items: start;
   align-items: start;
-  height: 100%;
+  height: min-content;
   padding: 7.4rem 0.5rem 0.5rem 0.5rem;
   background-color: transparent;
 }
@@ -141,11 +140,14 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   width: 100%;
-  height: 42vh;
+  height: 100%;
   min-height: 300px;
   padding: 5rem;
+  gap: 1rem;
+  color: white;
   justify-content: center;
   align-items: center;
+  text-align: center;
   background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 70%, rgba(12, 12, 12, 0.757));
 }
 .title-image {
@@ -169,6 +171,8 @@ onMounted(async () => {
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   }
 }
+
+
 @media (max-width: 450px) {
   .all-travels {
     display: grid;
