@@ -104,10 +104,8 @@
         <q-stepper
           v-model="intoStep"
           ref="intoStepper"
-          animated
-          style="backdrop-filter: blur(20px)"
           active-color="purple"
-          :contracted="mobilView"
+          :vertical="mobilView"
           class="stepper"
         >
           <q-step
@@ -729,7 +727,7 @@ onMounted(() => {
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 2rem;
+    gap: 0.2rem;
     width: 100%;
     place-items: center;
   }
@@ -754,7 +752,7 @@ onMounted(() => {
     width: 100%;
   }
   :deep  .q-stepper__step-inner {
-    padding: 1rem 2rem 32px 3rem;
+    padding: 1rem 1rem 1rem 3rem;
 }
 }
 </style>
