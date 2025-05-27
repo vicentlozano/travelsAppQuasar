@@ -149,51 +149,45 @@
                   </q-avatar>
                   <span>Select travel's image</span>
                 </div>
-                  <q-file
-                    v-model="place.imageFile"
-                    filled
-                    dense
-                    :style="mobilView ? 'width: 100%' : 'width: 250px'"
-                    name="avatar"
-                    label-color="black"
-                    label="Add your photo"
-                    accept="image/*"
-                    :rules="[
-                      (val) => !!val || 'La imagen es obligatoria',
-                      (val) =>
-                        (val.type && val.type.startsWith('image/')) ||
-                        'El archivo debe ser una imagen',
-                      (val) => {
-                        const currentIndex = intoStep - 1
-                        const exists = places.value?.some(
-                          (p, i) =>
-                            i !== currentIndex &&
-                            p.imageFile &&
-                            p.imageFile.name === val.name &&
-                            p.imageFile.size === val.size,
-                        )
-                        return !exists || 'Esta imagen ya está utilizada'
-                      },
-                    ]"
-                    @update:model-value="onFileChange(index)"
-                  >
-                    <template v-slot:append>
-                      <q-icon
-                        v-if="place.imageFile !== null"
-                        name="close"
-                        @click.stop.prevent="place.imageFile = null"
-                        class="cursor-pointer"
-                      />
-                      <q-icon
-                        v-if="place.imageFile === null"
-                        round
-                        dense
-                        flat
-                        name="cloud_upload"
-                      />
-                    </template>
-                  </q-file>
-                </div>
+                <q-file
+                  v-model="place.imageFile"
+                  filled
+                  dense
+                  :style="mobilView ? 'width: 100%' : 'width: 250px'"
+                  name="avatar"
+                  label-color="black"
+                  label="Add your photo"
+                  accept="image/*"
+                  :rules="[
+                    (val) => !!val || 'La imagen es obligatoria',
+                    (val) =>
+                      (val.type && val.type.startsWith('image/')) ||
+                      'El archivo debe ser una imagen',
+                    (val) => {
+                      const currentIndex = intoStep - 1
+                      const exists = places.value?.some(
+                        (p, i) =>
+                          i !== currentIndex &&
+                          p.imageFile &&
+                          p.imageFile.name === val.name &&
+                          p.imageFile.size === val.size,
+                      )
+                      return !exists || 'Esta imagen ya está utilizada'
+                    },
+                  ]"
+                  @update:model-value="onFileChange(index)"
+                >
+                  <template v-slot:append>
+                    <q-icon
+                      v-if="place.imageFile !== null"
+                      name="close"
+                      @click.stop.prevent="place.imageFile = null"
+                      class="cursor-pointer"
+                    />
+                    <q-icon v-if="place.imageFile === null" round dense flat name="cloud_upload" />
+                  </template>
+                </q-file>
+              </div>
             </section>
           </q-step>
           <template v-slot:navigation>
@@ -555,6 +549,18 @@ const submitTravel = async () => {
       emits('new-travel')
       closeDialog()
       notifySuccessCenter('Travel uploaded!')
+      places.value =[{ place: '', image: '', imageFile: null }]
+      slide.value =places.value.length > 0 ? places.value[0].place : ''
+      step.value =1
+      intoStep.value =1
+      numberPlaces.value =1
+      country.value =''
+      mobilView.value =null
+      windowWidth.value =window.innerWidth
+      options.value =
+      dateForm.value =''
+      priceForm.value =null
+      stepper.value =null
     } else {
       notifySuccessCenter('An error ocurred when upload travel')
     }
@@ -751,8 +757,8 @@ onMounted(() => {
   .selects-date {
     width: 100%;
   }
-  :deep  .q-stepper__step-inner {
+  :deep .q-stepper__step-inner {
     padding: 1rem 1rem 1rem 3rem;
-}
+  }
 }
 </style>

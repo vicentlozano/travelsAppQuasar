@@ -58,10 +58,10 @@ import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
 const closeDialog = (bool) => {
   showDialog.value = bool
 }
-const deleteTravelSelected = async (idSelected) => {
+const deleteTravelSelected = async (idAndUrls) => {
   try {
-    await deleteTravelById({ id: idSelected })
-    travels.value = travels.value.filter((travel) => travel.id !== idSelected)
+    await deleteTravelById(idAndUrls)
+    travels.value = travels.value.filter((travel) => travel.travel_id !== idAndUrls.id)
   } catch (error) {
     console.log(error)
   }

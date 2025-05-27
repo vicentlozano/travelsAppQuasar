@@ -83,7 +83,7 @@
           <section v-if="crud" class="delete">
             <q-btn
               icon="delete"
-              @click="deleteTravel(travel_id)"
+              @click="deleteTravel(travel_id, places)"
               push
               round
               dense
@@ -148,11 +148,11 @@ const toggleMoreInfo = (place) => {
 }
 const emits = defineEmits(['delete'])
 const editTravel = (id) => {
-  console.log('hola', id)
   router.push({ name: 'edit', params: { id } })
 }
-const deleteTravel = (id) => {
-  emits('delete', id)
+const deleteTravel = (id, places) => {
+  let idAndUrls = { id: id, urls: places.map((place) => place.image) }
+  emits('delete', idAndUrls)
 }
 //watch
 watch(
@@ -210,8 +210,8 @@ watch(
 .plus:hover {
   background: rgba(0, 0, 0, 0.364) !important;
 }
- :deep .q-carousel__slide {
- min-height: 300px !important;
+:deep .q-carousel__slide {
+  min-height: 300px !important;
 }
 
 @media (max-width: 450px) {
