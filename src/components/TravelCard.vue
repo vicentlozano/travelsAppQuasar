@@ -1,242 +1,229 @@
 <template>
-  <div class="principal">
-    <div class="card">
-      <section class="travel-image" :style="{ backgroundImage: `url(${backgroundImage})` }">
-        <q-avatar size="70px" class="avatar">
-          <img src="https://cdn.quasar.dev/img/avatar2.jpg" />
-        </q-avatar>
-        <div>
-          <h3 class="section-title">{{ name }}</h3>
+  <q-carousel
+    arrows
+    swipeable
+    animated
+    v-model:fullscreen="fullscreen"
+    v-model="slide"
+    infinite
+    :class="isBigWidth? 'carrusel carrusel-width' : 'carrusel' "
+    control-type="unelevated"
+  >
+    <q-carousel-slide
+      v-for="place in props.places"
+      :key="place.place_id"
+      :name="place.place + place.place_id"
+      :img-src="place.image"
+    >
+      <div class="absolute-bottom custom-caption">
+        <div class="text-h2">{{ name.charAt(0).toUpperCase() + name.slice(1) }}</div>
+        <div class="text-subtitle1">
+          {{ place.place.charAt(0).toUpperCase() + place.place.slice(1) }}
         </div>
-      </section>
-      <section class="text">
-        <p>
-          <span class="info">{{ props.days }} Dias</span>
-        </p>
-        <p>
-          <span v-for="(place) in places" :key="place" class="info-places"
-            >{{ place }}
-          </span>
-        </p>
-        <p>
-          <span class="info">{{ price }}€</span>
-        </p>
-        <p>
-          <span class="info">{{ travel_date }}</span>
-        </p>
-
-        <section v-if="props.crud" class="crud">
-          <button class="round-button" @click="deleteTravel(props.travel_id)">
-            <img class="delete" alt="delete" src="../assets/icons/icons8-delete-60.png" />
-          </button>
-          <button class="round-button" @click="editTravel(props.travel_id)">
-            <img class="edit" alt="edit" src="../assets/icons/icons8-edit-50.png" />
-          </button>
+      </div>
+      <section class="gadgets">
+        <q-avatar color="primary" text-color="white" size="50px" class="avatar">
+          <img v-if="auth.avatar" :src="auth.avatar" />
+          <span v-else>{{ auth.username?.charAt(0) }}</span>
+        </q-avatar>
+        <q-btn
+          icon="add"
+          push
+          round
+          dense
+          style="height: fit-content; align-self: center"
+          text-color="white"
+          v-if="!moreInfo[place]"
+          @click="toggleMoreInfo(place)"
+          ><q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]" class="bg-blue">
+            <strong>More info</strong>
+          </q-tooltip></q-btn
+        >
+        <section class="actions" v-if="moreInfo[place]">
+          <q-btn
+            icon="mdi-cash-multiple"
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+            ><q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]" class="bg-blue">
+              <strong>{{ price }} EUR</strong>
+            </q-tooltip></q-btn
+          >
+          <q-btn
+            icon="event"
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+          >
+            <q-tooltip anchor="top middle" self="bottom middle" :offset="[10, 10]" class="bg-blue">
+              <strong>More info</strong>
+            </q-tooltip>
+            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+              <q-date v-model="date" readonly class="calendar">
+                <div class="row items-center justify-end">
+                  <q-btn v-close-popup label="Close" color="primary" flat />
+                </div>
+              </q-date>
+            </q-popup-proxy>
+          </q-btn>
+          <q-btn
+            v-if="crud"
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+            icon="edit"
+            @click="editTravel(travel_id)"
+          />
+          <section v-if="crud" class="delete">
+            <q-btn
+              icon="delete"
+              @click="deleteTravel(travel_id, places)"
+              push
+              round
+              dense
+              style="height: fit-content; align-self: center"
+              text-color="white"
+            ></q-btn>
+          </section>
+          <q-btn
+            push
+            round
+            dense
+            style="height: fit-content; align-self: center"
+            text-color="white"
+            icon="mdi-arrow-u-left-top"
+            @click="toggleMoreInfo(place)"
+          />
         </section>
       </section>
-    </div>
-  </div>
+    </q-carousel-slide>
+    <template v-slot:control>
+      <q-carousel-control position="bottom-right" :offset="[18, 18]">
+        <q-btn
+          push
+          round
+          dense
+          text-color="white"
+          :icon="fullscreen ? 'fullscreen_exit' : 'fullscreen'"
+          @click="fullscreen = !fullscreen"
+        />
+      </q-carousel-control>
+    </template>
+  </q-carousel>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
-const router = useRouter()
+import { ref, watch,computed } from 'vue'
+import { useUserStore } from '../stores/user'
+import { useQuasar } from 'quasar'
+
+//data
 const props = defineProps({
   name: String,
-  days: [String, Number],
-  places: [String],
-  price: [String, Number],
-  backgroundImage: String,
-  travel_date: [String, Number],
+  places: [Object],
+  price: [Number, String],
+  travel_date: [String, Object],
   crud: Boolean,
   id: Number,
   user: String,
-  travel_id: Number
-
+  travel_id: Number,
+  slide: String,
 })
-const emits = defineEmits(['delete'])
+const auth = useUserStore()
+const slide = ref(props.places[0]?.place + props.places[0]?.place_id || '')
+const fullscreen = ref(false)
+const moreInfo = ref({})
+const date = props.travel_date
+const $q = useQuasar()
+
+// methods
+const toggleMoreInfo = (place) => {
+  moreInfo.value[place] = !moreInfo.value[place]
+}
+const emits = defineEmits(['delete','edit-travel'])
 const editTravel = (id) => {
-  router.push({ name: 'edit', params: {id} })
+  emits('edit-travel', id)
 }
-const deleteTravel = (id) => {
-  emits('delete', id)
+const deleteTravel = (id, places) => {
+  let idAndUrls = { id: id, urls: places.map((place) => place.image) }
+  emits('delete', idAndUrls)
 }
+//computed
+
+const isBigWidth = computed(() => $q.screen.width > 1400)
+
+//watch
+watch(
+  () => props.places,
+  (newPlaces) => {
+    if (Array.isArray(newPlaces) && newPlaces.length > 0) {
+      slide.value = newPlaces[0].place + newPlaces[0].place_id
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style lang="scss" scoped>
-.card {
-  display: grid;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr 0.5fr;
-  justify-content: center;
-  align-items: center;
-  height: fit-content;
-  width: fit-content;
-  background-image: url(../assets/landsphoto.jfif);
-
-  background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 40%, rgba(12, 12, 12, 0.757));
-  border-radius: 25px;
-}
-.principal {
-  display: grid;
+.carrusel {
+  width: 100%;
   height: 100%;
-  grid-template-rows: 5fr auto;
-  justify-content: center;
-  gap: 1rem;
-  padding-top: 3.6rem ;
-  align-items: center;
+  min-height: 350px;
+}
+.carrusel-width{
+  max-width: 50vw;
 }
 
-.travel-image {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+.custom-caption {
   text-align: center;
-  min-height: 280px;
-  min-width: 400px;
-  background-image: url(../assets/landsphoto.jfif);
-  background-size: cover;
-  background-repeat: no-repeat;
-  border-top-left-radius: 25px;
-  border-bottom-left-radius: 25px;
+  padding: 12px;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.3);
 }
-.crud {
-  display: flex;
-  flex-direction: row;
-  gap: 2rem;
-  justify-content: center;
-  padding: 1rem;
-  border-radius: 15px;
+.gadgets {
+  display: grid;
+  grid-template-columns: 1fr min-content;
+  justify-content: space-between;
+  width: 100%;
 }
-.round-button {
-  height: auto;
-  width: auto;
-  border-radius: 50%;
-  border: none;
-  background-size: auto;
-  background-color: transparent;
-  cursor: pointer;
+
+.calendar {
+  width: 190px;
 }
-img {
-  transition: transform 0.4s ease;
+.carrusel :deep(.q-carousel__arrow) {
+  backdrop-filter: blur(1px);
+  place-self: center;
 }
-.delete {
-  height: 50px;
-  width: 50px;
+
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  gap: 0.3rem;
+  place-items: center;
 }
 .edit {
-  height: 50px;
-  width: 50px;
+  border-radius: 50%;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.7) !important;
+  color: #fff !important;
+  border-radius: 50%;
 }
-img:hover {
-  transform: scale(1.1);
+.plus:hover {
+  background: rgba(0, 0, 0, 0.364) !important;
 }
-.section-title {
-  background-color: rgba(32, 26, 26, 0.498);
-  font-weight: 700;
-}
-.text {
-  display: grid;
-  grid-template-rows: auto auto auto auto;
-  align-items: center;
-  text-align: center;
-  text-align: center;
-  background-color: transparent;
-  padding: 0rem 1rem;
-  width: 100%;
-  height: 100%;
-  p {
-    font-size: 1.2em;
-    margin: 0;
-    color: white;
-    text-align: center;
-  }
-}
-
-h3 {
-  color: white;
-  margin: 0;
-  font-size: 1.4em;
-  border-bottom-left-radius: 25px;
-}
-.info {
-  color: white;
-  margin-right: 0.6rem;
-}
-.info-places{
-  font-size: 0.9rem;
-}
-p {
-  width: 100%;
-  text-align: center;
-  color: rgb(119, 186, 206);
-}
-.avatar {
-  padding: 0.4rem;
-  z-index: -1;
-}
-
-@media (max-width: 1310px) {
-  .travel-image {
-    min-height: 200px;
-    min-width: 300px;
-    background-image: url(../assets/landsphoto.jfif);
-    border-bottom-left-radius: 0px;
-    border-top-right-radius: 25px;
-  }
-  .card {
-    display: grid;
-    grid-template-rows: 1fr 1fr;
-    grid-template-columns: 1fr;
-  }
-  h3 {
-    border-bottom-left-radius: 0px;
-  }
-}
-@media (max-width: 681px) {
-  .travel-image {
-    min-height: 200px;
-    min-width: 400px;
-    background-image: url(../assets/landsphoto.jfif);
-    border-top-right-radius: 0px;
-    border-bottom-left-radius: 25px;
-  }
-  .card {
-    display: grid;
-    grid-template-rows: 1fr;
-    grid-template-columns: 1.6fr 1fr;
-  }
-  h3 {
-    border-bottom-left-radius: 25px;
-  }
+:deep .q-carousel__slide {
+  min-height: 350px !important;
 }
 
 @media (max-width: 450px) {
-  .travel-image {
-    min-height: 200px;
-    min-width: 360px;
-    border-top-right-radius: 15px;
-    border-bottom-left-radius: 0px;
-  }
-  .card {
-    display: grid;
-    grid-template-rows: auto 1fr;
-    grid-template-columns: 1fr;
-    width: 100%;
-  }
-  h3 {
-    border-bottom-left-radius: 0px;
-  }
-  .delete {
-    height: 30px;
-    width: 30px;
-  }
-  .edit {
-    height: 30px;
-    width: 30px;
-  }
-  .card {
-    height: 100%;
+  .carrusel {
+    min-height: 300px;
   }
 }
 </style>

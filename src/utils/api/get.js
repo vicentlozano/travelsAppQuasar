@@ -6,24 +6,26 @@ let isReloading = false
 
 const errorCode = 54321
 
-async function get(endpoint, params) {
+async function get(endpoint, params, options = {}) {
   return api
-    .get(`/${endpoint}`, { params })
+    .get(`/${endpoint}`, { params, ...options })
     .then((res) => {
       const { data } = res
+
       if (data.error && data.error.status) {
         closeUserSession(data.error)
         if (!isReloading) {
           notifyError(data.error.source)
         }
       }
+
       return res
     })
     .catch((error) => {
       closeUserSession(error)
       console.log(error)
       if (!isReloading) {
-        if (error.response.data.error && error.response.data.error.code === errorCode) {
+        if (error.response?.data?.error?.code === errorCode) {
           notifyError(error.response.data.error.source)
         } else {
           notifyError('defaultError')
@@ -35,6 +37,12 @@ async function get(endpoint, params) {
 
 export const getAllTravels = () => {
   return get('Travels/wsGetAllTravels')
+}
+export const getFriendsTravels = (idUser) => {
+  return get('Travels/wsGetFiendsTravels', idUser)
+}
+export const getNewPeopleTravels = (idUser) => {
+  return get('Travels/wsGetNewPeopleTravels', idUser)
 }
 export const getMessages = (idUser) => {
   return get('Messages/wsGetMessages', idUser)
@@ -50,6 +58,9 @@ export const getRequestsById = (idUser) => {
 }
 export const getFiveContactsById = (idUser) => {
   return get('Contacts/wsGetFiveContactsById', idUser)
+}
+export const getImageFileDataFromS3 = (url) => {
+  return get('Travels/wsGetImageFileFromS3', { url }, { responseType: 'blob' })
 }
 
 function closeUserSession(error) {

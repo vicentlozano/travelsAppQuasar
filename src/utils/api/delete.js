@@ -32,8 +32,8 @@ function deleted(endpoint, params) {
     })
 }
 
-export const deleteTravelById = (id) => {
-  return deleted('Travels/wsDeleteTravelById', id)
+export const deleteTravelById = (idAndUrls) => {
+  return deleted('Travels/wsDeleteTravelById', idAndUrls)
 }
 
 function closeUserSession(error) {

@@ -473,17 +473,17 @@ onMounted(() => {
   margin: 0;
   font-weight: 600;
 }
-::v-deep(.q-stepper){
+:deep(.q-stepper){
   align-self: flex-start;
 }
-::v-deep(.q-stepper__header) {
+:deep(.q-stepper__header) {
   background-color: rgba(44, 41, 41, 0);
 }
-::v-deep(.q-stepper__line)::before,
-::v-deep(.q-stepper__line)::after {
+:deep(.q-stepper__line)::before,
+:deep(.q-stepper__line)::after {
   background-color: rgba(255, 255, 255, 0.849) !important;
 }
-::v-deep(.q-stepper__content.q-panel-parent) {
+:deep(.q-stepper__content.q-panel-parent) {
   align-self: start;
 }
 @media(max-width: 480px){

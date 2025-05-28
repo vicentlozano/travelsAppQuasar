@@ -191,10 +191,10 @@ onUnmounted(() => {
     color: white;
 
     // Aconsegueix que el placeholder també canvii
-    ::v-deep input::placeholder {
+    :deep input::placeholder {
       color: #ccc;
     }
-    ::v-deep input {
+    :deep input {
       color: #ccc;
     }
   }

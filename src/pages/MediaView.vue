@@ -1,8 +1,8 @@
 <template>
-  <HeaderComponent  class="fixed-header"/>
+  <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <h3 class="title">MIS VIAJES</h3>
+      <div v-if="!isBigWidth" class="title-image"><h3 class="title">Mis viajes</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
@@ -10,27 +10,60 @@
       </q-input>
     </div>
 
-    <section v-if="travels.length > 0" class="all-travels">
+    <section class="all-travels" v-if="travels.length > 0">
       <TravelCard
         v-for="travel in travelsSearched"
-        :key="travel.id"
+        :key="travel.travel_id"
         :name="travel.name"
-        :days="travel.days"
         :places="travel.places"
         :price="travel.price"
-        :background-image="travel.background_image"
         :travel_date="travel.travel_date"
         :user="travel.user_name"
         :id="travel.user_id"
         :crud="true"
         @delete="deleteTravelSelected"
-        :travel_id="travel.id"
+        @edit-travel="editTravel"
+        :travel_id="travel.travel_id"
       />
       <section class="card">
         <h4 class="add-text">Añadir nuevo viaje</h4>
-        <RouterLink to="/add"><q-icon name="mdi-plus" size="30px" /></RouterLink>
+        <q-btn
+          push
+          round
+          dense
+          text-color="white"
+          icon="mdi-plus"
+          size="30px"
+          @click="showDialog = true"
+        />
       </section>
     </section>
+    <section v-else class="no-travels">
+      <h2 class="title center">
+        You don't have any trips yet. Start creating one to share your journey!
+      </h2>
+      <section class="card">
+        <h4 class="add-text">Añadir nuevo viaje</h4>
+        <q-btn
+          push
+          round
+          dense
+          text-color="white"
+          icon="mdi-plus"
+          size="30px"
+          @click="showDialog = true"
+        />
+      </section>
+    </section>
+    <CreateTravelDialog
+      :show="showDialog"
+      :dataTravel="dataTravelEdit"
+      :isEdit="travelIdEdit"
+      @close-dialog="closeDialog"
+      @new-travel="checkTravels"
+      @clean-props="cleanData"
+      @delete-old-travel="deleteOldTravel"
+    />
   </div>
 </template>
 
@@ -40,24 +73,66 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api'
+import { deleteTravelById } from '../utils/api/delete'
+import { useQuasar } from 'quasar'
+
+import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
 const auth = useUserStore()
 const travels = ref([])
+const showDialog = ref(false)
 const search = ref('')
 const userId = ref(null)
-import { deleteTravelById } from '../utils/api/delete'
-const deleteTravelSelected = async (idSelected) => {
+const dataTravelEdit = ref(null)
+const travelIdEdit = ref(null)
+const $q = useQuasar()
+
+//methods
+const closeDialog = (bool) => {
+  showDialog.value = bool
+}
+const deleteTravelSelected = async (idAndUrls) => {
   try {
-    await deleteTravelById({ id: idSelected })
-    travels.value = travels.value.filter((travel) => travel.id !== idSelected)
+    await deleteTravelById(idAndUrls)
+    travels.value = travels.value.filter((travel) => travel.travel_id !== idAndUrls.id)
+  } catch (error) {
+    console.log(error)
+  }
+}
+const deleteOldTravel = async (id) => {
+  let travel = travels.value.filter((travel) => travel.travel_id === id)
+  let idAndUrls = { id: id, urls: travel[0].places.map((place) => place.image) }
+  try {
+    await deleteTravelById(idAndUrls)
+    travels.value = travels.value.filter((travel) => travel.travel_id !== idAndUrls.id)
   } catch (error) {
     console.log(error)
   }
 }
 
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+const checkTravels = async () => {
+  try {
+    let response = await getAllTravels()
+    response = response.data
+    travels.value = response.data.filter((travel) => travel.user_id === userId.value)
+  } catch (error) {
+    console.log(error)
+  }
+}
+const editTravel = async (id) => {
+  dataTravelEdit.value = travels.value.find((travel) => travel.travel_id === id)
+  travelIdEdit.value = id
+  showDialog.value = true
+}
+const cleanData = () => {
+  dataTravelEdit.value = null
+  travelIdEdit.value = null
+}
 //computed
+const isBigWidth = computed(() => $q.screen.width > 1400)
+
 const travelsSearched = computed(() => {
-  return search.value
+  return search.value.trim().length > 0
     ? travels.value.filter(
         (travel) =>
           removeAccents(travel.name.toLowerCase()).includes(
@@ -65,7 +140,7 @@ const travelsSearched = computed(() => {
           ) ||
           (Array.isArray(travel.places) &&
             travel.places.some((place) =>
-              removeAccents(place.toLowerCase()).includes(
+              removeAccents(place.place.toLowerCase()).includes(
                 removeAccents(search.value.toLowerCase()),
               ),
             )) ||
@@ -78,7 +153,6 @@ const travelsSearched = computed(() => {
 //hooks
 onMounted(async () => {
   userId.value = auth.userId
-  console.log(userId.value)
   try {
     let response = await getAllTravels()
     response = response.data
@@ -90,14 +164,15 @@ onMounted(async () => {
 </script>
 
 <style lang="scss" scoped>
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 .all-travels {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
-  grid-gap: 3rem;
-  justify-items: center;
-  align-items: center;
-  height: 100%;
-  padding: 11.6rem 2rem 2rem 2rem;
+  grid-gap: 0.1rem;
+  justify-items: start;
+  align-items: start;
+  height: min-content;
+  padding: 3.4rem 0.5rem 0.5rem 0.5rem;
   background-color: transparent;
 }
 .page-basic {
@@ -105,7 +180,7 @@ onMounted(async () => {
   padding-top: 3.4rem;
   height: 100%;
   width: 100%;
-  grid-template-rows: 0.2fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 .search-input {
@@ -117,40 +192,82 @@ onMounted(async () => {
 .card {
   display: flex;
   flex-direction: column;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  min-height: 350px;
   padding: 5rem;
+  gap: 1rem;
+  color: white;
   justify-content: center;
   align-items: center;
+  text-align: center;
   background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 70%, rgba(12, 12, 12, 0.757));
-  border-radius: 25px;
+}
+.title-image {
+  text-align: center;
+  align-self: center;
+  color: rgba(24, 24, 24, 0.831);
 }
 .title {
-  color: white;
-  z-index: 3;
-  text-align: center;
-  padding: 2rem;
-  background: linear-gradient(90deg, rgba(12, 12, 12, 0.905) 40%, rgba(12, 12, 12, 0.757));
+  font-family: 'Pacifico', cursive;
+  font-weight: 300;
+  padding: 0.2rem;
+  font-style: italic;
+  background-color: rgb(44, 46, 46);
+  color: whitesmoke;
+  font-size: 2em;
 }
-.fixed-header{
+
+.fixed-header {
   position: fixed;
 }
-@media (max-width: 1310px) {
+.title {
+  font-family: 'Pacifico', cursive;
+  font-weight: 300;
+  padding: 0.2rem;
+  font-style: italic;
+  font-size: 2em;
+}
+.center {
+  width: 100%;
+  justify-self: center;
+  align-self: center;
+  text-align: center;
+  background-color: transparent;
+  color: black;
+}
+.no-travels {
+  display: grid;
+  grid-template-rows: 0.7fr 1fr;
+  width: 100%;
+  height: 100%;
+  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
+}
+@media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   }
 }
+
 @media (max-width: 450px) {
   .all-travels {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    grid-gap: 1rem;
     padding-top: 12rem;
     padding-bottom: 3.6rem;
+    padding: 7.4rem 0.2rem 3.6rem 0.2rem;
   }
   .page-basic {
     padding-top: 0rem;
+  }
+  .card {
+    height: 30vh;
+  }
+  .no-travels {
+    padding: 7.4rem 0.2rem 3.6rem 0.2rem;
+  }
+  .center {
+    font-size: 1.5em;
   }
 }
 </style>
