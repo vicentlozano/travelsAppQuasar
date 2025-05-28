@@ -10,7 +10,7 @@
       </q-input>
     </div>
 
-    <section class="all-travels">
+    <section class="all-travels" v-if="travels.length > 1">
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
@@ -25,6 +25,23 @@
         @edit-travel="editTravel"
         :travel_id="travel.travel_id"
       />
+      <section class="card">
+        <h4 class="add-text">Añadir nuevo viaje</h4>
+        <q-btn
+          push
+          round
+          dense
+          text-color="white"
+          icon="mdi-plus"
+          size="30px"
+          @click="showDialog = true"
+        />
+      </section>
+    </section>
+    <section v-else class="no-travels">
+      <h2 class="title center">
+        You don't have any trips yet. Start creating one to share your journey!
+      </h2>
       <section class="card">
         <h4 class="add-text">Añadir nuevo viaje</h4>
         <q-btn
@@ -196,6 +213,26 @@ onMounted(async () => {
 .fixed-header {
   position: fixed;
 }
+.title {
+  font-family: 'Pacifico', cursive;
+  font-weight: 300;
+  padding: 0.2rem;
+  font-style: italic;
+  font-size: 2em;
+}
+.center {
+  width: 100%;
+  justify-self: center;
+  align-self: center;
+  text-align: center;
+}
+.no-travels {
+  display: grid;
+  grid-template-rows: 0.7fr 1fr;
+  width: 100%;
+  height: 100%;
+  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
+}
 @media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
@@ -215,6 +252,12 @@ onMounted(async () => {
   }
   .card {
     height: 30vh;
+  }
+   .no-travels {
+    padding: 7.4rem 0.2rem 3.6rem 0.2rem;
+  }
+  .center {
+    font-size: 1.5em;
   }
 }
 </style>

@@ -248,7 +248,7 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useUserStore } from '../stores/user'
 import TravelCard from './TravelCard.vue'
-import { getImageFileDataFromS3} from '../utils/api'
+import { getImageFileDataFromS3 } from '../utils/api'
 
 import { createTravel } from 'src/utils/api'
 import { notifySuccessCenter } from 'src/utils/utilsNotify'
@@ -258,7 +258,7 @@ const props = defineProps({
   dataTravel: Object,
   isEdit: Number,
 })
-const emits = defineEmits(['close-dialog', 'new-travel', 'clean-props','delete-old-travel'])
+const emits = defineEmits(['close-dialog', 'new-travel', 'clean-props', 'delete-old-travel'])
 const isShow = ref(false)
 const auth = useUserStore()
 const places = ref(
@@ -277,7 +277,6 @@ const numberPlaces = ref(1)
 const country = ref('')
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
-const options = ref('España')
 const dateForm = ref('')
 const priceForm = ref(null)
 const stepper = ref(null)
@@ -477,6 +476,8 @@ const optionsCountry = [
   'Zambia',
   'Zimbabue',
 ]
+const options = ref([...optionsCountry])
+
 // methods
 const closeDialog = () => {
   if (props.dataTravel) {
@@ -549,7 +550,7 @@ const submitTravel = async () => {
   try {
     const formData = new FormData()
     if (props.isEdit) {
-      emits('delete-old-travel',props.isEdit)
+      emits('delete-old-travel', props.isEdit)
     }
     formData.append('name', country.value)
     formData.append('price', priceForm.value)

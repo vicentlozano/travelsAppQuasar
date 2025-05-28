@@ -10,7 +10,7 @@
       </q-input>
     </div>
 
-    <section :class="isBigWidth? 'all-travels-full' : 'all-travels'">
+    <section :class="isBigWidth ? 'all-travels-full' : 'all-travels'" v-if="travels.length > 1">
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
@@ -24,6 +24,12 @@
         :travel_id="travel.travel_id"
       />
     </section>
+    <section v-else class="no-travels">
+      <h2 class="title center">
+        There are no travels from your friends yet. Connect with more people to see their
+        adventures!
+      </h2>
+    </section>
   </div>
 </template>
 
@@ -33,17 +39,14 @@ import HeaderComponent from 'src/components/HeaderComponent.vue'
 import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api'
-import {useQuasar} from 'quasar'
+import { useQuasar } from 'quasar'
 const auth = useUserStore()
 const travels = ref([])
 const search = ref('')
 const userId = ref(null)
 const $q = useQuasar()
 
-
 //methods
-
-
 
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
@@ -67,7 +70,7 @@ const travelsSearched = computed(() => {
       )
     : travels.value
 })
-const isBigWidth = computed(()=> $q.screen.width > 1600)
+const isBigWidth = computed(() => $q.screen.width > 1600)
 //hooks
 onMounted(async () => {
   userId.value = auth.userId
@@ -85,7 +88,7 @@ onMounted(async () => {
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 .all-travels {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(600px,1fr));
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
   grid-gap: 0.1rem;
   justify-items: start;
   align-items: start;
@@ -93,9 +96,9 @@ onMounted(async () => {
   padding: 7.4rem 0.5rem 0.5rem 0.5rem;
   background-color: transparent;
 }
-.all-travels-full{
-    display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(600px,1665px));
+.all-travels-full {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1665px));
   grid-gap: 0.1rem;
   justify-items: start;
   align-items: start;
@@ -143,16 +146,27 @@ onMounted(async () => {
   font-style: italic;
   font-size: 2em;
 }
+.center {
+  width: 100%;
+  justify-self: center;
+  align-self: center;
+  text-align: center;
+}
 
 .fixed-header {
   position: fixed;
+}
+.no-travels {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
 }
 @media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
   }
 }
-
 
 @media (max-width: 450px) {
   .all-travels {
@@ -167,6 +181,15 @@ onMounted(async () => {
   }
   .card {
     height: 30vh;
+  }
+  .no-travels {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    padding: 7.4rem 0.2rem 3.6rem 0.2rem;
+  }
+  .center {
+    font-size: 1.5em;
   }
 }
 </style>
