@@ -2,7 +2,7 @@
   <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <div v-if="!isBigWidth" class="title-image"><h3 class="title">Mis viajes</h3></div>
+      <div class="title-image"><h3 class="title">Mis viajes</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
@@ -74,8 +74,6 @@ import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api'
 import { deleteTravelById } from '../utils/api/delete'
-import { useQuasar } from 'quasar'
-
 import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
 const auth = useUserStore()
 const travels = ref([])
@@ -84,7 +82,6 @@ const search = ref('')
 const userId = ref(null)
 const dataTravelEdit = ref(null)
 const travelIdEdit = ref(null)
-const $q = useQuasar()
 
 //methods
 const closeDialog = (bool) => {
@@ -129,7 +126,6 @@ const cleanData = () => {
   travelIdEdit.value = null
 }
 //computed
-const isBigWidth = computed(() => $q.screen.width > 1400)
 
 const travelsSearched = computed(() => {
   return search.value.trim().length > 0

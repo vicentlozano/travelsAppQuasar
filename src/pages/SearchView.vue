@@ -2,7 +2,7 @@
   <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <div v-if="!isBigWidth" class="title-image"><h3 class="title">Discover new travels</h3></div>
+      <div class="title-image"><h3 class="title">Discover new travels</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
