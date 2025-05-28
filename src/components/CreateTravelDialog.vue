@@ -248,28 +248,39 @@
 import { ref, onMounted, watch, computed } from 'vue'
 import { useUserStore } from '../stores/user'
 import TravelCard from './TravelCard.vue'
+import { getImageFileDataFromS3} from '../utils/api'
+
 import { createTravel } from 'src/utils/api'
 import { notifySuccessCenter } from 'src/utils/utilsNotify'
 //data
 const props = defineProps({
   show: Boolean,
+  dataTravel: Object,
+  isEdit: Number,
 })
-const emits = defineEmits(['close-dialog', 'new-travel'])
+const emits = defineEmits(['close-dialog', 'new-travel', 'clean-props','delete-old-travel'])
 const isShow = ref(false)
 const auth = useUserStore()
-const places = ref([{ place: '', image: '', imageFile: null }])
-const slide = ref(places.value.length > 0 ? places.value[0].place : '')
+const places = ref(
+  props.dataTravel ? props.dataTravel.places : [{ place: '', image: '', imageFile: null }],
+)
+const slide = ref(
+  props.dataTravel
+    ? props.dataTravel.places[0].place
+    : places.value.length > 0
+      ? places.value[0].place
+      : '',
+)
 const step = ref(1)
 const intoStep = ref(1)
 const numberPlaces = ref(1)
 const country = ref('')
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
-const options = ref()
+const options = ref('España')
 const dateForm = ref('')
 const priceForm = ref(null)
 const stepper = ref(null)
-
 const optionsCountry = [
   'Afganistán',
   'Albania',
@@ -467,7 +478,12 @@ const optionsCountry = [
   'Zimbabue',
 ]
 // methods
-const closeDialog = () => emits('close-dialog', false)
+const closeDialog = () => {
+  if (props.dataTravel) {
+    emits('clean-props')
+  }
+  emits('close-dialog', false)
+}
 
 const updateWidth = () => {
   windowWidth.value = window.innerWidth
@@ -532,6 +548,9 @@ const submitTravel = async () => {
   }
   try {
     const formData = new FormData()
+    if (props.isEdit) {
+      emits('delete-old-travel',props.isEdit)
+    }
     formData.append('name', country.value)
     formData.append('price', priceForm.value)
     formData.append('travel_date', dateForm.value)
@@ -574,6 +593,28 @@ const handleStepAction = () => {
     submitTravel()
   }
 }
+async function loadPlacesWithFiles(placesData) {
+  if (!placesData || placesData.length === 0) {
+    return [{ place: '', image: '', imageFile: null }]
+  }
+
+  // Mapeja els llocs carregant la imatge i creant el fitxer
+  const updatedPlaces = await Promise.all(
+    placesData.map(async (place) => {
+      const res = await getImageFileDataFromS3({ url: place.image })
+
+      // Suponem que res.data és un Blob
+      const file = new File([res.data], place.image.split('/').pop(), { type: res.data.type })
+
+      return {
+        ...place,
+        imageFile: file,
+      }
+    }),
+  )
+
+  return updatedPlaces
+}
 
 //computed
 const dateRange = computed({
@@ -590,9 +631,9 @@ const dateRange = computed({
     return ''
   },
   set(val) {
-    if (val.includes(' - ')) {
+    if (val.includes('-')) {
       // Si es un rango de fechas
-      const [from, to] = val.split(' - ')
+      const [from, to] = val.split('-')
       dateForm.value = { from, to }
     } else {
       // Si es una sola fecha
@@ -645,7 +686,6 @@ watch(
 )
 watch(numberPlaces, (newVal) => {
   const currentLength = places.value.length
-  console.log(places.value.length)
   if (newVal > currentLength) {
     // Añadir nuevos objetos si hace falta
     for (let i = currentLength; i < newVal; i++) {
@@ -657,10 +697,31 @@ watch(numberPlaces, (newVal) => {
   }
 })
 watch(places, (newVal) => {
-  console.log(newVal[0].place)
   slide.value = newVal[0].place
 })
 
+watch(
+  () => props.dataTravel,
+  async (newVal) => {
+    if (newVal) {
+      places.value = await loadPlacesWithFiles(newVal.places)
+
+      slide.value = places.value.length > 0 ? places.value[0].place : ''
+      numberPlaces.value = places.value.length
+      country.value = newVal.name || ''
+      dateForm.value = newVal.travel_date || ''
+      priceForm.value = newVal.price || null
+    } else {
+      places.value = [{ place: '', image: '', imageFile: null }]
+      slide.value = ''
+      numberPlaces.value = 1
+      country.value = ''
+      dateForm.value = ''
+      priceForm.value = null
+    }
+  },
+  { immediate: true },
+)
 //hooks
 onMounted(() => {
   mobilView.value = window.innerWidth < 650

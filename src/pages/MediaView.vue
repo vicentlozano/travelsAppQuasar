@@ -22,6 +22,7 @@
         :id="travel.user_id"
         :crud="true"
         @delete="deleteTravelSelected"
+        @edit-travel="editTravel"
         :travel_id="travel.travel_id"
       />
       <section class="card">
@@ -37,7 +38,15 @@
         />
       </section>
     </section>
-    <CreateTravelDialog :show="showDialog" @close-dialog="closeDialog" @new-travel="checkTravels" />
+    <CreateTravelDialog
+      :show="showDialog"
+      :dataTravel="dataTravelEdit"
+      :isEdit="travelIdEdit"
+      @close-dialog="closeDialog"
+      @new-travel="checkTravels"
+      @clean-props="cleanData"
+      @delete-old-travel="deleteOldTravel"
+    />
   </div>
 </template>
 
@@ -54,12 +63,23 @@ const travels = ref([])
 const showDialog = ref(false)
 const search = ref('')
 const userId = ref(null)
-
+const dataTravelEdit = ref(null)
+const travelIdEdit = ref(null)
 //methods
 const closeDialog = (bool) => {
   showDialog.value = bool
 }
 const deleteTravelSelected = async (idAndUrls) => {
+  try {
+    await deleteTravelById(idAndUrls)
+    travels.value = travels.value.filter((travel) => travel.travel_id !== idAndUrls.id)
+  } catch (error) {
+    console.log(error)
+  }
+}
+const deleteOldTravel = async (id) => {
+  let travel = travels.value.filter((travel) => travel.travel_id === id)
+  let idAndUrls = { id: id, urls: travel[0].places.map((place) => place.image) }
   try {
     await deleteTravelById(idAndUrls)
     travels.value = travels.value.filter((travel) => travel.travel_id !== idAndUrls.id)
@@ -77,6 +97,15 @@ const checkTravels = async () => {
   } catch (error) {
     console.log(error)
   }
+}
+const editTravel = async (id) => {
+  dataTravelEdit.value = travels.value.find((travel) => travel.travel_id === id)
+  travelIdEdit.value = id
+  showDialog.value = true
+}
+const cleanData = () => {
+  dataTravelEdit.value = null
+  travelIdEdit.value = null
 }
 //computed
 const travelsSearched = computed(() => {

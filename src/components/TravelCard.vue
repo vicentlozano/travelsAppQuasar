@@ -121,10 +121,8 @@
 <script setup>
 import { ref, watch } from 'vue'
 import { useUserStore } from '../stores/user'
-import { useRouter } from 'vue-router'
 
 //data
-const router = useRouter()
 const props = defineProps({
   name: String,
   places: [Object],
@@ -146,9 +144,9 @@ const date = props.travel_date
 const toggleMoreInfo = (place) => {
   moreInfo.value[place] = !moreInfo.value[place]
 }
-const emits = defineEmits(['delete'])
+const emits = defineEmits(['delete','edit-travel'])
 const editTravel = (id) => {
-  router.push({ name: 'edit', params: { id } })
+  emits('edit-travel', id)
 }
 const deleteTravel = (id, places) => {
   let idAndUrls = { id: id, urls: places.map((place) => place.image) }
@@ -211,7 +209,7 @@ watch(
   background: rgba(0, 0, 0, 0.364) !important;
 }
 :deep .q-carousel__slide {
-  min-height: 300px !important;
+  min-height: 350px !important;
 }
 
 @media (max-width: 450px) {
