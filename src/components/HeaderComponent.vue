@@ -1,44 +1,36 @@
 <template>
   <header :class="mobilView ? 'nav-footer' : 'nav-header'">
     <RouterLink class="link" to="/"
-      ><q-icon name="mdi-home" class="icons-header" /><span class="title" v-if="isBigWidth"
-        >Home</span
-      ></RouterLink
+      ><q-icon name="mdi-home" class="icons-header" /></RouterLink
     >
     <RouterLink class="link" to="/chat">
       <q-icon
         name="mdi-chat"
         class="icons-header"
         :color="auth.countMessages > 0 ? 'red' : 'white'"
-      /><span class="title" v-if="isBigWidth">Chat</span>
+      />
     </RouterLink>
     <RouterLink class="link" to="/media"
-      ><q-icon name="mdi-airplane" class="icons-header" /><span class="title" v-if="isBigWidth"
-        >My Travels</span
-      ></RouterLink
+      ><q-icon name="mdi-airplane" class="icons-header" /></RouterLink
     >
     <RouterLink class="link" to="/search"
-      ><q-icon name="mdi-magnify" class="icons-header" /><span class="title" v-if="isBigWidth"
-        >Search</span
-      ></RouterLink
+      ><q-icon name="mdi-magnify" class="icons-header" /></RouterLink
     >
     <RouterLink class="link" to="/profile"
       ><q-avatar size="30px"><img :src="auth.avatar" /> </q-avatar
-      ><span class="title" v-if="isBigWidth" style="padding-left: 0.3rem">Profile</span></RouterLink
+      ></RouterLink
     >
   </header>
 </template>
 
 <script setup>
-import { ref, onMounted, inject, computed } from 'vue'
+import { ref, onMounted, inject } from 'vue'
 import { useUserStore } from '../stores/user'
-import { useQuasar } from 'quasar'
 const auth = useUserStore()
 const mobilView = ref(null)
 let windowWidth = ref(window.innerWidth)
 const mqtt = inject('appGlobal/mqtt')
 const alertChat = ref(false)
-const $q = useQuasar()
 
 //methods
 const updateWidth = () => {
@@ -47,7 +39,6 @@ const updateWidth = () => {
 }
 
 //computed
-const isBigWidth = computed(() => $q.screen.width > 1400)
 
 //hooks
 onMounted(() => {
