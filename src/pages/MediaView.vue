@@ -2,7 +2,7 @@
   <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <div class="title-image"><h3 class="title">Mis viajes</h3></div>
+      <div v-if="!isBigWidth" class="title-image"><h3 class="title">Mis viajes</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
@@ -10,7 +10,7 @@
       </q-input>
     </div>
 
-    <section class="all-travels" v-if="travels.length > 1">
+    <section class="all-travels" v-if="travels.length > 0">
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
@@ -74,6 +74,8 @@ import { ref, onMounted, computed } from 'vue'
 import { useUserStore } from 'src/stores/user'
 import { getAllTravels } from '../utils/api'
 import { deleteTravelById } from '../utils/api/delete'
+import { useQuasar } from 'quasar'
+
 import CreateTravelDialog from 'src/components/CreateTravelDialog.vue'
 const auth = useUserStore()
 const travels = ref([])
@@ -82,6 +84,8 @@ const search = ref('')
 const userId = ref(null)
 const dataTravelEdit = ref(null)
 const travelIdEdit = ref(null)
+const $q = useQuasar()
+
 //methods
 const closeDialog = (bool) => {
   showDialog.value = bool
@@ -125,6 +129,8 @@ const cleanData = () => {
   travelIdEdit.value = null
 }
 //computed
+const isBigWidth = computed(() => $q.screen.width > 1400)
+
 const travelsSearched = computed(() => {
   return search.value.trim().length > 0
     ? travels.value.filter(
@@ -166,7 +172,7 @@ onMounted(async () => {
   justify-items: start;
   align-items: start;
   height: min-content;
-  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
+  padding: 3.4rem 0.5rem 0.5rem 0.5rem;
   background-color: transparent;
 }
 .page-basic {
@@ -207,6 +213,8 @@ onMounted(async () => {
   font-weight: 300;
   padding: 0.2rem;
   font-style: italic;
+  background-color: rgb(44, 46, 46);
+  color: whitesmoke;
   font-size: 2em;
 }
 
@@ -225,6 +233,8 @@ onMounted(async () => {
   justify-self: center;
   align-self: center;
   text-align: center;
+  background-color: transparent;
+  color: black;
 }
 .no-travels {
   display: grid;
@@ -253,7 +263,7 @@ onMounted(async () => {
   .card {
     height: 30vh;
   }
-   .no-travels {
+  .no-travels {
     padding: 7.4rem 0.2rem 3.6rem 0.2rem;
   }
   .center {

@@ -2,7 +2,7 @@
   <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <div class="title-image"><h3 class="title">Your friends travels</h3></div>
+      <div v-if="!isBigWidth" class="title-image"><h3 class="title">Discover new travels</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
@@ -10,7 +10,7 @@
       </q-input>
     </div>
 
-    <section :class="isBigWidth ? 'all-travels-full' : 'all-travels'" v-if="travels.length > 1">
+    <section :class="isBigWidth ? 'all-travels-full' : 'all-travels'" v-if="travels.length > 0">
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
@@ -26,8 +26,7 @@
     </section>
     <section v-else class="no-travels">
       <h2 class="title center">
-        There are no travels from your friends yet. Connect with more people to see their
-        adventures!
+        There are no travels yet. 
       </h2>
     </section>
   </div>
@@ -51,6 +50,8 @@ const $q = useQuasar()
 const removeAccents = (str) => str.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
 
 //computed
+//computed
+
 const travelsSearched = computed(() => {
   return search.value.trim().length > 0
     ? travels.value.filter(
@@ -70,7 +71,7 @@ const travelsSearched = computed(() => {
       )
     : travels.value
 })
-const isBigWidth = computed(() => $q.screen.width > 1600)
+const isBigWidth = computed(() => $q.screen.width > 1400)
 //hooks
 onMounted(async () => {
   userId.value = auth.userId
@@ -144,6 +145,8 @@ onMounted(async () => {
   font-weight: 300;
   padding: 0.2rem;
   font-style: italic;
+  background-color: rgb(44, 46, 46);
+  color: whitesmoke;
   font-size: 2em;
 }
 .center {
@@ -151,6 +154,8 @@ onMounted(async () => {
   justify-self: center;
   align-self: center;
   text-align: center;
+  background-color: transparent;
+  color: black;
 }
 
 .fixed-header {
@@ -160,7 +165,7 @@ onMounted(async () => {
   display: flex;
   width: 100%;
   height: 100%;
-  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
+  padding: 1rem 0.5rem 0.5rem 0.5rem;
 }
 @media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {

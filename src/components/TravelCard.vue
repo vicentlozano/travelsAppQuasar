@@ -6,7 +6,7 @@
     v-model:fullscreen="fullscreen"
     v-model="slide"
     infinite
-    class="carrusel"
+    :class="isBigWidth? 'carrusel carrusel-width' : 'carrusel' "
     control-type="unelevated"
   >
     <q-carousel-slide
@@ -119,8 +119,9 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch,computed } from 'vue'
 import { useUserStore } from '../stores/user'
+import { useQuasar } from 'quasar'
 
 //data
 const props = defineProps({
@@ -139,6 +140,7 @@ const slide = ref(props.places[0]?.place + props.places[0]?.place_id || '')
 const fullscreen = ref(false)
 const moreInfo = ref({})
 const date = props.travel_date
+const $q = useQuasar()
 
 // methods
 const toggleMoreInfo = (place) => {
@@ -152,6 +154,10 @@ const deleteTravel = (id, places) => {
   let idAndUrls = { id: id, urls: places.map((place) => place.image) }
   emits('delete', idAndUrls)
 }
+//computed
+
+const isBigWidth = computed(() => $q.screen.width > 1400)
+
 //watch
 watch(
   () => props.places,
@@ -169,6 +175,9 @@ watch(
   width: 100%;
   height: 100%;
   min-height: 350px;
+}
+.carrusel-width{
+  max-width: 50vw;
 }
 
 .custom-caption {
