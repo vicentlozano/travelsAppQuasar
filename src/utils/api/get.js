@@ -38,6 +38,12 @@ async function get(endpoint, params, options = {}) {
 export const getAllTravels = () => {
   return get('Travels/wsGetAllTravels')
 }
+export const getFriendsTravels = (idUser) => {
+  return get('Travels/wsGetFiendsTravels', idUser)
+}
+export const getNewPeopleTravels = (idUser) => {
+  return get('Travels/wsGetNewPeopleTravels', idUser)
+}
 export const getMessages = (idUser) => {
   return get('Messages/wsGetMessages', idUser)
 }
