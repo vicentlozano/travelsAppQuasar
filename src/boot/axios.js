@@ -10,7 +10,8 @@ import { LocalStorage } from 'quasar'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-  baseURL: 'http://localhost:7002/wsTravels/',
+  baseURL: 'http://travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net/wsTravels/',
+  //travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net
   timeout: 6000,
 })
 api.interceptors.request.use(
