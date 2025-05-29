@@ -2,7 +2,6 @@ import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 import { LocalStorage } from 'quasar'
 
-
 // Be careful when using SSR for cross-request state pollution
 // due to creating a Singleton instance here;
 // If any client changes this (global) instance, it might be a
@@ -10,17 +9,18 @@ import { LocalStorage } from 'quasar'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-    baseURL: 'https://travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net/wsTravels/',
+  baseURL: 'https://travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net/wsTravels/',
 
   // baseURL: 'https://travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net/wsTravels/',
   //travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net
   timeout: 6000,
+  withCredentials: true, // <-- AIXÒ ÉS IMPORTANT
 })
 api.interceptors.request.use(
   (config) => {
     // Comprova si el token està emmagatzemat en LocalStorage
     const token = LocalStorage.getItem('token')
-    
+
     // Si el token existeix, afegeix-lo a l'header de la petició
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`
@@ -31,7 +31,7 @@ api.interceptors.request.use(
   (error) => {
     // Gestionar errors si la petició falla
     return Promise.reject(error)
-  }
+  },
 )
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
