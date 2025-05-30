@@ -55,7 +55,7 @@
       <section class="card">
         <h4 class="add-text">Añade nuevo contenido!</h4>
         <RouterLink class="link" to="/media"
-      ><q-icon name="mdi-airplane" class="icons-header" /></RouterLink
+      ><q-icon name="mdi-airplane" size="50px" class="icons-header" /></RouterLink
     >
       </section>
     </section>
@@ -159,8 +159,7 @@ $margin-spacing: 3rem;
   border-radius: 25px;
 }
 .icons-header {
-  height: 50px;
-  width: 50px;
+ 
 }
 
 h2 {
