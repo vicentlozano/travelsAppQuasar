@@ -53,22 +53,17 @@
         :travel_id="travel.travel_id"
       />
       <section class="card">
-        <h4 class="add-text">Añadir nuevo viaje</h4>
-        <q-btn
-          push
-          round
-          dense
-          text-color="white"
-          icon="mdi-plus"
-          size="30px"
-          @click="showDialog = true"
-        />
+        <h4 class="add-text">Añade nuevo contenido!</h4>
+        <RouterLink class="link" to="/media"
+      ><q-icon name="mdi-airplane" class="icons-header" /></RouterLink
+    >
       </section>
     </section>
     <section v-else class="no-travels">
       <h3 class="message-empty">Sin viajes actualmente!</h3>
     </section>
   </div>
+  
 </template>
 
 <script setup>
@@ -154,6 +149,18 @@ $margin-spacing: 3rem;
   align-items: start;
   height: min-content;
   background-color: transparent;
+}
+.link {
+  color: white;
+  text-decoration: none;
+  width: 70%;
+  height: fit-content;
+  padding: 0.2rem;
+  border-radius: 25px;
+}
+.icons-header {
+  height: 50px;
+  width: 50px;
 }
 
 h2 {
