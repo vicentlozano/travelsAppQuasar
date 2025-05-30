@@ -22,7 +22,7 @@ export default class MQTT extends EventTarget {
 
   connect() {
     return new Promise((resolve, reject) => {
-      let connectUrl = `wws://${this.host}:${this.port}`
+      let connectUrl = `wss://${this.host}:${this.port}`
       // let connectUrl =  `ws://${this.host}:${this.port}`;
 
       try {
