@@ -2,7 +2,7 @@ import { defineBoot } from '#q-app/wrappers'
 import MQTT from 'src/utils/mqttManager'
 
 export default defineBoot(({ app }) => {
-  const ip = 'localhost'
+  const ip = '13.61.1.168'
   //  const ip = 'localhost'
 
   const port = '9001'
