@@ -38,7 +38,7 @@
         />
       </section>
     </section>
-    <section v-else class="no-travels" v-show="actualShowDialog">
+    <section v-else class="no-travels">
       <h2 class="title center">
         You don't have any trips yet. Start creating one to share your journey!
       </h2>
@@ -82,7 +82,6 @@ const search = ref('')
 const userId = ref(null)
 const dataTravelEdit = ref(null)
 const travelIdEdit = ref(null)
-const actualShowDialog = ref('false')
 
 //methods
 const closeDialog = (bool) => {
@@ -157,9 +156,7 @@ onMounted(async () => {
   } catch (error) {
     console.log(error)
   }
-  setTimeout(() => {
-    actualShowDialog.value = true
-  }, 3000)
+ 
 })
 </script>
 
@@ -242,6 +239,15 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   padding: 7.4rem 0.5rem 0.5rem 0.5rem;
+  animation: 2s fade ease forwards;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {
