@@ -159,7 +159,7 @@ onMounted(async () => {
   }
   setTimeout(() => {
     actualShowDialog.value = true
-  }, 1000)
+  }, 3000)
 })
 </script>
 
