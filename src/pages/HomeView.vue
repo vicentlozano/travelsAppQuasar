@@ -55,15 +55,14 @@
       <section class="card">
         <h4 class="add-text">Añade nuevo contenido!</h4>
         <RouterLink class="link" to="/media"
-      ><q-icon name="mdi-airplane" size="50px" class="icons-header" /></RouterLink
-    >
+          ><q-icon name="mdi-airplane" size="50px" class="icons-header"
+        /></RouterLink>
       </section>
     </section>
     <section v-else class="no-travels">
       <h3 class="message-empty">Sin viajes actualmente!</h3>
     </section>
   </div>
-  
 </template>
 
 <script setup>
@@ -90,12 +89,11 @@ onMounted(async () => {
     //
     let response = await getAllTravels()
     response = response.data
-    let totalTravels = response.data.length
+    myTravels.value = response.data.filter((travel) => travel.user_id === auth.userId)
+    let totalTravels = myTravels.value.length
 
     if (totalTravels > 4) {
-      myTravels.value = response.data.slice(totalTravels - 3, totalTravels)
-    } else {
-      myTravels.value = response.data
+      myTravels.value = myTravels.value.slice(totalTravels - 3, totalTravels)
     }
     //
     let friendsResponse = await getFriendsTravels({ id: auth.userId })
@@ -159,7 +157,6 @@ $margin-spacing: 3rem;
   border-radius: 25px;
 }
 .icons-header {
- 
 }
 
 h2 {
