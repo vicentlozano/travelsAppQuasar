@@ -9,11 +9,7 @@
         </template>
       </q-input>
     </div>
-<q-spinner
-        color="primary"
-        size="3em"
-        v-if="loading"
-      />
+    <q-spinner color="primary" size="3em" v-if="loading" class="spinner" />
     <section class="all-travels" v-if="travels.length > 0 && !loading">
       <TravelCard
         v-for="travel in travelsSearched"
@@ -162,7 +158,6 @@ onMounted(async () => {
   } catch (error) {
     console.log(error)
   }
- 
 })
 </script>
 
@@ -246,6 +241,13 @@ onMounted(async () => {
   height: 100%;
   padding: 7.4rem 0.5rem 0.5rem 0.5rem;
   animation: 2s fade ease forwards;
+}
+.spinner {
+  position: fixed; 
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  z-index: 9999;
 }
 @keyframes fade {
   from {
