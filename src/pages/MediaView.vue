@@ -157,6 +157,7 @@ onMounted(async () => {
     loading.value = false
   } catch (error) {
     console.log(error)
+    loading.value = false
   }
 })
 </script>
@@ -243,10 +244,10 @@ onMounted(async () => {
   animation: 2s fade ease forwards;
 }
 .spinner {
-  position: fixed; 
+  position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); 
+  transform: translate(-50%, -50%);
   z-index: 9999;
 }
 @keyframes fade {

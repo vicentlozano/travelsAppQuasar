@@ -9,8 +9,11 @@
         </template>
       </q-input>
     </div>
-
-    <section :class="isBigWidth ? 'all-travels-full' : 'all-travels'" v-if="travels.length > 0">
+    <q-spinner color="primary" size="3em" v-if="loading" class="spinner" />
+    <section
+      :class="isBigWidth ? 'all-travels-full' : 'all-travels'"
+      v-if="travels.length > 0 && !loading"
+    >
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
@@ -24,10 +27,8 @@
         :travel_id="travel.travel_id"
       />
     </section>
-    <section v-else class="no-travels">
-      <h2 class="title center">
-        There are no travels yet. 
-      </h2>
+    <section v-else-if="!loading" class="no-travels">
+      <h2 class="title center">There are no travels yet.</h2>
     </section>
   </div>
 </template>
@@ -44,6 +45,7 @@ const travels = ref([])
 const search = ref('')
 const userId = ref(null)
 const $q = useQuasar()
+const loading = ref(true)
 
 //methods
 
@@ -79,8 +81,10 @@ onMounted(async () => {
     let response = await getAllTravels()
     response = response.data
     travels.value = response.data.filter((travel) => travel.user_id !== userId.value)
+    loading.value = false
   } catch (error) {
     console.log(error)
+    loading.value = false
   }
 })
 </script>
@@ -99,7 +103,7 @@ onMounted(async () => {
 }
 .all-travels-full {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(600px, 1665px));
+  grid-template-columns: repeat(auto-fit, minmax(600px, 0.5fr));
   grid-gap: 0.1rem;
   justify-items: start;
   align-items: start;
@@ -166,6 +170,13 @@ onMounted(async () => {
   width: 100%;
   height: 100%;
   padding: 1rem 0.5rem 0.5rem 0.5rem;
+}
+.spinner {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
 }
 @media (min-width: 450px) and (max-width: 1310px) {
   .all-travels {
