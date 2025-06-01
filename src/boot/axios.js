@@ -9,9 +9,9 @@ import { LocalStorage } from 'quasar'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-  baseURL: 'https://d3lzqlg4fsd3wq.cloudfront.net/wsTravels/',
+    // baseURL: 'https://d3lzqlg4fsd3wq.cloudfront.net/wsTravels/',
   //for locale
-  // baseURL: 'https://localhost:3000/wsTravels/',
+  baseURL: 'http://localhost:3000/wsTravels/',
 
 
   //baseURL: 'https://travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net/wsTravels/',
