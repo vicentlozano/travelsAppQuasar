@@ -197,7 +197,6 @@ watch(
   width: 190px;
 }
 .carrusel :deep(.q-carousel__arrow) {
-  backdrop-filter: blur(1px);
   place-self: center;
 }
 
