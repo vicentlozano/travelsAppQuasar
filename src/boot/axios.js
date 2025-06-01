@@ -9,7 +9,7 @@ import { LocalStorage } from 'quasar'
 // "export default () => {}" function below (which runs individually
 // for each client)
 const api = axios.create({
-  baseURL: 'https://d3lzqlg4fsd3wq.cloudfront.net/wsTravels/',
+  baseURL: 'https://api.vilodev.com/wsTravels/',
   //for locale
   // baseURL: 'https://localhost:3000/wsTravels/',
 
@@ -17,7 +17,6 @@ const api = axios.create({
   //baseURL: 'https://travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net/wsTravels/',
   //travlesbackend-bmg4gtc5a0d9bbbd.canadacentral-01.azurewebsites.net
   timeout: 6000,
-  withCredentials: true, // <-- AIXÒ ÉS IMPORTANT
 })
 api.interceptors.request.use(
   (config) => {
