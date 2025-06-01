@@ -7,6 +7,7 @@
     v-model="slide"
     infinite
     :class="isBigWidth? 'carrusel carrusel-width' : 'carrusel' "
+    :style="fullscreen? 'max-width:100%': ''"
     control-type="unelevated"
   >
     <q-carousel-slide
@@ -178,6 +179,10 @@ watch(
 }
 .carrusel-width{
   max-width: 50vw;
+}
+.carrusel-with-full{
+    max-width: 100%;
+
 }
 
 .custom-caption {
