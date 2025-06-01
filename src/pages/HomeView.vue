@@ -9,7 +9,15 @@
       </div>
     </div>
     <h2 v-if="friendsTravels.length > 0" class="title">Friends travels</h2>
-    <section v-if="friendsTravels.length > 0" class="last-travels">
+    <section
+      v-if="friendsTravels.length > 0"
+      class="last-travels"
+      :style="
+        (peopleTravels.length > 0 || myTravels.length > 0) && $q.screen.width < 450
+          ? 'padding-bottom:0'
+          : ''
+      "
+    >
       <TravelCard
         v-for="travel in friendsTravels"
         :key="travel.travel_id"
@@ -24,7 +32,11 @@
       />
     </section>
     <h2 v-if="peopleTravels.length > 0" class="title">Last people travels</h2>
-    <section v-if="peopleTravels.length > 0" class="last-travels">
+    <section
+      v-if="peopleTravels.length > 0"
+      class="last-travels"
+      :style="myTravels.length > 0 && $q.screen.width < 450 ? 'padding-bottom:0' : ''"
+    >
       <TravelCard
         v-for="travel in peopleTravels"
         :key="travel.travel_id"
@@ -155,6 +167,8 @@ $margin-spacing: 3rem;
   height: fit-content;
   padding: 0.2rem;
   border-radius: 25px;
+}
+.icons-header {
 }
 
 h2 {
