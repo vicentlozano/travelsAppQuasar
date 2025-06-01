@@ -65,14 +65,14 @@
         :travel_id="travel.travel_id"
       />
       <section class="card">
-        <h4 class="add-text">Añade nuevo contenido!</h4>
+        <h4 class="add-text">Add new content!</h4>
         <RouterLink class="link" to="/media"
           ><q-icon name="mdi-airplane" size="50px" class="icons-header"
         /></RouterLink>
       </section>
     </section>
     <section v-else class="no-travels">
-      <h3 class="message-empty">Sin viajes actualmente!</h3>
+      <h3 class="message-empty">No travels yet!</h3>
     </section>
   </div>
 </template>
