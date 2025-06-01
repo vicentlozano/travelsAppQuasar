@@ -168,8 +168,7 @@ $margin-spacing: 3rem;
   padding: 0.2rem;
   border-radius: 25px;
 }
-.icons-header {
-}
+
 
 h2 {
   display: flex;
