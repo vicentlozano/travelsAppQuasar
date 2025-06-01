@@ -93,9 +93,7 @@ onMounted(async () => {
     let totalTravels = myTravels.value.length
 
     if (totalTravels > 4) {
-      myTravels.value = response.data.slice(totalTravels - 3, totalTravels)
-    } else {
-      myTravels.value = response.data
+      myTravels.value = myTravels.value.slice(totalTravels - 3, totalTravels)
     }
     //
     let friendsResponse = await getFriendsTravels({ id: auth.userId })
