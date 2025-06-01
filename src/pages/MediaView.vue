@@ -9,8 +9,12 @@
         </template>
       </q-input>
     </div>
-
-    <section class="all-travels" v-if="travels.length > 0">
+<q-spinner
+        color="primary"
+        size="3em"
+        v-if="loading"
+      />
+    <section class="all-travels" v-if="travels.length > 0 && !loading">
       <TravelCard
         v-for="travel in travelsSearched"
         :key="travel.travel_id"
@@ -38,7 +42,7 @@
         />
       </section>
     </section>
-    <section v-else class="no-travels">
+    <section v-else-if="!loading" class="no-travels">
       <h2 class="title center">
         You don't have any trips yet. Start creating one to share your journey!
       </h2>
@@ -82,6 +86,7 @@ const search = ref('')
 const userId = ref(null)
 const dataTravelEdit = ref(null)
 const travelIdEdit = ref(null)
+const loading = ref(true)
 
 //methods
 const closeDialog = (bool) => {
@@ -153,6 +158,7 @@ onMounted(async () => {
     let response = await getAllTravels()
     response = response.data
     travels.value = response.data.filter((travel) => travel.user_id === userId.value)
+    loading.value = true
   } catch (error) {
     console.log(error)
   }
