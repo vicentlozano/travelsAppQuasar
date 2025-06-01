@@ -168,7 +168,7 @@ onMounted(async () => {
   justify-items: start;
   align-items: start;
   height: min-content;
-  padding: 3.4rem 0.5rem 0.5rem 0.5rem;
+  padding: 7.4rem 0.5rem 0.5rem 0.5rem;
   background-color: transparent;
 }
 .page-basic {
