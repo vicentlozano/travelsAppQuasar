@@ -100,7 +100,7 @@
         </section>
       </q-step>
 
-      <q-step :name="3" prefix="3" title="Plsace and Image">
+      <q-step :name="3" prefix="3" title="Place and Image">
         <q-stepper
           v-model="intoStep"
           ref="intoStepper"
