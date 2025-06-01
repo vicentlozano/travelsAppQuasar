@@ -158,7 +158,7 @@ onMounted(async () => {
     let response = await getAllTravels()
     response = response.data
     travels.value = response.data.filter((travel) => travel.user_id === userId.value)
-    loading.value = true
+    loading.value = false
   } catch (error) {
     console.log(error)
   }
