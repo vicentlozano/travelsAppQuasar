@@ -6,7 +6,8 @@
     v-model:fullscreen="fullscreen"
     v-model="slide"
     infinite
-    :class="isBigWidth? 'carrusel carrusel-width' : 'carrusel' "
+    :class="isBigWidth ? 'carrusel carrusel-width' : 'carrusel'"
+    :style="fullscreen ? 'max-width:100%' : ''"
     control-type="unelevated"
   >
     <q-carousel-slide
@@ -119,7 +120,7 @@
 </template>
 
 <script setup>
-import { ref, watch,computed } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useUserStore } from '../stores/user'
 import { useQuasar } from 'quasar'
 
@@ -146,7 +147,7 @@ const $q = useQuasar()
 const toggleMoreInfo = (place) => {
   moreInfo.value[place] = !moreInfo.value[place]
 }
-const emits = defineEmits(['delete','edit-travel'])
+const emits = defineEmits(['delete', 'edit-travel'])
 const editTravel = (id) => {
   emits('edit-travel', id)
 }
@@ -176,7 +177,7 @@ watch(
   height: 100%;
   min-height: 350px;
 }
-.carrusel-width{
+.carrusel-width {
   max-width: 50vw;
 }
 
