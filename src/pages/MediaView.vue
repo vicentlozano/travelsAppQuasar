@@ -2,7 +2,7 @@
   <HeaderComponent class="fixed-header" />
   <div class="page-basic">
     <div class="search-input">
-      <div class="title-image"><h3 class="title">Mis viajes</h3></div>
+      <div class="title-image"><h3 class="title">My travels</h3></div>
       <q-input v-model="search" debounce="500" filled placeholder="Search">
         <template v-slot:append>
           <q-icon name="search" />
@@ -26,7 +26,7 @@
         :travel_id="travel.travel_id"
       />
       <section class="card">
-        <h4 class="add-text">Añadir nuevo viaje</h4>
+        <h4 class="add-text">Add new travel</h4>
         <q-btn
           push
           round
@@ -43,7 +43,7 @@
         You don't have any trips yet. Start creating one to share your journey!
       </h2>
       <section class="card">
-        <h4 class="add-text">Añadir nuevo viaje</h4>
+        <h4 class="add-text">Add new travel</h4>
         <q-btn
           push
           round
