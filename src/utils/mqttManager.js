@@ -23,9 +23,9 @@ export default class MQTT extends EventTarget {
   connect() {
     return new Promise((resolve, reject) => {
       //for production
-      // let connectUrl = `wss://${this.host}:${this.port}`
+     let connectUrl = `wss://${this.host}`
       //for local develop
-       let connectUrl =  `wss://${this.host}:${this.port}`;
+       //let connectUrl =  `ws://${this.host}:${this.port}`;
 
       try {
         this.client = mqtt.connect(connectUrl, this.options)
