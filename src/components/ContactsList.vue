@@ -48,7 +48,7 @@
       </section>
     </div>
   </div>
-  <InnerLoading v-else class="padding-top: 5rem">
+  <InnerLoading v-else>
     <h3 class="message">No contacts yet!</h3>
   </InnerLoading>
 </template>
