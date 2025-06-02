@@ -136,7 +136,8 @@ watch(recipientId, (newRecipient, oldRecipent) => {
 })
 
 onUnmounted(() => {
-  mqtt.unSubscribe(`TRAVELS/ISWRITTING/${recipientId.value.id}/${user.userId}`)
+  if (recipientId.value?.id) {
+  mqtt.unSubscribe(`TRAVELS/ISWRITTING/${recipientId.value.id}/${user.userId}`)}
 })
 //hooks
 </script>
