@@ -153,24 +153,28 @@ onMounted(async () => {
   try {
     messages.value = await getMessages({ userId: user.userId, friendId: props.contactChat.id })
     messages.value = messages.value.data.data
-    contactAvatar.value = props.contactChat?.avatar.length > 0 ? props.contactChat?.avatar : ''
-    const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
-    const topic = `${id1}-${id2}`
-    mqtt.subscribe(`TRAVELS/UPDATES/${topic}`, (message) => {
-      let count = user.countMessages
-      console.log(count)
-      user.recountNewMessages(count - 1)
-      messages.value.push(JSON.parse(message))
-    })
-    scrollToBottom(true)
+    if (messages.value) {
+      contactAvatar.value = props.contactChat?.avatar.length > 0 ? props.contactChat?.avatar : ''
+      const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
+      const topic = `${id1}-${id2}`
+      mqtt.subscribe(`TRAVELS/UPDATES/${topic}`, (message) => {
+        let count = user.countMessages
+        console.log(count)
+        user.recountNewMessages(count - 1)
+        messages.value.push(JSON.parse(message))
+      })
+      scrollToBottom(true)
+    }
   } catch (error) {
     notifyError(error)
   }
 })
 onUnmounted(() => {
-  const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
-  const topic = `${id1}-${id2}`
-  mqtt.unSubscribe(`TRAVELS/UPDATES/${topic}`)
+  if (messages.value) {
+    const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
+    const topic = `${id1}-${id2}`
+    mqtt.unSubscribe(`TRAVELS/UPDATES/${topic}`)
+  }
 })
 </script>
 
