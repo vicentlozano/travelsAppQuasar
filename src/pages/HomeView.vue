@@ -73,7 +73,10 @@
         /></RouterLink>
       </section>
     </section>
-    <section v-else-if="!friendsTravels.value?.length>0 && !peopleTravels.value?.length>0" class="no-travels">
+    <section
+      v-else-if="friendsTravels.value?.length === 0 && peopleTravels.value?.length === 0"
+      class="no-travels"
+    >
       <h3 class="message-empty">No travels yet!</h3>
     </section>
   </div>
