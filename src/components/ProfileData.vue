@@ -21,7 +21,7 @@
         <q-separator spaced color="secondary" />
 
         <div class="form">
-          <span class="title">Nombre</span>
+          <span class="title">Name</span>
           <p v-if="!editUserName" class="data">
             {{ auth.username
             }}<q-btn
@@ -60,7 +60,7 @@
         </div>
         <q-separator spaced color="secondary" />
         <div class="email">
-          <span class="title">Correo</span>
+          <span class="title">Email</span>
 
           <p class="data">{{ auth.email }} </p>
         </div>
