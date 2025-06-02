@@ -16,7 +16,7 @@
     <div class="contacts">
       <section class="my-contacts" v-for="contact in displayedContacts" :key="contact.id">
         <q-avatar size="140px" square class="avatar">
-          <img v-if="contact.avatar" :src="contact.avatar" />
+          <img v-if="contact.avatar && contact.avatar!=='undefined'" :src="contact.avatar" />
           <p v-else class="initial">
             {{ contact.name.charAt(0).toUpperCase() + contact.lastname.charAt(0).toUpperCase() }}
           </p>
