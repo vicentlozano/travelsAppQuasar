@@ -23,10 +23,13 @@
         </div>
       </div>
       <section class="gadgets">
-        <q-avatar v-if="!noUser" color="primary" text-color="white" size="50px" class="avatar">
-          <img v-if="auth.avatar" :src="auth.avatar" />
-          <span v-else>{{ auth.username?.charAt(0) }}</span>
-        </q-avatar>
+        <div>
+          <q-avatar v-if="!noUser" color="primary" text-color="white" size="50px" class="avatar">
+            <img v-if="auth.avatar" :src="auth.avatar" />
+            <span v-else>{{ auth.username?.charAt(0) }}</span>
+          </q-avatar>
+        </div>
+
         <q-btn
           icon="add"
           push
