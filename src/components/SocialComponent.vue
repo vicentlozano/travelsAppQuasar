@@ -1,6 +1,6 @@
 <template>
   <div class="social">
-    <section v-if="requests" class="my-requests">
+    <section v-if="requests.length>0" class="my-requests">
       <h5 class="title">Friends Request</h5>
 
       <CardsSlider :discover="false" :cardObjects="requests" @filter-requests="filterList" @load-contacts="loadContacts"/>
