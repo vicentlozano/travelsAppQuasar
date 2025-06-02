@@ -25,6 +25,7 @@
         :id="travel.user_id"
         :crud="false"
         :travel_id="travel.travel_id"
+        :noUser="true"
       />
     </section>
     <section v-else-if="!loading" class="no-travels">

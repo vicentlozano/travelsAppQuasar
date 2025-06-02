@@ -29,6 +29,7 @@
         :id="travel.user_id"
         :crud="false"
         :travel_id="travel.travel_id"
+        :noUser="true"
       />
     </section>
     <h2 v-if="peopleTravels.length > 0" class="title">Last people travels</h2>
@@ -48,6 +49,7 @@
         :id="travel.user_id"
         :crud="false"
         :travel_id="travel.travel_id"
+        :noUser="true"
       />
     </section>
     <h2 v-if="myTravels.length > 0" class="title">Your last travels</h2>
@@ -71,7 +73,7 @@
         /></RouterLink>
       </section>
     </section>
-    <section v-else class="no-travels">
+    <section v-else-if="!friendsTravels.value && !peopleTravels.value" class="no-travels">
       <h3 class="message-empty">No travels yet!</h3>
     </section>
   </div>
@@ -168,7 +170,6 @@ $margin-spacing: 3rem;
   padding: 0.2rem;
   border-radius: 25px;
 }
-
 
 h2 {
   display: flex;

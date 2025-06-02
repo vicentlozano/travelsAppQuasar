@@ -23,7 +23,7 @@
         </div>
       </div>
       <section class="gadgets">
-        <q-avatar color="primary" text-color="white" size="50px" class="avatar">
+        <q-avatar v-if="!noUser" color="primary" text-color="white" size="50px" class="avatar">
           <img v-if="auth.avatar" :src="auth.avatar" />
           <span v-else>{{ auth.username?.charAt(0) }}</span>
         </q-avatar>
@@ -135,6 +135,10 @@ const props = defineProps({
   user: String,
   travel_id: Number,
   slide: String,
+  noUser: {
+    type: Boolean,
+    default: false,
+  },
 })
 const auth = useUserStore()
 const slide = ref(props.places[0]?.place + props.places[0]?.place_id || '')
