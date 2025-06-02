@@ -17,7 +17,10 @@
         >
           {{ contact.name }}
         </q-tooltip>
-        <img v-if="contact.avatar !== 'undefined' && contact.avatar !== null" :src="contact.avatar" />
+        <img
+          v-if="contact.avatar !== 'undefined' && contact.avatar !== null"
+          :src="contact.avatar"
+        />
         <p v-else class="initial">
           {{
             contactChat.name.charAt(0).toUpperCase() + contactChat.lastname.charAt(0).toUpperCase()
@@ -42,10 +45,13 @@ const props = defineProps({
   },
   contactSearch: {
     type: String,
+    default: '',
     required: false,
   },
-  contactSelected: String,
-  String,
+  contactSelected: {
+    type: String,
+    default: '',
+  },
 })
 const emits = defineEmits(['recipientSelected'])
 //data
