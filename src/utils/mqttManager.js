@@ -23,7 +23,7 @@ export default class MQTT extends EventTarget {
   connect() {
     return new Promise((resolve, reject) => {
       //for production
-     let connectUrl = `wss://${this.host}`
+     let connectUrl = `wss://${this.host}/mqtt`
       //for local develop
        //let connectUrl =  `ws://${this.host}:${this.port}`;
 

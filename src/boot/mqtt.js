@@ -3,7 +3,7 @@ import MQTT from 'src/utils/mqttManager'
 
 export default defineBoot(({ app }) => {
   // for production 
-  const ip = 'api.vilodev.com/mqtt'
+  const ip = 'api.vilodev.com'
   //for local
     // const ip = 'localhost' 
 
