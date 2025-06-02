@@ -94,7 +94,7 @@ const sendMessage = async () => {
     const response = await sendMessageById({
       userId: user.userId,
       message: messageText.value,
-      recipientId: recipientId.value.id,
+      recipientId: recipientId.value?.id,
     })
     if (!response.data.error?.status) {
       messageText.value = ''
@@ -105,13 +105,13 @@ const sendMessage = async () => {
 }
 const stopWritting = () => {
   mqtt.publish(
-    `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value.id}`,
+    `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value?.id}`,
     JSON.stringify({ isWritting: false }),
   )
 }
 const writting = () => {
   mqtt.publish(
-    `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value.id}`,
+    `TRAVELS/ISWRITTING/${user.userId}/${recipientId.value?.id}`,
     JSON.stringify({ isWritting: true }),
   )
 }
