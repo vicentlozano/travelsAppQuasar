@@ -23,6 +23,7 @@ onMounted(async () => {
 
     if (!response.error.status) {
       if (response.error.source) {
+        console.log(response.error.source)
         notifySuccessCenter(response.error.source)
         message.value = response.error.source
         setTimeout(() => router.push({ name: 'login' }), 4000)
