@@ -22,7 +22,7 @@ import CardsSlider from './CardsSlider.vue'
 
 //data
 const user = useUserStore()
-const requests = ref(null)
+const requests = ref([])
 const contacts = ref(null)
 const lastContacts = ref([])
 ref(false)
