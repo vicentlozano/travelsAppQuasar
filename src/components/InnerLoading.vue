@@ -38,7 +38,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 5rem;
+  padding-top: 8rem;
   height: 100%;
   width: 100%;
 }
