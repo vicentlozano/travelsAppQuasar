@@ -2,9 +2,10 @@ import { defineBoot } from '#q-app/wrappers'
 import MQTT from 'src/utils/mqttManager'
 
 export default defineBoot(({ app }) => {
-  // for production const ip = '13.61.1.168'
+  // for production 
+  const ip = 'api.vilodev.com'
   //for local
-    const ip = 'localhost' 
+    // const ip = 'localhost' 
 
   const port = '9001'
 
