@@ -8,12 +8,12 @@
         <div :class="movil ? 'small-subtitle1' : 'text-subtitle1'">Inspire people</div>
       </div>
     </div>
-    <h2 v-if="friendsTravels.length > 0" class="title">Friends travels</h2>
+    <h2 v-if="friendsTravels?.length > 0" class="title">Friends travels</h2>
     <section
-      v-if="friendsTravels.length > 0"
+      v-if="friendsTravels?.length > 0"
       class="last-travels"
       :style="
-        (peopleTravels.length > 0 || myTravels.length > 0) && $q.screen.width < 450
+        (peopleTravels?.length > 0 || myTravels?.length > 0) && $q.screen.width < 450
           ? 'padding-bottom:0'
           : ''
       "
@@ -32,11 +32,11 @@
         :noUser="true"
       />
     </section>
-    <h2 v-if="peopleTravels.length > 0" class="title">Last people travels</h2>
+    <h2 v-if="peopleTravels?.length > 0" class="title">Last people travels</h2>
     <section
-      v-if="peopleTravels.length > 0"
+      v-if="peopleTravels?.length > 0"
       class="last-travels"
-      :style="myTravels.length > 0 && $q.screen.width < 450 ? 'padding-bottom:0' : ''"
+      :style="myTravels?.length > 0 && $q.screen.width < 450 ? 'padding-bottom:0' : ''"
     >
       <TravelCard
         v-for="travel in peopleTravels"
@@ -52,8 +52,8 @@
         :noUser="true"
       />
     </section>
-    <h2 v-if="myTravels.length > 0" class="title">Your last travels</h2>
-    <section v-if="myTravels.length > 0" class="last-travels">
+    <h2 v-if="myTravels?.length > 0" class="title">Your last travels</h2>
+    <section v-if="myTravels?.length > 0" class="last-travels">
       <TravelCard
         v-for="travel in myTravels"
         :key="travel.travel_id"
@@ -73,7 +73,7 @@
         /></RouterLink>
       </section>
     </section>
-    <section v-else-if="!friendsTravels.value.length>0 && !peopleTravels.value.length>0" class="no-travels">
+    <section v-else-if="!friendsTravels.value?.length>0 && !peopleTravels.value?.length>0" class="no-travels">
       <h3 class="message-empty">No travels yet!</h3>
     </section>
   </div>
@@ -104,15 +104,15 @@ onMounted(async () => {
     let response = await getAllTravels()
     response = response.data
     myTravels.value = response.data.filter((travel) => travel.user_id === auth.userId)
-    let totalTravels = myTravels.value.length
+    let totalTravels = myTravels.value?.length
 
     if (totalTravels > 4) {
-      myTravels.value = myTravels.value.slice(totalTravels - 3, totalTravels)
+      myTravels.value = myTravels.value?.slice(totalTravels - 3, totalTravels)
     }
     //
     let friendsResponse = await getFriendsTravels({ id: auth.userId })
     friendsResponse = friendsResponse.data
-    const totalFriends = friendsResponse.data.length
+    const totalFriends = friendsResponse.data?.length
 
     if (totalFriends > 4) {
       friendsTravels.value = friendsResponse.data.slice(totalFriends - 4, totalFriends)
@@ -122,7 +122,7 @@ onMounted(async () => {
     //
     let peopleResponse = await getNewPeopleTravels({ id: auth.userId })
     peopleResponse = peopleResponse.data
-    const totalPeople = peopleResponse.data.length
+    const totalPeople = peopleResponse.data?.length
 
     if (totalPeople > 4) {
       peopleTravels.value = peopleResponse.data.slice(totalPeople - 4, totalPeople)
