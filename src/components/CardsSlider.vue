@@ -3,7 +3,7 @@
     <section class="friends-request" ref="requestContainerValue">
       <div class="request" v-for="request in props.cardObjects" :key="request.id">
         <div class="image-container">
-          <img v-if="request.avatar !== undefined && request.avatar !== null" :src="request.avatar" class="image-contact" />
+          <img v-if="request.avatar !== 'undefined' && request.avatar !== null" :src="request.avatar" class="image-contact" />
           <p v-else class="initial">
             {{ request.name.charAt(0).toUpperCase() + request.lastname.charAt(0).toUpperCase() }}
           </p>
