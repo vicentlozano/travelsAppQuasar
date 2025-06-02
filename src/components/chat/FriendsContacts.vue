@@ -63,7 +63,7 @@ const avatarSelected = ref(props.userId)
 
 //computed
 const displayedContacts = computed(() => {
-  return filteredContacts.value.length ? filteredContacts.value : contacts.value
+  return filteredContacts.value?.length ? filteredContacts.value : contacts.value
 })
 watch(
   () => props.contactSearch,

@@ -122,7 +122,7 @@ watch(
   },
 )
 watch(
-  () => messages.value.length,
+  () => messages.value?.length,
   () => {
     if (wasWritting.value) {
       // si justo antes estaba escribiendo, da un poco de tiempo
@@ -154,7 +154,7 @@ onMounted(async () => {
     messages.value = await getMessages({ userId: user.userId, friendId: props.contactChat.id })
     messages.value = messages.value.data.data
     if (messages.value) {
-      contactAvatar.value = props.contactChat?.avatar.length > 0 ? props.contactChat?.avatar : ''
+      contactAvatar.value = props.contactChat?.avatar?.length > 0 ? props.contactChat?.avatar : ''
       const [id1, id2] = [user.userId, props.contactChat.id].sort((a, b) => a - b)
       const topic = `${id1}-${id2}`
       mqtt.subscribe(`TRAVELS/UPDATES/${topic}`, (message) => {
